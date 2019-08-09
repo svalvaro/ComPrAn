@@ -1,11 +1,30 @@
 Package: complexomics
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Analysis of SILAC and Non-SILAC Complexomic Data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Authors@R: 
+    c(person(given = "Rick",
+           family = "Scavetta",
+           role = c("aut"),
+           email = "office@scavetta.academy"),
+      person(given = "Petra",
+           family = "Palenikova",
+           role = c("aut", "cre"),
+           email = "pp451@mrc-mbu.cam.ac.uk"))
+Maintainer: Rick Scavetta <office@scavetta.academy>
+Description: Takes the output from ... and produces rready-to-use tables and plots.
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends:
+    magrittr
+Imports: 
+    dplyr,
+    data.table,
+    purrr,
+    tidyr,
+    stringr
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat
