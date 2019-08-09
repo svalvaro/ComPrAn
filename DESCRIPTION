@@ -1,6 +1,6 @@
 Package: complexomics
 Type: Package
-Title: Analysis of SILAC and Non-SILAC Complexomic Data
+Title: Analysis of SILAC Complexomic Data
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Rick",
@@ -24,7 +24,8 @@ Imports:
     data.table,
     purrr,
     tidyr,
-    stringr
+    stringr,
+    stats
 RoxygenNote: 6.1.1
 Suggests: 
     testthat
