@@ -1,8 +1,8 @@
 # Test script
 
 #   Install Package:           'Cmd + Shift + B'
-load_all()
-
+devtools::load_all()
+library(tidyverse)
 # Read in data
 peptides <- data.table::fread("../complexomics_app/data/data.txt")
 
