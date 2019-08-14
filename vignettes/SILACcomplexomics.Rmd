@@ -27,6 +27,8 @@ This package allows to estimate protein intensities from peptide intensities, pr
 
 ### Method description
 
+Below, we provide an overview of the method. We suggest **two possible uses of the package**. Here, we describe a **full workflow** which can be used when starting from the peptide information. Second option is to use only **protein workflow** described in a separate vignette. The second workflow would include only steps 3) and 4) from below. It provides greater flexibility for example if someone does not have access to peptide files but only to normalised protein values or if they wish to use different apporach for estimation of protein intensities from peptide intensities and/or for normalisation. 
+
 #### 1) Estimation of protein intensities from peptide intensities
 
 During mass spectrometry analysis many peptides are detected for each protein. During initial analysis peptides are identified, assigned to proteins and quantified. In a single sample, quantities of different peptides belonging to the same protein might differ. This is caused because different peptides ionize with different efficiency. Variation in detected quantities may be caused not only by differences in their sequence but also their charge state, modifications etc. There are many possibilities how to estimate a protein from peptide quantity, we can take minimum/average/maximum of the quantities of all peptides that belong to this protein or we can do the same for a subset of peptides.
@@ -69,7 +71,7 @@ Plotting functionality includes:
 * twoGroupsWithinLabelCoMigration - scatter plot for 2 selected groups of proteins
 * makeBarPlotClusterSummary - bar plot showing number of proteins per cluster
 
-# Example workflow
+# Example full workflow
 
 Read in and filter data
 ```{r}
@@ -99,7 +101,7 @@ max_frac <- 23
 
 allPeptidesPlot(peptide_index,protein, max_frac = max_frac)
 ```
-![**Fig 1.** example all peptide plot (default settings)](allPeptidesPlot.png)
+![**Fig 1** example all peptide plot (default settings)](allPeptidesPlot.png)
 
 
 
@@ -136,7 +138,7 @@ max_frac <- 23
 
 proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 ```
-![**Fig 2.** example protein plot, quantitative comparison between labeled and unlabeled samples (default settings)](proteinPlot.png)
+![**Fig 2** example protein plot, quantitative comparison between labeled and unlabeled samples (default settings)](proteinPlot.png)
 
 
 Make a heatmap for a selected group of proteins
@@ -147,7 +149,7 @@ groupData <- read_tsv(paste0("data/", groupDataFileName))
 
 groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 ```
-![**Fig 3.** example heatmap, quantitative comparison between labeled and unlabeled samples (default settings)](heatmap.png)
+![**Fig 3** example heatmap, quantitative comparison between labeled and unlabeled samples (default settings)](heatmap.png)
 
 
 Co-migration plot of single protein group between label states
@@ -159,7 +161,7 @@ max_frac <- 23
 oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, groupDataVector,groupName)
 
 ```
-![**Fig 4.** example co-migration plot, non-quantitative comparison of migration profile of a sigle protein goup between labeled and unlabeled samples (default settings)](oneGroupCoMigration.png)
+![**Fig 4** example co-migration plot, non-quantitative comparison of migration profile of a sigle protein goup between labeled and unlabeled samples (default settings)](oneGroupCoMigration.png)
 
 Co-migration plot of two protein groups within label state
 ```{r}
@@ -173,7 +175,7 @@ twoGroupsWithinLabelCoMigration(dataFrame = forAnalysis, max_frac = max_frac,
                                 group1Data = group1DataVector, group1Name = group1Name,
                                 group2Data = group2DataVector, group2Name = group2Name)
 ```
-![**Fig 5.** example co-migration plot, non-quantitative comparison of migration profile of two protein goups within label states (default settings)](twoGroupsCoMigration.png)
+![**Fig 5** example co-migration plot, non-quantitative comparison of migration profile of two protein goups within label states (default settings)](twoGroupsCoMigration.png)
 
 Extract data frames for clustering:
 1) scenario A, isLabel == TRUE
@@ -208,8 +210,8 @@ unlabDist <- makeDist(t(select(unlabelledTable,-c(1:3))), centered = T)
 
 Assign clusters to data frames
 ```{r}
-labelledTable_clust <- assignClusters(labelledTable, labDist,method = 'average', cutoff = 0.8)
-unlabelledTable_clust <- assignClusters(unlabelledTable,unlabDist ,method = 'average', cutoff = 0.8)
+labelledTable_clust <- assignClusters(labelledTable, labDist,method = 'average', cutoff = 0.85)
+unlabelledTable_clust <- assignClusters(unlabelledTable,unlabDist ,method = 'average', cutoff = 0.85)
 ```
 
 Make bar plots summarizing numbers of proteins per cluster
@@ -218,7 +220,7 @@ makeBarPlotClusterSummary(labelledTable_clust, name = 'labeled')
 makeBarPlotClusterSummary(unlabelledTable_clust, name = 'unlabeled')
 ```
 <center>
-![**Fig 6.** example bar plots](bar1.png) ![](bar2.png)
+![**Fig 6** example bar plots](bar1.png) ![](bar2.png)
 </center>
 
 Create table containing proteins and their assigned clusters
