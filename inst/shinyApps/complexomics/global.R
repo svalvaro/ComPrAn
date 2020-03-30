@@ -12,7 +12,7 @@ library(shinydashboard)
 library(rio)
 library(grid)
 library(gridExtra)
-library(complexomics)
+library(ComPrAn)
 
 # options(shiny.maxRequestSize = 30*1024^2)
 options(shiny.maxRequestSize = 150*1024^2)
