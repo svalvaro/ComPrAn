@@ -1,4 +1,4 @@
-Package: complexomics
+Package: ComPrAn
 Type: Package
 Title: Analysis of SILAC Complexomic Data
 Version: 0.1.0
