@@ -12,6 +12,7 @@ library(shinydashboard)
 library(rio)
 library(grid)
 library(gridExtra)
+library(complexomics)
 
 # options(shiny.maxRequestSize = 30*1024^2)
 options(shiny.maxRequestSize = 150*1024^2)
@@ -27,13 +28,13 @@ col_vector_proteins <- c('#ff9d2e', '#07b58a')
 names(col_vector_proteins) <- c('TRUE', 'FALSE')
 
 # This sources all files in the R directory
-for (i in list.files("R/", full.names = T)) {
-  source(i)
-}
+# for (i in list.files("R/", full.names = T)) {
+#   source(i)
+# }
 
 # Read in data
-dataFile <- system.file("extdata", "data.txt", package = "complexomics")
-peptides <- data.table::fread(dataFile)
+# dataFile <- system.file("extdata", "data.txt", package = "complexomics")
+# peptides <- data.table::fread(dataFile)
 # names(peptides)
 # max_frac <- max(peptides$Search.ID)
 # max_frac <- max(peptides$Fraction)
@@ -42,7 +43,7 @@ peptides <- data.table::fread(dataFile)
 
 # peptides <- cleanData(peptides, fCol = "Search ID")
 
-peptides <- cleanData(data.table::fread(dataFile), fCol = "Search ID")
+# peptides <- cleanData(data.table::fread(dataFile), fCol = "Search ID")
 # names(peptides)
 
 
