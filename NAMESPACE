@@ -2,7 +2,7 @@
 
 export(assignClusters)
 export(cleanData)
-export(complexomicsApp)
+export(compranApp)
 export(exportClusterAssignments)
 export(extractRepPeps)
 export(groupHeatMap)

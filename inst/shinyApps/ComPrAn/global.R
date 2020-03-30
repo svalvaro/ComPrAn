@@ -12,7 +12,7 @@ library(shinydashboard)
 library(rio)
 library(grid)
 library(gridExtra)
-library(complexomics)
+library(ComPrAn)
 
 # options(shiny.maxRequestSize = 30*1024^2)
 options(shiny.maxRequestSize = 150*1024^2)
@@ -33,8 +33,8 @@ names(col_vector_proteins) <- c('TRUE', 'FALSE')
 # }
 
 # Read in data
-# dataFile <- system.file("extdata", "data.txt", package = "complexomics")
-# peptides <- data.table::fread(dataFile)
+dataFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- data.table::fread(dataFile)
 # names(peptides)
 # max_frac <- max(peptides$Search.ID)
 # max_frac <- max(peptides$Fraction)
