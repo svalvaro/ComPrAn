@@ -21,5 +21,4 @@ export(splitModLab)
 export(toFilter)
 export(twoGroupsWithinLabelCoMigration)
 importFrom(magrittr,"%>%")
-importFrom("stats", "as.dist", "cor", "cutree", "filter", "hclust",
-             "median", "reorder")
+importFrom("stats", "as.dist", "cor", "cutree", "filter", "hclust", "median", "reorder")
