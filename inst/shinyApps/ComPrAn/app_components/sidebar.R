@@ -1,6 +1,6 @@
 ###################
 # sidebar.R
-# 
+#
 ###################
 sidebar <- dashboardSidebar(
   sidebarMenu(id = "menu0",
@@ -11,8 +11,8 @@ sidebar <- dashboardSidebar(
                        menuSubItem("Filter", tabName = "filter", icon = icon("filter")),
                        menuSubItem("Rep Peptides", tabName = "bylabelstate", icon = icon("cogs")),
                        menuSubItem("Normalize", tabName = "normalize", icon = icon("ruler-horizontal"))
-                       
-                       ), 
+
+                       ),
               menuItem("Part 2: Protein workflow", tabName = "pw", #icon = icon("tools"),
                        menuSubItem("Normalized Proteins", tabName = "proteinNormViz", icon = icon("chart-bar")),
                        menuSubItem("Heatmaps", tabName = "heatMaps", icon = icon("chart-bar")),
@@ -23,6 +23,6 @@ sidebar <- dashboardSidebar(
               menuItem("Q & A", tabName ="QuestionsAndAnswers", icon = icon("question")),
               menuItem("Feedback", tabName="feedback", icon = icon("comment", lib="glyphicon"))
   ),
-  helpText("Developed by Rick Scavetta and Petra Palenikova as part of the R complexomics package",
+  helpText("Developed by Rick Scavetta and Petra Palenikova as part of the R ComPrAn package",
            style="padding-left:1em; padding-right:1em;position:absolute; bottom:1em; ")
 )
