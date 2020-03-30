@@ -1,10 +1,10 @@
 ###################
 # body.R
-# 
+#
 ###################
 body <- dashboardBody(
   tabItems(
-    
+
     ########################
     # intro tab content
     ########################
@@ -12,9 +12,9 @@ body <- dashboardBody(
       tabName = "intro",
       h2("Introduction"),
       p(
-        strong("Complexome profiling") ,
+        strong("Complexome Profiling Analysis") ,
         "or",
-        strong("complexomics"),
+        strong("ComPrAn"),
         "is a method used in biology to study migration profiles of proteins and protein complexes. First, ",
         strong("sample is separated into fractions"),
         ", typically by blue native electrophoresis or gradient centrifugation and individual",
@@ -46,7 +46,7 @@ body <- dashboardBody(
         "During this part peptide data are filtered, a representative peptide is picked for each protein and
         amounts of detected proteins are nomrlaized.",
         style = "padding-left: 2em"),
-      
+
       h3("Part 2: Protein Workflow",
          style = "padding-left: 1em"),
       p(strong("The aim of part 2 is to visualize and cluster protein results."),
@@ -54,16 +54,16 @@ body <- dashboardBody(
         a group of proteins and protein co-migration plots",
         style = "padding-left: 2em")
       ),
-      
+
     ########################
     # import tab content
     ########################
     tabItem(tabName="import",
             h2("Import data"),
             p("Enter a file to use, if this is blank, we'll just use an example file"),
-            
+
             fluidRow(
-              
+
               tabBox(id = "tabsetImport", height = "250px",
                      tabPanel("Raw Data",
                               p("Use this to import a peptide file."),
@@ -72,31 +72,31 @@ body <- dashboardBody(
                                                                                               '.csv',
                                                                                               '.tsv')),
                               actionButton("processRaw", "Process data")),
-                     tabPanel("Normalized values", 
+                     tabPanel("Normalized values",
                               p("Use this to import a file containing normalized values that you've previously generated using this app."),
                               fileInput("inputfileNorm", "Select a Normalized peptide file for analysis", accept = c('text/tab-separated-values',
                                                                                                                      '.txt',
                                                                                                                      '.csv',
                                                                                                                      '.tsv')),
                               actionButton("processNorm", "Process data")
-                              
+
                      )
               ),
-              
+
               textOutput("useCase")
-              
-              
+
+
             ),
             fluidRow(
             ),
             # fluidRow(
             #   verbatimTextOutput("NormInputTest_0")
             # ),
-            
+
             fluidRow(
-              
+
               box(width = 6, solidHeader = TRUE,
-                  
+
                   textInput("labelledName", label = "Labeled sample:", value = "Control")
               ),
               box(width = 6, solidHeader = TRUE,
@@ -115,36 +115,36 @@ body <- dashboardBody(
               # textOutput("selected_var"),
               plotOutput("totalSplit", width = "100%", height = "150px")
             ),
-            
+
             fluidRow(
               # textOutput("selected_var"),
               textOutput("test_input")
             ),
-            
+
             fluidRow(
               # textOutput("selected_var"),
               plotOutput("labUnlabSplit", width = "100%", height = "150px")
             )
-            
+
     ),
-    
+
     ########################
     # filter tab content
     ########################
     tabItem(tabName="filter",
             h2("Filter data"),
             p("Choose your filtering criteria in this section.",
-              
+
               # numericInput("frac","Number of fractions:", value = max_frac()),
               sliderInput("rank", label = "Keep peptides ranked below or equal to:",
                           min = 1, max = max(peptides$Rank), value = 1, step = 1),
-              
+
               checkboxGroupInput("checkGroup", label = "Include peptides with confidence level:",
                                  choices = list("High" = "High", "Middle" = "Middle", "Low" = "Low"),
                                  selected = c("High", "Middle","Low")),
-              
+
               checkboxInput("simplify", label = "Simplify data set", value = TRUE),
-              
+
               actionButton("filter", "Filter the data"),
               "(Larger number of processing steps happens after pressing 'Filter the data' button, this might take a while.) "
 
@@ -161,33 +161,33 @@ body <- dashboardBody(
               )
             )
     ),
-    
+
     ########################
     # bylabelstate tab content
     ########################
     tabItem(tabName="bylabelstate",
             h2("Analysis Summary"),
             p("Here you can search for presence/absence of a protein in your data set.
-              The plot displayes all peptides that belong to the selected protein. 
-              There are multiple options with which you can modify the plot visualization, 
-              including the option to highliht peptide that was selected as \"representative peptide\" 
+              The plot displayes all peptides that belong to the selected protein.
+              There are multiple options with which you can modify the plot visualization,
+              including the option to highliht peptide that was selected as \"representative peptide\"
               by the analysis.",
               style="padding-left: 0em"),
             fluidRow(
-              
+
               tabBox(id = "tabset1", height = "250px",
-                     tabPanel("All Proteins", 
+                     tabPanel("All Proteins",
                               uiOutput("dt")
                      ),
-                     tabPanel("By label state", 
-                              column(width = 6, 
+                     tabPanel("By label state",
+                              column(width = 6,
                                      actionButton("chooseUnlabeled", "Only Unlabeled"),
                                      actionButton("chooseBoth", "Both"),
                                      actionButton("chooseLabeled", "Only Labeled")),
                               column(width = 12,
                                      DT::dataTableOutput('allPeptides_choose'),
                                      style = "height:300px; overflow-y: scroll; overflow-x: scroll;"
-                                     
+
                               )
                      )
               )
@@ -213,15 +213,15 @@ body <- dashboardBody(
             )
             # )
     ),
-    
+
     ########################
     # normalize tab content
     ########################
     tabItem(tabName="normalize",
             h2("Normalize protein values"),
-            p("For easier comparison of protein co-migrations and quantities we 
+            p("For easier comparison of protein co-migrations and quantities we
               normalize all values to be between 0 and 1."),
-            
+
             fluidRow(
               column(width = 6,
                      actionButton("normData", "Normalize the data")
@@ -232,7 +232,7 @@ body <- dashboardBody(
               )
             )
     ),
-    
+
     ########################
     # proteinNormViz tab content
     ########################
@@ -256,29 +256,29 @@ body <- dashboardBody(
                      textInput("allProteinPlot_xaxis", label = "X axis label:", value = "Fraction"),
                      textInput("allProteinPlot_yaxis", label = "Y axis label:", value = "Precursor Area")
               ),
-              column(width = 6, 
+              column(width = 6,
                      plotOutput("proteinPlot", height = 500),
                      uiOutput("dl_Norm_Plot")
               ),
-              
+
             fluidRow(
               column(width = 12,
-            textAreaInput("normPlotsMultipleInput", 
+            textAreaInput("normPlotsMultipleInput",
                           label = "Input for multiple plots ..."),
             downloadLink('allgraphsNorm')
-                
+
               )
-              
+
             )
             )
     ),
-    
+
     ########################
     # heatMaps tab content
     ########################
     tabItem(tabName="heatMaps",
             h2("Heatmaps of Normalized Profiles"),
-            p("Quantitative comparison of a group of proteins 
+            p("Quantitative comparison of a group of proteins
               between labeled and unlabeled samples"),
             fluidRow(
               column(width = 6,
@@ -286,98 +286,98 @@ body <- dashboardBody(
                                                                                        '.csv',
                                                                                        '.tsv')) ,
                      verbatimTextOutput("HeatTest"),
-                     
+
                      textInput("heatMapGroupName", label = "Group Name:", value = "Group 1"),
-                     
+
                      checkboxInput("renameProteinsHeatMap", label = "Rename proteins", value = FALSE),
                      uiOutput("dt_3"),
-                     
+
                      radioButtons("showSamplesHeatMap", label = "Show Samples",
                                   choices = list("Side-by-side" = 2, "One above another" = 1),
                                   selected = 1)),
-              column(width = 6, 
+              column(width = 6,
                      plotOutput("heatMapPlot", height = 500),
                      uiOutput("dl_Heat_Plot"))
-              
-              
+
+
             )
     ),
-    
+
     ########################
     # co-migration tab content
     ########################
     tabItem(tabName="coMigration",
             h2("Co-migration plots"),
-            p("Here you can compare migation of a single group of proteins between the label states, 
+            p("Here you can compare migation of a single group of proteins between the label states,
               or look whether two groups of proteins co-migrate in both label states."),
             p("This plot is ",
-              strong("not quantitative"), "and should not be used to compare the amounts of proteins 
+              strong("not quantitative"), "and should not be used to compare the amounts of proteins
               between label states!"),
-            
+
             fluidRow(
               tabBox(id = "tabsetComigration", height = "100%", width = "100%",
                      tabPanel("Co-migration 1",
                               p("Here we show whether the migration pattern of proteins specified in \"Protein IDs\"
                                 box changes between label states"),
                               fluidRow(column(width = 3,
-                                              textInput("groupName_coMig1", 
-                                                        label = "Group Name", 
+                                              textInput("groupName_coMig1",
+                                                        label = "Group Name",
                                                         value = "Group 1"),
-                                              textAreaInput("groupData_coMig1", 
+                                              textAreaInput("groupData_coMig1",
                                                             label = "Protein IDs (one per line)")
                               ),
                               column(width = 3,
                                      checkboxInput("grid_coMig1", label = "Show grid", value = FALSE),
-                                     checkboxInput("meanLine_coMig1", label = "Show mean line", value = FALSE), 
+                                     checkboxInput("meanLine_coMig1", label = "Show mean line", value = FALSE),
                                      checkboxInput("medianLine_coMig1", label = "Show median line", value = FALSE),
                                      sliderInput("jitterPoints_coMig1", label = "Jittering",
                                                  min = 0, max = 1, value = 0.3, step = 0.05),
                                      sliderInput("pointSize_coMig1", label = "Point size",
-                                                 min = 1, max = 10, value = 2.5, step = 0.5), 
+                                                 min = 1, max = 10, value = 2.5, step = 0.5),
                                      sliderInput("alphaValue_coMig1", label = "Transparency",
-                                                 min = 0.1, max = 1, value = 0.5, step = 0.05), 
+                                                 min = 0.1, max = 1, value = 0.5, step = 0.05),
                                      radioButtons("titleAlign_coMig1", label = "Title alignment",
                                                   choices = list("Left" = "left", "Center" = "center", "Right" = "right"),
-                                                  selected = "left"), 
+                                                  selected = "left"),
                                      textInput("legendLabel_coMig1", label = "Legend label" , value = "Condition"),
                                      textInput("ylabel_coMig1", label = "Y-axis label", value = "Relative Protein Abundance"),
                                      textInput("xlabel_coMig1", label = "X-axis label", value = "Fraction")
                               ),
-                              # labelled_coMig1 = 'Labeled', 
-                              # unlabelled_coMig1 = 'Unlabeled', 
+                              # labelled_coMig1 = 'Labeled',
+                              # unlabelled_coMig1 = 'Unlabeled',
                               column(width = 6,
                                      plotOutput("coMig_1"),
                                      uiOutput("dl_Comig1_Plot")
                               ))
                      ),
-                     tabPanel("Co-migration 2", 
+                     tabPanel("Co-migration 2",
                               p("Here we show whether the proteins specified in \"Group 1 protein IDs\" and
                                 \"Group 2 protein IDs\" boxes co-migrate in labeled/unlabeled samples"),
                               fluidRow(column(width = 3,
-                                              textInput("groupName_coMig2_g1", 
-                                                        label = "Group Name", 
+                                              textInput("groupName_coMig2_g1",
+                                                        label = "Group Name",
                                                         value = "Group 1"),
-                                              textAreaInput("groupData_coMig2_g1", 
+                                              textAreaInput("groupData_coMig2_g1",
                                                             label = "Group 1 protein IDs (one per line)"),
-                                              textInput("groupName_coMig2_g2", 
-                                                        label = "Group Name", 
+                                              textInput("groupName_coMig2_g2",
+                                                        label = "Group Name",
                                                         value = "Group 2"),
-                                              textAreaInput("groupData_coMig2_g2", 
+                                              textAreaInput("groupData_coMig2_g2",
                                                             label = "Group 2 protein IDs (one per line)")
                               ),
                               column(width = 3,
                                      checkboxInput("grid_coMig2", label = "Show grid", value = FALSE),
-                                     checkboxInput("meanLine_coMig2", label = "Show mean line", value = FALSE), 
+                                     checkboxInput("meanLine_coMig2", label = "Show mean line", value = FALSE),
                                      checkboxInput("medianLine_coMig2", label = "Show median line", value = FALSE),
                                      sliderInput("jitterPoints_coMig2", label = "Jittering",
                                                  min = 0, max = 1, value = 0.3, step = 0.05),
                                      sliderInput("pointSize_coMig2", label = "Point size",
-                                                 min = 1, max = 10, value = 2.5, step = 0.5), 
+                                                 min = 1, max = 10, value = 2.5, step = 0.5),
                                      sliderInput("alphaValue_coMig2", label = "Transparency",
-                                                 min = 0.1, max = 1, value = 0.5, step = 0.05), 
+                                                 min = 0.1, max = 1, value = 0.5, step = 0.05),
                                      radioButtons("titleAlign_coMig2", label = "Title alignment",
                                                   choices = list("Left" = "left", "Center" = "center", "Right" = "right"),
-                                                  selected = "left"), 
+                                                  selected = "left"),
                                      textInput("legendLabel_coMig2", label = "Legend label" , value = "Condition"),
                                      textInput("ylabel_coMig2", label = "Y-axis label", value = "Relative Protein Abundance"),
                                      textInput("xlabel_coMig2", label = "X-axis label", value = "Fraction")
@@ -387,20 +387,20 @@ body <- dashboardBody(
                                      plotOutput("coMig_2"),
                                      uiOutput("dl_Comig2_Plot")
                               ))
-                              
+
                      )
               )
             )
     ),
-    
-    
-    
+
+
+
     ########################
     # cluster tab content
     ########################
     tabItem(tabName="cluster",
             h2("Clustering"),
-            p("Here you can perform a hierarchical clustering of your protein data. 
+            p("Here you can perform a hierarchical clustering of your protein data.
               Clustering is performed separately on labelled and unlabelled sample."),
             fluidRow(
               column(width = 6,
@@ -408,16 +408,16 @@ body <- dashboardBody(
                                   choices = list("centered" = TRUE,
                                                  "uncentered" = FALSE
                                                  )),
-                     
+
                      radioButtons("distMethod", "Linkage method:",
                                   choices = list("complete" = "complete",
                                                  "average" = "average",
                                                  "single" = "single")),
                      uiOutput("UI_distCutoff"),
                      uiOutput("dl_clustertable")
-                     
+
                     ),
-              column(width = 6, 
+              column(width = 6,
                      plotOutput("labeledBar_plot", height = 500),
                      uiOutput("dl_labeledBar_Plot"),
                      plotOutput("unlabeledBar_plot", height = 500),
@@ -425,10 +425,10 @@ body <- dashboardBody(
                      )
     )
     ),
-    
-    
-    
-    
+
+
+
+
     ########################
     # QuestionsAndAnswers tab content
     ########################
@@ -439,7 +439,7 @@ body <- dashboardBody(
             # fluidPage(
             fluidRow(
               column(title = "Output",
-                     
+
                      width = 3,
                      plotOutput('distPlot_1', height = 200),
                      plotOutput('distPlot_2', height = 200)
@@ -447,7 +447,7 @@ body <- dashboardBody(
               column(width = 8, plotOutput('distPlot_3', height = 400))
             )
     ),
-    
+
     ########################
     # feedback tab content
     ########################
