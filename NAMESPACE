@@ -2,6 +2,7 @@
 
 export(assignClusters)
 export(cleanData)
+export(complexomicsApp)
 export(exportClusterAssignments)
 export(extractRepPeps)
 export(groupHeatMap)
@@ -20,3 +21,5 @@ export(splitModLab)
 export(toFilter)
 export(twoGroupsWithinLabelCoMigration)
 importFrom(magrittr,"%>%")
+importFrom("stats", "as.dist", "cor", "cutree", "filter", "hclust",
+             "median", "reorder")

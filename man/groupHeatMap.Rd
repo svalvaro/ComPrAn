@@ -4,10 +4,20 @@
 \alias{groupHeatMap}
 \title{Make heatmap}
 \usage{
-groupHeatMap(dataFrame, groupData, groupName, titleAlign = "left",
-  newNamesCol = NULL, colNumber = 2, ylabel = "Protein",
-  xlabel = "Fraction", legendLabel = "Relative Protein Abundance",
-  grid = TRUE, labelled = "labeled", unlabelled = "unlabeled")
+groupHeatMap(
+  dataFrame,
+  groupData,
+  groupName,
+  titleAlign = "left",
+  newNamesCol = NULL,
+  colNumber = 2,
+  ylabel = "Protein",
+  xlabel = "Fraction",
+  legendLabel = "Relative Protein Abundance",
+  grid = TRUE,
+  labelled = "labeled",
+  unlabelled = "unlabeled"
+)
 }
 \arguments{
 \item{dataFrame}{data frame, contains columns:

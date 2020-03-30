@@ -4,8 +4,7 @@
 \alias{extractRepPeps}
 \title{Extract Only Data Belonging to Representative Peptide}
 \usage{
-extractRepPeps(.data, scenario,
-  label = "Label neccessary for scenario A")
+extractRepPeps(.data, scenario, label = "Label neccessary for scenario A")
 }
 \arguments{
 \item{.data}{dataframe containing all peptides of one protein}

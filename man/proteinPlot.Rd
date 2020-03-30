@@ -4,11 +4,19 @@
 \alias{proteinPlot}
 \title{Create Line Plots}
 \usage{
-proteinPlot(dataFrame, protein, max_frac, grid = TRUE,
-  titleLabel = "all", titleAlign = "left",
-  ylabel = "Relative Protein Abundance", xlabel = "Fraction",
-  legendLabel = "Condition", labelled = "Labeled",
-  unlabelled = "Unlabeled")
+proteinPlot(
+  dataFrame,
+  protein,
+  max_frac,
+  grid = TRUE,
+  titleLabel = "all",
+  titleAlign = "left",
+  ylabel = "Relative Protein Abundance",
+  xlabel = "Fraction",
+  legendLabel = "Condition",
+  labelled = "Labeled",
+  unlabelled = "Unlabeled"
+)
 }
 \arguments{
 \item{dataFrame}{data frame, contains columns: `Protein Group Accessions` character
