@@ -26,44 +26,77 @@ cleanData <- function(.data, fCol = "Search ID") {
   columnHeaders <- names(.data)
 
   #rename "Search ID" to something more meaningful e.g. "Fraction"
-  if (fCol %in% columnHeaders) {
-    names(.data)[grep(fCol, names(.data))] <- "Fraction"
-  } else {
-    stop(paste(fCol, "column not found"))
-  }
+  #check if column specifying fraction number is present
+  # if (fCol %in% columnHeaders) {
+  #   names(.data)[grep(fCol, names(.data))] <- "Fraction"
+  # } else {
+  #   stop(paste(fCol, "column not found"))
+  # }
+  
+  # check if column specifying fraction number is present
+  if (!fCol %in% columnHeaders) {
+      stop(paste0("\"",fCol, "\"column not found"))
+      } 
+  
+  # convert Fraction (originaly "Search ID") to numbers instead of letters:
+  ## This implementation causes issues when there are missing
+  ## letters (= fractions).
+  ## Let's say fractions present are A,B,C,F,G they are re-numbered 
+  ## to 1,2,3,4,5 instead of 1,2,3,6,7
+  # .data %>%
+  #   dplyr::mutate(n = nchar(Fraction)) %>%
+  #   dplyr::arrange(n, Fraction) %>%
+  #   dplyr::mutate(Fraction = as.factor(Fraction),
+  #          Fraction = as.integer(Fraction)) %>%
+  #   dplyr::select(-n) -> .data
+  
+  ## Alternative implementation to account for issue described above
+  # convert Fraction (originaly "Search ID") to numbers instead of letters:
+  # 1) generate a data frame that we will use to map correce numers to letters
+  #    let's make this work for up to 702 fractions (27x length of LETTERS)
+  # 2) merge this data frame with .data to convert letters to numbers
+  #    -> add "Fraction" column with correct numers, remove old fcol column
+  letterSequence <- c(LETTERS, 
+                      unlist(lapply(LETTERS, function(x) {paste0(x,LETTERS)})))
+  
+  letterToNumber <- data.frame("Letters" = letterSequence,
+                               "Fraction" = seq(1:length(letterSequence)),
+                               stringsAsFactors = FALSE)
+  
+  names(letterToNumber)[grep("Letters", names(letterToNumber))] <- fCol
+  nrowOld <- nrow(.data)
+  .data <- dplyr::inner_join(.data,letterToNumber, by = fCol)
+  
+  # check if column specifying fraction number is present
+  if (nrow(.data) < nrowOld) {
+      stop(paste0("Some rows in \"", fCol, "\" column do not have a value"))
+  } 
+  
 
-  #all column names with "Search ID" renamed
+  #all column names with after adding "Fraction" column
   columnHeaders <- names(.data)
-
+  
   # which columns we need
   colsToLookFor <- c("PSM Ambiguity", "Fraction", "Precursor Area",
                      "# Protein Groups", "Rank", "Confidence Level",
                      "Protein Group Accessions", "Protein Descriptions",
                      "Modifications", "Charge", "Sequence")
-
+  
   #their expected classes
   classesOfCols <- c("factor", "integer", "numeric",
                      "integer", "integer", "factor",
                      "factor", "character",
                      "character", "integer", "character")
-
-
+  
+  
   # make a named vector:
   names(classesOfCols) <- colsToLookFor
-
+  
   #are all columns we need in column names?
   if(sum(colsToLookFor %in% columnHeaders) < length(colsToLookFor)) {
-    stop('Not all columns found') #write an ERROR message, do not continue
+      stop('Not all columns found') #write an ERROR message, do not continue
   }
-
-  # convert Fraction (originaly "Search ID") to numbers instead of letters:
-  .data %>%
-    dplyr::mutate(n = nchar(Fraction)) %>%
-    dplyr::arrange(n, Fraction) %>%
-    dplyr::mutate(Fraction = as_factor(Fraction),
-           Fraction = as.integer(Fraction)) %>%
-    dplyr::select(-n) -> .data
-
+  
   # Convert to factor variables
   .data %>%
     dplyr::mutate(`PSM Ambiguity` = as.factor(`PSM Ambiguity`),
