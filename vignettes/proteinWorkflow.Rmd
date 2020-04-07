@@ -51,7 +51,9 @@ Plotting functionality includes:
 Read in data, convert to correct format
 
 ```{r}
-forAnalysis <- protInportForAnalysis(data.table::fread("./data/dataNormProts.txt"))
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 ```
 
 

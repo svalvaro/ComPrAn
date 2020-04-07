@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2019 Rick Scavetta
+Copyright (c) 2020 Rick Scavetta and Petra Palenikova
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
