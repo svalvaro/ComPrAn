@@ -27,6 +27,8 @@
 #'                           contains `Precursor Area` values in a given fraction(columns) for a protein(rows)
 #'               cluster integer
 #'
+#' @importFrom tidyr spread
+#'
 #' @return dataframe
 #' @export
 exportClusterAssignments <- function(labClustTable, unlabClustTable){

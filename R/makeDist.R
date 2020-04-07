@@ -12,6 +12,8 @@
 #' @param centered centered: logical,if TRUE return dist matrix based on centered Pearson correlation (uses R cor() function, fast)
 #'                 ,if FALSE return dist matrix based on uncentered Pearson correlation (uses custom uncenteredCor() function, slow)
 #'
+#' @importFrom stats as.dist cor
+#'
 #' @return matrix
 #' @export
 makeDist <- function(df,centered = FALSE){

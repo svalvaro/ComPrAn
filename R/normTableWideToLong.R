@@ -12,18 +12,18 @@ normTableWideToLong <- function(labTab, unlabTab, comboTab) {
 
   # convert normalized data frames from wide to long format - will be used for plotting
   labTab %>%
-    gather(condition, `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
-    separate(condition, c('Fraction', 'isLabel'), sep = '_') %>%
+    gather("condition", `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
+    separate("condition", c('Fraction', 'isLabel'), sep = '_') %>%
     mutate(scenario = "A") -> labTab
 
   unlabTab %>%
-    gather(condition, `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
-    separate(condition, c('Fraction', 'isLabel'), sep = '_') %>%
+    gather("condition", `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
+    separate("condition", c('Fraction', 'isLabel'), sep = '_') %>%
     mutate(scenario = "A") -> unlabTab
 
   comboTab %>%
-    gather(condition, `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
-    separate(condition, c('Fraction', 'isLabel'), sep = '_') %>%
+    gather("condition", `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
+    separate("condition", c('Fraction', 'isLabel'), sep = '_') %>%
     mutate(scenario = "B") -> comboTab
 
   # .data$Fraction <- as.numeric(as.character(.data$Fraction))

@@ -12,9 +12,9 @@ server <- function(input, output, session) {
     readFile <- input$inputfile
     if (is.null(readFile)) {
       dataFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-      data.table::fread(dataFile)
+      fread(dataFile)
     } else {
-      data.table::fread(readFile$datapath)
+      fread(readFile$datapath)
     }
   })
 

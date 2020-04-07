@@ -17,6 +17,8 @@
 #' @param labelled character label to be used for isLabel == TRUE
 #' @param unlabelled character label to be used for isLabel == FALSE
 #'
+#' @importFrom stringr str_extract
+#'
 #' @return a plot
 #' @export
 proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE, titleLabel = 'all', titleAlign = 'left',

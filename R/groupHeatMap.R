@@ -24,6 +24,8 @@
 #' @param labelled character, label to be used for isLabel == TRUE
 #' @param unlabelled character, label to be used for isLabel == FALSE
 #'
+#' @import ggplot2
+#'
 #' @return plot
 #' @export
 groupHeatMap <- function(dataFrame, groupData, groupName,

@@ -7,6 +7,8 @@
 #'
 #' @param .data dataframe
 #'
+#' @importFrom stringr str_split
+#'
 #' @return dataframe
 #' @export
 #'
@@ -53,7 +55,7 @@ splitModLab <- function(.data) {
                                     .data$Labels, sep = "_")
 
   .data %>%
-    dplyr::select(-c(Modifications, splitMod)) -> .data
+    dplyr::select(-c(Modifications, .data$splitMod)) -> .data
 
   return(.data)
 }

@@ -15,7 +15,7 @@ toFilter <- function(.data, rank = 1, cl = c('Low','Middle','High')) {
   # rank numeric
   # cl character vector of some or all of 'Low', 'Middle' and 'High' values
   .data %>%
-    dplyr::filter(Rank <= rank,
+    dplyr::filter(.data$Rank <= rank,
            `Confidence Level` %in% cl)
 }
 

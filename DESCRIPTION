@@ -12,21 +12,29 @@ Authors@R:
            role = c("aut", "cre"),
            email = "pp451@mrc-mbu.cam.ac.uk"))
 Maintainer: Rick Scavetta <office@scavetta.academy>
-Description: Takes the output from ... and produces rready-to-use tables and plots.
+Description: Takes the output from ... and produces ready-to-use tables and plots.
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends:
-    magrittr,
-    shiny
 Imports: 
-    dplyr,
     data.table,
+    dplyr,
+    forcats,
+    ggplot2,
+    magrittr,
     purrr,
     tidyr,
+    rlang,
     stringr,
-    stats
+    shiny,
+    stats,
+    DT,
+    RColorBrewer,
+    VennDiagram,
+    rio,
+    scales,
+    shinydashboard
 RoxygenNote: 7.0.2
 Suggests: 
     testthat

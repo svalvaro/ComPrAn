@@ -6,6 +6,9 @@
 #' @param unlabTab a dataframe
 #' @param comboTab a dataframe
 #'
+#' @importFrom stringr str_remove
+#' @importFrom tidyr gather separate
+#'
 #' @return a dataframe
 #' @export
 normTableForExport <- function(labTab, unlabTab, comboTab) {
@@ -25,9 +28,9 @@ normTableForExport <- function(labTab, unlabTab, comboTab) {
 
   # Clean up combined
   comboTab %>%
-    gather(key, value, -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
-    separate(key, c("Fraction", "label"), "_") %>%
-    spread(Fraction, value) %>%
+    gather("key", "value", -c(`Protein Group Accessions`, `Protein Descriptions`)) %>%
+    separate("key", c("Fraction", "label"), "_") %>%
+    spread(Fraction, "value") %>%
     mutate(scenario = "B",
            label = as.logical(label)) -> comboTab
   comboTab <- comboTab[c("Protein Group Accessions", "Protein Descriptions", "scenario", "label", 1:max_frac)]

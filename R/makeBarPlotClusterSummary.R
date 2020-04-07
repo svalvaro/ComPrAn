@@ -9,6 +9,8 @@
 #'               cluster integer
 #' @param name character, specifies the name of the sample
 #'
+#' @importFrom stats reorder
+#'
 #' @return plot
 #' @export
 makeBarPlotClusterSummary <- function(df, name = 'sample 1') {

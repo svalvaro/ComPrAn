@@ -28,6 +28,8 @@
 #' @param titleAlign character, one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot
 #' @param alphaValue numeric, transparency of the point, values 0 to 1
 #'
+#' @importFrom stats median
+#'
 #' @return plot
 #' @export
 oneGroupTwoLabelsCoMigration <- function(dataFrame, max_frac, groupData = NULL, groupName = 'group1', meanLine = FALSE, medianLine = FALSE,

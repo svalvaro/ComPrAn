@@ -17,7 +17,11 @@
 #' @param .data dataframe
 #' @param fCol character The column containing the fractions, e.g. "Search ID" (default)
 #'
-#' @importFrom magrittr  %>%
+#' @import dplyr forcats
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @importFrom stringr str_detect
+#'
 #' @return dataframe
 #' @export
 #'
@@ -58,24 +62,23 @@ cleanData <- function(.data, fCol = "Search ID") {
 
   # convert Fraction (originaly "Search ID") to numbers instead of letters:
   .data %>%
-    dplyr::mutate(n = nchar(Fraction)) %>%
-    dplyr::arrange(n, Fraction) %>%
-    dplyr::mutate(Fraction = as_factor(Fraction),
-           Fraction = as.integer(Fraction)) %>%
-    dplyr::select(-n) -> .data
+    mutate(n = nchar(Fraction)) %>%
+    arrange(n, Fraction) %>%
+    mutate(Fraction = as_factor(Fraction),
+                  Fraction = as.integer({Fraction})) %>%
+    select(-n) -> .data
 
   # Convert to factor variables
   .data %>%
-    dplyr::mutate(`PSM Ambiguity` = as.factor(`PSM Ambiguity`),
-           `Confidence Level` = as.factor(`Confidence Level`),
-           `Protein Group Accessions` = as.factor(`Protein Group Accessions`)) -> .data
+    mutate(`PSM Ambiguity` = as.factor(`PSM Ambiguity`),
+                  `Confidence Level` = as.factor(`Confidence Level`),
+                  `Protein Group Accessions` = as.factor(`Protein Group Accessions`)) -> .data
 
   #are all values in columns we need of correct type?
   # check to see that actual and desired match
   if(!identical(sapply(.data, class)[colsToLookFor], classesOfCols)) {
     stop('Not all columns are the correct type!') #write an ERROR message, do not continue
   }
-
 
   # Reorder multiple name accessions #
   strsplit(levels(.data$`Protein Group Accessions`), ";") %>%
@@ -98,10 +101,9 @@ cleanData <- function(.data, fCol = "Search ID") {
   .data %>%
     dplyr::select(colsToLookFor)  %>%
     dplyr::filter(`PSM Ambiguity` != 'Rejected',
-           `# Protein Groups` > 0) %>%
+                  `# Protein Groups` > 0) %>%
     tidyr::drop_na(`Precursor Area`) %>%
     dplyr::mutate(isLabel = ifelse(str_detect(Modifications, "\\(Label\\:"), TRUE, FALSE),
-           Sequence = toupper(Sequence)) -> data1
-
+                  Sequence = toupper(Sequence)) -> data1
 
 }

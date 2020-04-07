@@ -63,7 +63,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data = NULL
 
   data.frame(Value = NA,
              Fraction = 1:max_frac) %>%
-    spread(Fraction, Value) -> padding
+    spread(Fraction, "Value") -> padding
 
   dataFrame %>%
     spread(Fraction, `Precursor Area`)  %>%
