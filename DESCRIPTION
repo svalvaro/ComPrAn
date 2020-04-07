@@ -1,6 +1,6 @@
 Package: ComPrAn
 Type: Package
-Title: Analysis of SILAC Complexomic Data
+Title: Complexome Profiling Analysis paskage
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Rick",
@@ -12,8 +12,9 @@ Authors@R:
            role = c("aut", "cre"),
            email = "pp451@mrc-mbu.cam.ac.uk"))
 Maintainer: Rick Scavetta <office@scavetta.academy>
-Description: Takes the output from ... and produces ready-to-use tables and plots.
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package is for analysis of SILAC labeled complexome profiling
+    data. It uses peptide table in tab-delimited format as an input and produces
+    ready-to-use tables and plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -28,13 +29,13 @@ Imports:
     rlang,
     stringr,
     shiny,
-    stats,
     DT,
     RColorBrewer,
     VennDiagram,
     rio,
     scales,
-    shinydashboard
-RoxygenNote: 7.0.2
+    shinydashboard,
+    stats
+RoxygenNote: 7.1.0
 Suggests: 
     testthat

@@ -8,9 +8,9 @@
 #
 # ui <- dashboardPage(header, sidebar, body, skin = "purple")
 
-source(system.file("shinyApps/complexomics/app_components", "header.R", package = "ComPrAn"))
-source(system.file("shinyApps/complexomics/app_components", "sidebar.R", package = "ComPrAn"))
-source(system.file("shinyApps/complexomics/app_components", "body.R", package = "ComPrAn"))
+source(system.file("shinyApps/ComPrAn/app_components", "header.R", package = "ComPrAn"))
+source(system.file("shinyApps/ComPrAn/app_components", "sidebar.R", package = "ComPrAn"))
+source(system.file("shinyApps/ComPrAn/app_components", "body.R", package = "ComPrAn"))
 
 ui <- dashboardPage(header, sidebar, body, skin = "purple")
 

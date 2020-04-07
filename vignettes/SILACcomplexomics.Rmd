@@ -75,7 +75,8 @@ Plotting functionality includes:
 
 Read in and filter data
 ```{r}
-peptides <- cleanData(data.table::fread("./data/data.txt"), fCol = "Search ID") # read in + mandatory filtering
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID") # read in + mandatory filtering
 peptides <- toFilter(peptides, rank = 1) # optional filtering
 peptides <- splitModLab(peptides) # separate chemical modifications and labelling into separate columns
 peptides <- simplifyProteins(peptides) # remove unneccessary columns, simplify rows
@@ -134,7 +135,7 @@ forAnalysis <- normTableWideToLong(protNormLab, protNormUnlab, protNormComb) # f
 Have a look at a selected protein (line plot)
 ```{r}
 protein <- "P52815"
-max_frac <- 23
+max_frac <- max(forAnalysis$Fraction)
 
 proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 ```
@@ -143,9 +144,8 @@ proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 
 Make a heatmap for a selected group of proteins
 ```{r}
-groupDataFileName <- 'exampleGroup.txt'
+groupData <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
 groupName <- 'group1'
-groupData <- read_tsv(paste0("data/", groupDataFileName))
 
 groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 ```
@@ -156,7 +156,7 @@ Co-migration plot of single protein group between label states
 ```{r}
 groupDataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
 groupName <- 'group1' 
-max_frac <- 23 
+max_frac <- max(forAnalysis$Fraction) 
 
 oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, groupDataVector,groupName)
 
@@ -169,7 +169,7 @@ group1DataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
 group1Name <- 'group1' 
 group2DataVector <- c("Q9NVS2","Q9NWU5","Q9NX20","Q9NYK5","Q9NZE8")
 group2Name <- 'group2'
-max_frac <- 23 
+max_frac <- max(forAnalysis$Fraction) 
 
 twoGroupsWithinLabelCoMigration(dataFrame = forAnalysis, max_frac = max_frac, 
                                 group1Data = group1DataVector, group1Name = group1Name,

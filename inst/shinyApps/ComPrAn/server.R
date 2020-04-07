@@ -24,7 +24,8 @@ server <- function(input, output, session) {
   normalized_full <- eventReactive(input$processNorm, {
     readNorm <- input$inputfileNorm
     if (is.null(readNorm)) {
-      readr::read_tsv("./data/NormValues.txt")
+        dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+      readr::read_tsv(dataFile)
     } else {
       readr::read_tsv(readNorm$datapath)
 

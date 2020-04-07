@@ -4,8 +4,8 @@
 #' @importFrom data.table fread
 #'
 #' @export
-complexomicsApp <- function() {
-  appDir <- system.file("shinyApps", "complexomics", package = "ComPrAn")
+compranApp <- function() {
+  appDir <- system.file("shinyApps", "ComPrAn", package = "ComPrAn")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `ComPrAn`.", call. = FALSE)
   }
