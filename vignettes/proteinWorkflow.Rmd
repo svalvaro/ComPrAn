@@ -4,7 +4,7 @@ author: "Petra Palenikova & Rick Scavetta"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Protein workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -146,7 +146,7 @@ makeBarPlotClusterSummary(labelledTable_clust, name = 'labeled')
 makeBarPlotClusterSummary(unlabelledTable_clust, name = 'unlabeled')
 ```
 <center>
-![**Fig 5** example bar plots](bar4.png) ![](bar3.png)
+![**Fig 5** example bar plots](bar1.png) ![](bar2.png)
 </center>
 
 Create table containing proteins and their assigned clusters

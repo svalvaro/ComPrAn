@@ -10,8 +10,7 @@ Authors@R:
       person(given = "Petra",
            family = "Palenikova",
            role = c("aut", "cre"),
-           email = "pp451@mrc-mbu.cam.ac.uk"))
-Maintainer: Rick Scavetta <office@scavetta.academy>
+           email = "pp451@cam.ac.uk"))
 Description: This package is for analysis of SILAC labeled complexome profiling
     data. It uses peptide table in tab-delimited format as an input and produces
     ready-to-use tables and plots.
@@ -38,4 +37,7 @@ Imports:
     stats
 RoxygenNote: 7.1.0
 Suggests: 
-    testthat
+    testthat,
+    knitr
+VignetteBuilder: knitr
+BiocViews: MassSpectrometry, Proteomics
