@@ -233,13 +233,22 @@ server <- function(input, output, session) {
   })
 
   # Make the Environment...
-  observeEvent(peptides_filtered(),{
+  observeEvent(peptides_filtered(), {
     withProgress(message = 'Making environment...', value = 0, {
 
       n <- 6
       # Sys.sleep(3)
       incProgress(1/n, detail = "Making environment")
-      makeEnv(peptides_filtered())
+      
+      # Use makeEnv function
+      peptide_index <- makeEnv(peptides_filtered())
+      
+      # Manually just make a list
+      # peptide_index <- list()
+      # for (i in unique(peptides_filtered()$`Protein Group Accessions`)) {
+      #   peptide_index[[i]] <- peptides_filtered()[peptides_filtered()$`Protein Group Accessions` == i,]
+      # }
+      
 
       #run new version of pickPeptide_new on all
       incProgress(1/n, detail = "Choosing Representative peptides")

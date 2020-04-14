@@ -17,7 +17,9 @@
 #' @param labelled character, label to be used for isLabel == TRUE 
 #' @param unlabelled character, label to be used for isLabel == FALSE
 #' 
-#' @import tibble
+#' @importFrom tibble rowid_to_column
+#'
+#' @return plot
 #' @export
 
 allPeptidesPlot <- function(env, dataFrame, max_frac, 

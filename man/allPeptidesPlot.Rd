@@ -52,6 +52,9 @@ indexed by `Protein Group Accessions`}
 
 \item{unlabelled}{character, label to be used for isLabel == FALSE}
 }
+\value{
+plot
+}
 \description{
 Create scatter plot
 This function creates a scatter plot of all peptides that belong to a single proteins
