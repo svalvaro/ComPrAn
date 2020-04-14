@@ -16,7 +16,11 @@
 #' @param grid logical, specifies presence/absence of gridline in the plot
 #' @param labelled character, label to be used for isLabel == TRUE 
 #' @param unlabelled character, label to be used for isLabel == FALSE
-
+#' 
+#' @importFrom tibble rowid_to_column
+#'
+#' @return plot
+#' @export
 allPeptidesPlot <- function(env, dataFrame, max_frac, 
                             meanLine = FALSE, repPepLine = FALSE, separateLabStates = FALSE,
                             grid = TRUE, titleLabel = 'all', titleAlign = 'left',

@@ -6,7 +6,7 @@ Authors@R:
     c(person(given = "Rick",
            family = "Scavetta",
            role = c("aut"),
-           email = "office@scavetta.academy"),
+           email = "rick@scavetta.academy"),
       person(given = "Petra",
            family = "Palenikova",
            role = c("aut", "cre"),
@@ -35,7 +35,8 @@ Imports:
     rio,
     scales,
     shinydashboard,
-    stats
+    stats,
+    tibble
 RoxygenNote: 7.1.0
 Suggests: 
     testthat

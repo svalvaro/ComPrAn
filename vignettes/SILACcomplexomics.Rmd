@@ -79,13 +79,13 @@ inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
 peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID") # read in + mandatory filtering
 peptides <- toFilter(peptides, rank = 1) # optional filtering
 peptides <- splitModLab(peptides) # separate chemical modifications and labelling into separate columns
-peptides <- simplifyProteins(peptides) # remove unneccessary columns, simplify rows
+peptides <- simplifyProteins(peptides) # remove unnecessary columns, simplify rows
 
 ```
 
 Create and populate environment
 ```{r}
-makeEnv(peptides)
+peptide_index <- makeEnv(peptides)
 ```
 
 Pick representative peptides for scenario A and scenario B
@@ -115,7 +115,11 @@ listOnlyOneLabState <- onlyInOneLabelState_ENV(peptide_index)
 Extract values for representative peptides for each protein, for both scenario A and scenario B.
 Combine results into one data frame used further down.
 ```{r}
-names(peptide_index) %>%
+
+
+newFun <- function(...,  human = FALSE) {
+  
+  names(peptide_index) %>%
   map_df(~ extractRepPeps(peptide_index[[.]], scenario = 'A', label = T))  %>% 
   normalizeTable() -> protNormLab
 
@@ -127,8 +131,14 @@ names(peptide_index) %>%
   map_df(~ extractRepPeps(peptide_index[[.]], scenario = 'B')) %>% 
   normalizeTable() -> protNormComb
 
-forExport <- normTableForExport(protNormLab, protNormUnlab, protNormComb) # file in nicely human readable format
-forAnalysis <- normTableWideToLong(protNormLab, protNormUnlab, protNormComb) # file in format required for further analysis
+if (human) {
+normTableForExport(protNormLab, protNormUnlab, protNormComb) # file in nicely human readable format
+} else {
+  normTableWideToLong(protNormLab, protNormUnlab, protNormComb) # file in format required for further analysis
+}
+
+}
+forAnalysis <-  newFun()
 ```
 
 
