@@ -21,3 +21,13 @@ a single fraction there are multiple rows with the same combination of Sequence,
 \details{
 For cols: remove columns that are not neccessary any more
 }
+\examples{
+##Use example peptide data set, read in and clean data
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+## separate chemical modifications and labelling into separate columns
+peptides <- splitModLab(peptides) 
+## remove unneccessary columns, simplify rows
+peptides <- simplifyProteins(peptides) 
+
+}

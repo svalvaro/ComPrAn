@@ -17,3 +17,11 @@ This function converts imported protien table into format compatible with downst
 \details{
 "Protein Group Accessions" -  character/factor, "Protein Descriptions" - character. "scenario" - character/factor, "label" - logical, columns "1" to "n" - numeric
 }
+\examples{
+
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+
+}

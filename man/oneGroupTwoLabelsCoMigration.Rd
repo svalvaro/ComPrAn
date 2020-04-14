@@ -71,3 +71,16 @@ This function creates a ?scatter plot? for a subset of proteins in dataFrame spe
 Intended use of the function - using scenario A data, compare shape of the migration profile
 for a SINGLE GROUP of proteins BETWEEN the two LABEL STATES
 }
+\examples{
+
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+##example plot:
+groupDataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
+groupName <- 'group1' 
+max_frac <- 23 
+oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, groupDataVector,groupName)
+
+}

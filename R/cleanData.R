@@ -1,19 +1,20 @@
-#' Clean raw complexomic data
+#' Clean raw peptide complexomics data
 #'
 #' Perform initial, mandatory, cleaning of data
 #' Check presence of reguired columns
 #' Function to process raw input data into format required for subsequent analysis
 #' .data is a data frame containing raw input data
 #' This function checks (not neccessarily in this order):
-#' 1) are all required columns present
-#' 2) are these columns in correct format
-#' 3) renames Sequence ID column to Fraction and converts values in this column from letters to numbers
-#' 4) reorders Protein Group Accessions containing multiple proteins
-#' 5) removes rows in which PSM Ambiguity == 'Rejected'
-#' 6) removes rows in which # Protein Groups == 0
-#' 7) removes rows in which Precursor Area is NA
-#' 8) removes cols that are not used at all
-#'
+#' \itemize{
+#' \item are all required columns present
+#' \item are these columns in correct format
+#' \item renames Sequence ID column to Fraction and converts values in this column from letters to numbers
+#' \item reorders Protein Group Accessions containing multiple proteins
+#' \item removes rows in which PSM Ambiguity == 'Rejected'
+#' \item removes rows in which # Protein Groups == 0
+#' \item removes rows in which Precursor Area is NA
+#' \item removes cols that are not used at all
+#'}
 #' @param .data dataframe
 #' @param fCol character The column containing the fractions, e.g. "Search ID" (default)
 #'
@@ -25,6 +26,13 @@
 #' @return dataframe
 #' @export
 #'
+#' @author Petra Palenikova \email{pp451@@cam.ac.uk}
+#' @author Rick Scavetta \email{office@@scavetta.academy}
+#' 
+#' @examples  
+#' ##Use example peptide data set, read in and clean data
+#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
 cleanData <- function(.data, fCol = "Search ID") {
 
   columnHeaders <- names(.data)

@@ -18,3 +18,11 @@ It adds two more columns to the data frame:
 UniqueCombinedID_A: Unique combinations of Sequence, Mods and Charge for "scenario A"
 UniqueCombinedID_B: Unique combinations of Sequence, Mods, Charge and Labels for "scenario B"
 }
+\examples{
+##Use example peptide data set, read in and clean data
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+## separate chemical modifications and labelling into separate columns
+peptides <- splitModLab(peptides) 
+
+}

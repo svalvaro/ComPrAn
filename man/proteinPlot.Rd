@@ -50,3 +50,15 @@ a plot
 \description{
 This function creates a line plot for a proteins in dataFrame specified by protein
 }
+\examples{
+
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+##example plot:
+protein <- "P52815"
+max_frac <- 23
+proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
+
+}

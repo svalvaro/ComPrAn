@@ -11,6 +11,12 @@
 #'
 #' @return dataframe
 #' @export
+#' @examples 
+#' ##Use example peptide data set, read in and clean data
+#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' ## separate chemical modifications and labelling into separate columns
+#' peptides <- splitModLab(peptides) 
 #'
 splitModLab <- function(.data) {
   #This function splits up the Modifications column into lists of vectors for modifications(Mods) and labels(Labels)

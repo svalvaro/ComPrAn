@@ -28,6 +28,19 @@
 #'
 #' @return plot
 #' @export
+#' 
+#' @examples 
+#' 
+#' ##Use example normalised proteins file
+#' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#' #read file in and change structure of table to required format
+#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' ##example plot:
+#' groupDataFileName <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+#' groupName <- 'group1'
+#' groupData <- data.table::fread(groupDataFileName)
+#' groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
+#' 
 groupHeatMap <- function(dataFrame, groupData, groupName,
                          titleAlign = "left", newNamesCol = NULL, colNumber = 2,
                          ylabel = "Protein", xlabel = "Fraction",

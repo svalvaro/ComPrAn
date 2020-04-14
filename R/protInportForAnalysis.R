@@ -3,6 +3,14 @@
 #' @param .data - data frame, contains columns:
 #' 
 #' @details "Protein Group Accessions" -  character/factor, "Protein Descriptions" - character. "scenario" - character/factor, "label" - logical, columns "1" to "n" - numeric
+#' @export
+#' 
+#' @examples
+#' 
+#' ##Use example normalised proteins file
+#' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#' #read file in and change structure of table to required format
+#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 #' 
 protInportForAnalysis <- function(.data){
   .data %>%  gather(Fraction, `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`, scenario, label)) %>%

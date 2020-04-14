@@ -81,3 +81,16 @@ in group1Data and group2Data, label states are always separated into facets
 Intended use of the function - using scenario A data, compare shape of the migration profile
 between a TWO GROUPS of proteins WITHIN the ONE LABEL STATE
 }
+\examples{
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+##example plot:
+g1D <- c("Q16540","P52815","P09001","Q13405","Q9H2W6") #group 1 data vector
+g1N <- 'group1'                                        #group 1 name
+g2D <- c("Q9NVS2","Q9NWU5","Q9NX20","Q9NYK5","Q9NZE8") #group 2 data vector
+g2N <- 'group2'                                        #group 2 name
+max_frac <- 23 
+twoGroupsWithinLabelCoMigration(forAnalysis, max_frac, g1D, g1N, g2D, g2N)
+}

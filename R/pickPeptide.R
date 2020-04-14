@@ -15,6 +15,20 @@
 #'
 #' @return a dataframe
 #' @export
+#' 
+#' @examples 
+#' 
+#' ##Use example peptide data set, read in and clean data
+#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' ## separate chemical modifications and labelling into separate columns
+#' peptides <- splitModLab(peptides) 
+#' ## remove unneccessary columns, simplify rows
+#' peptides <- simplifyProteins(peptides) 
+#' ##make environment
+#' peptide_index <- makeEnv(peptides)
+#' ## Pick representative peptide for each protein for both scenarios
+#' for(i in names(peptide_index)){assign(i,pickPeptide(peptide_index[[i]]),envir=peptide_index)}
 #'
 pickPeptide <- function(.data) {
 

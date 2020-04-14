@@ -34,7 +34,8 @@ Imports:
     rio,
     scales,
     shinydashboard,
-    stats
+    stats,
+    tibble
 RoxygenNote: 7.1.0
 Suggests: 
     testthat,

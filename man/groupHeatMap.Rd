@@ -59,3 +59,16 @@ plot
 This function creates a heatmap for a subset of proteins in dataFrame specified in groupData,
 heatmap is divided into facets according to isLabel
 }
+\examples{
+
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+##example plot:
+groupDataFileName <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+groupName <- 'group1'
+groupData <- data.table::fread(groupDataFileName)
+groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
+
+}

@@ -19,3 +19,11 @@ a dataframe
 \description{
 Filters only rows with specified values in columns Rank and Confidence Level, specified as cl
 }
+\examples{
+ 
+##Use example peptide data set, read in and clean data
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+##optional filtering based on rank and confidence level
+peptides <- toFilter(peptides, rank = 1)
+}
