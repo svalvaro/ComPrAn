@@ -69,9 +69,9 @@ proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 
 Make a heatmap for a selected group of proteins
 ```{r}
-groupDataFileName <- 'exampleGroup.txt'
+groupDataFileName <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
 groupName <- 'group1'
-groupData <- read_tsv(paste0("data/", groupDataFileName))
+groupData <- read_tsv(groupDataFileName)
 
 groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 ```

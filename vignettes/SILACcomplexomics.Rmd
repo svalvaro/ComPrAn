@@ -85,7 +85,7 @@ peptides <- simplifyProteins(peptides) # remove unneccessary columns, simplify r
 
 Create and populate environment
 ```{r}
-makeEnv(peptides)
+peptide_index <- makeEnv(peptides)
 ```
 
 Pick representative peptides for scenario A and scenario B
@@ -144,7 +144,8 @@ proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 
 Make a heatmap for a selected group of proteins
 ```{r}
-groupData <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+groupDataFile <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+groupData <- data.table::fread(groupDataFile)
 groupName <- 'group1'
 
 groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
