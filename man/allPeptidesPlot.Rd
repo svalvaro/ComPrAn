@@ -6,8 +6,8 @@
 This function creates a scatter plot of all peptides that belong to a single proteins}
 \usage{
 allPeptidesPlot(
-  env,
-  dataFrame,
+  .listDF,
+  protein,
   max_frac,
   meanLine = FALSE,
   repPepLine = FALSE,
@@ -23,10 +23,10 @@ allPeptidesPlot(
 )
 }
 \arguments{
-\item{env}{environtmnt, environtment containing data frames of peptides for each protein
+\item{.listDF}{list, list containing data frames of peptides for each protein
 indexed by `Protein Group Accessions`}
 
-\item{dataFrame}{character, `Protein Group Accession` to show in the plot}
+\item{protein}{character, `Protein Group Accession` to show in the plot}
 
 \item{max_frac}{numeric, total number of fractions}
 

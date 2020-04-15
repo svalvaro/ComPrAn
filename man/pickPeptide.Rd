@@ -10,7 +10,7 @@ pickPeptide(.data)
 \item{.data}{a dataframe}
 }
 \value{
-a dataframe
+list of data frames
 }
 \description{
 This function selects a single unique peptide to represent each Protein Group Accession
@@ -22,7 +22,7 @@ peptide whith highest Precursor Area in any fraction
 (max value for any peptide is equal to twice the number of fractions)
 in case of ties, pick peptide with highest Precursor Area in any fraction.
 Representative peptide in Scenario B is picked only for proteins that have
-at least one shared peptide between label states.
+shared peptide between label states.
 }
 \examples{
 
@@ -33,9 +33,7 @@ peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
 peptides <- splitModLab(peptides) 
 ## remove unneccessary columns, simplify rows
 peptides <- simplifyProteins(peptides) 
-##make environment
-peptide_index <- makeEnv(peptides)
 ## Pick representative peptide for each protein for both scenarios
-for(i in names(peptide_index)){assign(i,pickPeptide(peptide_index[[i]]),envir=peptide_index)}
+peptide_index <- pickPeptide(peptides)
 
 }
