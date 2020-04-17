@@ -21,6 +21,30 @@
 #'
 #' @return plot
 #' @export
+#' 
+#' @examples 
+#' ##Use example peptide data set, read in and clean data
+#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' ## separate chemical modifications and labelling into separate columns
+#' peptides <- splitModLab(peptides) 
+#' ## remove unneccessary columns, simplify rows
+#' peptides <- simplifyProteins(peptides) 
+#' ## Pick representative peptide for each protein for both scenarios
+#' peptide_index <- pickPeptide(peptides)
+#' 
+#' ##create a plot showing all peptides of selected protein
+#' protein <- "P52815"
+#' max_frac <- 23
+#' #default plot
+#' allPeptidesPlot(peptide_index,protein, max_frac = max_frac)
+#' #other plot version
+#' allPeptidesPlot(peptide_index,protein, max_frac = max_frac,
+#' repPepLine = TRUE, grid = FALSE, titleAlign = "center")
+#' #other plot version
+#' allPeptidesPlot(peptide_index,protein, max_frac = max_frac,
+#' repPepLine = TRUE, meanLine = TRUE, separateLabStates =TRUE,
+#' titleLabel = "GN")
 allPeptidesPlot <- function(.listDF, protein, max_frac, 
                             meanLine = FALSE, repPepLine = FALSE, 
                             separateLabStates = FALSE,

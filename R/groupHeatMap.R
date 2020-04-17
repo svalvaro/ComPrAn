@@ -42,13 +42,16 @@
 #' groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 #' 
 groupHeatMap <- function(dataFrame, groupData, groupName,
-                         titleAlign = "left", newNamesCol = NULL, colNumber = 2,
+                         titleAlign = "left", newNamesCol = NULL, 
+                         colNumber = 2,
                          ylabel = "Protein", xlabel = "Fraction",
-                         legendLabel = "Relative Protein Abundance", grid = TRUE,
+                         legendLabel = "Relative Protein Abundance", 
+                         grid = TRUE,
                          labelled = "labeled", unlabelled = "unlabeled") {
 
 
-  #join DF and group data - proteins present in group but absent in the data will be shown as empty
+  #join DF and group data - proteins present in group but 
+  # absent in the data will be shown as empty
   groupData %>%
     select(`Protein Group Accessions`, newNamesCol) -> groupData
   right_join(dataFrame, groupData) -> dataFrame
@@ -64,14 +67,17 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
   }
 
   #draw basic plot
-  p <- ggplot(dataFrame, aes(x = Fraction, y = get(ycolumn), fill = `Precursor Area`)) +
-    geom_raster(na.rm = T)  +
-    facet_wrap(isLabel ~ ., ncol = colNumber, labeller = labeller(isLabel = c("TRUE" =  labelled,
-                                                                              "FALSE" = unlabelled)))+
+  p <- ggplot(dataFrame, 
+              aes(x = Fraction, y = get(ycolumn), fill = `Precursor Area`)) +
+    geom_raster(na.rm = TRUE)  +
+    facet_wrap(isLabel ~ ., ncol = colNumber, 
+               labeller = labeller(isLabel = c("TRUE" =  labelled,
+                                               "FALSE" = unlabelled)))+
     labs(title = groupName) +
     ylab(ylabel) +
     xlab(xlabel) +
-    scale_fill_gradient(legendLabel,low = '#cacde8',high = '#0019bf', na.value="grey60") +
+    scale_fill_gradient(legendLabel,
+                        low = '#cacde8',high = '#0019bf', na.value="grey60") +
     coord_cartesian(expand = 0)
 
   #add grid

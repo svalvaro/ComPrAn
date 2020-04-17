@@ -13,6 +13,23 @@
 #'
 #' @return plot
 #' @export
+#' 
+#' @examples
+#' 
+#' ##Use example normalised proteins file
+#' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#' #read file in and change structure of table to required format
+#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' # create components necessary for clustering
+#' clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
+#' #assign clusters
+#' labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
+#' method = 'complete', cutoff = 0.5)
+#' unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
+#'                                method = 'complete', cutoff = 0.5)
+#' #Make bar plots for labeled and unlabeled samples
+#' makeBarPlotClusterSummary(labTab_clust, name = 'labeled')
+#' makeBarPlotClusterSummary(unlabTab_clust, name = 'unlabeled')
 makeBarPlotClusterSummary <- function(df, name = 'sample 1') {
   df %>%
     group_by(cluster) %>%

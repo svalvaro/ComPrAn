@@ -4,7 +4,7 @@
 \alias{normalizeTable}
 \title{Convert extractRepPeps output to a Matrix}
 \usage{
-normalizeTable(.data, applyNormalization = T)
+normalizeTable(.data, applyNormalization = TRUE)
 }
 \arguments{
 \item{.data}{a dataframe}

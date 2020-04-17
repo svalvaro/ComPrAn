@@ -15,7 +15,6 @@
 #' @importFrom stats as.dist cor
 #'
 #' @return matrix
-#' @export
 makeDist <- function(df,centered = FALSE){
   if (centered){
     answer <- (1 - cor(df))

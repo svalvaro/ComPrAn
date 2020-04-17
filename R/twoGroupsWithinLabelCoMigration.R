@@ -80,17 +80,17 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data = NULL
 
   dataFrame %>%
     spread(Fraction, `Precursor Area`)  %>%
-    merge(padding, all.x = T) %>%
+    merge(padding, all.x = TRUE) %>%
     gather(Fraction, `Precursor Area`, -c(`Protein Group Accessions`,isLabel,group, `Protein Descriptions`))  %>%
     group_by(Fraction, isLabel, group) %>%
-    mutate (meanValue = mean(`Precursor Area`, na.rm = T)) %>%
-    mutate (medianValue = median(`Precursor Area`, na.rm = T)) %>%
+    mutate (meanValue = mean(`Precursor Area`, na.rm = TRUE)) %>%
+    mutate (medianValue = median(`Precursor Area`, na.rm = TRUE)) %>%
     ungroup() -> dataFrame
 
   dataFrame$Fraction <- as.numeric(as.character(dataFrame$Fraction))
 
   p <- ggplot(dataFrame, aes(x = Fraction, y = `Precursor Area`, col = group)) +
-    geom_point(position = position_jitter(jitterPoints),alpha = alphaValue, size = pointSize, na.rm =T) +
+    geom_point(position = position_jitter(jitterPoints),alpha = alphaValue, size = pointSize, na.rm =TRUE) +
     scale_color_manual(legendLabel, values=col_vector2) +
     scale_fill_manual(legendLabel, values=col_vector2) +
     ylab(ylabel) +
@@ -110,13 +110,13 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data = NULL
 
   #add mean line
   if(meanLine) {  ## add line that is a mean of all protein values
-    p <- p + geom_line(aes(y=meanValue, col = group, linetype = 'mean'), size = 1, na.rm = T) +
+    p <- p + geom_line(aes(y=meanValue, col = group, linetype = 'mean'), size = 1, na.rm = TRUE) +
       scale_linetype_manual('Line type', values = linetype_vector)
   }
 
   #add median line
   if (medianLine) { ##  add line that is a median of all protein values
-    p <- p + geom_line(aes(y = medianValue, col = group, linetype = 'median'),size=1, na.rm = T)+
+    p <- p + geom_line(aes(y = medianValue, col = group, linetype = 'median'),size=1, na.rm = TRUE)+
       scale_linetype_manual('Line type', values = linetype_vector)
   }
 

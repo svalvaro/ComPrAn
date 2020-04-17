@@ -10,7 +10,6 @@
 #' @param label character for output label
 #'
 #' @return dataframe containing only representative peptide
-#' @export
 extractRepPeps <- function(.data, scenario, label = 'Label neccessary for scenario A'){
   # Extract only data belonging to representative peptide
   # Input: .data, data frame containing all peptides of one protein
@@ -26,10 +25,10 @@ extractRepPeps <- function(.data, scenario, label = 'Label neccessary for scenar
   if (scenario == 'B'){
     .data <- .data[.data$repPepB,]
 
-  } else if(scenario == 'A' & label == T){
+  } else if(scenario == 'A' & label == TRUE){
     .data <- .data[.data$repPepA & .data$isLabel,]
 
-  } else if(scenario == 'A' & label == F){
+  } else if(scenario == 'A' & label == FALSE){
     .data <- .data[.data$repPepA & !.data$isLabel,]
   } else {
     stop(paste('Invalid function use.',label, sep = ' '))

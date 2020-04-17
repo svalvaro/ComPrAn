@@ -43,8 +43,8 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE, titleLabel = 
   description <- dataFrame$`Protein Descriptions`[1]
 
   p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
-    geom_line(na.rm = T) +
-    geom_point(na.rm = T) +
+    geom_line(na.rm = TRUE) +
+    geom_point(na.rm = TRUE) +
     scale_x_continuous(breaks = 1:max_frac, limits = c(0,max_frac))+
     scale_color_manual(legendLabel, values = col_vector_proteins,
                        labels = c("TRUE" = labelled,

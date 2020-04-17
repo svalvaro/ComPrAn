@@ -7,7 +7,6 @@
 #' @param comboTab a dataframe
 #'
 #' @return a dataframe
-#' @export
 normTableWideToLong <- function(labTab, unlabTab, comboTab) {
 
   # convert normalized data frames from wide to long format - will be used for plotting

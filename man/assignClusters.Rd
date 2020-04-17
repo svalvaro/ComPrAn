@@ -2,26 +2,47 @@
 % Please edit documentation in R/assignClusters.R
 \name{assignClusters}
 \alias{assignClusters}
-\title{Make a distmatrix}
+\title{Create a data frames with cluster assignment}
 \usage{
-assignClusters(DF, distObject, method = "complete", cutoff = 0.5)
+assignClusters(.listDf, sample, method = "complete", cutoff = 0.5)
 }
 \arguments{
-\item{DF}{DF: data frame, contains columns: `Protein Group Accessions` character `Protein Descriptions` character
-isLabel character ('TRUE'/'FALSE')
-               columns 1 to n, numeric, n is the total number of fractions/slices, each of this columns
-                                          contains `Precursor Area` values in a given fraction(columns) for a protein(rows)}
+\item{.listDf}{list of data frames produced by clusterComp() function}
 
-\item{distObject}{input data}
+\item{sample}{which of the two samples you want to apply the function 
+to (labeled/unlabeled).}
 
-\item{method}{character One of 'average', 'single' or 'complete' (default), specifies the linkage method to be used inside R hclust() function}
+\item{method}{character, One of 'average', 'single' or 'complete' (default),
+specifies the linkage method to be used inside R hclust() function}
 
-\item{cutoff}{numeric, specifies the h value in R cutree() function, height at which to 'cut the tree', everything with distance below this value is assigned into same cluster everything with larger distance is in a different cluster extreme possible values are 0 to 2 (might not be reached for all data sets)}
+\item{cutoff}{numeric, specifies the h value in R cutree() function, 
+height at which to 'cut the tree', everything with distance below this 
+value is assigned into same cluster everything with larger distance is 
+in a different cluster extreme possible values are 0 to 2 (might not be 
+reached for all data sets)}
 }
 \value{
 dataframe
 }
 \description{
-This function modifies the input DF data frame by performing clustering on distObject
-and adding a 'cluster' column to the DF
+This function creates a data frame with column specifying clusters assigned
+ot each protein using the table and distance matrix produced by clusterComp()
+function.
+}
+\examples{
+
+##Use example normalised proteins file
+inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#read file in and change structure of table to required format
+forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+# create components necessary for clustering
+clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
+#assign clusters
+labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
+method = 'complete', cutoff = 0.5)
+unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
+                               method = 'complete', cutoff = 0.5)
+}
+\seealso{
+\code{\link{clusterComp}}
 }

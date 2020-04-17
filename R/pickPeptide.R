@@ -53,7 +53,7 @@ pickPeptide <- function(.data) {
         dplyr::mutate(n = n()) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(`Protein Group Accessions`,UniqueCombinedID_A) %>%
-        dplyr::mutate(n_2 = sum(n[isLabel][1], n[!isLabel][1], na.rm = T)) %>%
+        dplyr::mutate(n_2 = sum(n[isLabel][1], n[!isLabel][1], na.rm = TRUE)) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(`Protein Group Accessions`) %>% 
         dplyr::mutate(maxN = ifelse(identical(n_2[n_2 != n], integer(0)),

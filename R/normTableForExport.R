@@ -10,7 +10,6 @@
 #' @importFrom tidyr gather separate
 #'
 #' @return a dataframe
-#' @export
 normTableForExport <- function(labTab, unlabTab, comboTab) {
 
   # Clean up labeled

@@ -75,9 +75,9 @@ Plotting functionality includes:
 
 Read in and filter data
 ```{r}
-inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn") 
 peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID") # read in + mandatory filtering
-peptides <- toFilter(peptides, rank = 1) # optional filtering
+peptides <- toFilter(peptides, rank = 1) # optional filtering 
 peptides <- splitModLab(peptides) # separate chemical modifications and labelling into separate columns
 peptides <- simplifyProteins(peptides) # remove unnecessary columns, simplify rows
 

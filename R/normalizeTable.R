@@ -7,8 +7,7 @@
 #' @param applyNormalization logical apply normalization or not
 #'
 #' @return a matrix
-#' @export
-normalizeTable<- function(.data, applyNormalization = T){
+normalizeTable<- function(.data, applyNormalization = TRUE){
   #convert data frame from extractRepPeps function to matrix-like table
   #return normalized or raw values of `Precursor Area`, by default return normalized values
   # .data <- protTableCombined

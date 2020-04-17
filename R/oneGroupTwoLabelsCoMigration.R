@@ -67,8 +67,8 @@ oneGroupTwoLabelsCoMigration <- function(dataFrame, max_frac, groupData = NULL, 
 
   dataFrame %>%
     group_by(Fraction, isLabel) %>%
-    mutate (meanValue = mean(`Precursor Area`, na.rm = T)) %>%
-    mutate (medianValue = median(`Precursor Area`, na.rm = T)) %>%
+    mutate (meanValue = mean(`Precursor Area`, na.rm = TRUE)) %>%
+    mutate (medianValue = median(`Precursor Area`, na.rm = TRUE)) %>%
     ungroup() -> dataFrame
 
   p <- ggplot(dataFrame, aes(x = Fraction, y = `Precursor Area`, col = isLabel)) +
@@ -91,13 +91,13 @@ oneGroupTwoLabelsCoMigration <- function(dataFrame, max_frac, groupData = NULL, 
 
   #add mean line
   if(meanLine) {  ## add line that is a mean of all protein values
-    p <- p + geom_line(aes(y=meanValue, colour = isLabel, linetype = 'mean'), size = 1, na.rm = T) +
+    p <- p + geom_line(aes(y=meanValue, colour = isLabel, linetype = 'mean'), size = 1, na.rm = TRUE) +
       scale_linetype_manual('Line type', values = linetype_vector)
   }
 
   #add median line
   if (medianLine) { ##  add line that is a median of all protein values
-    p <- p + geom_line(aes(y = medianValue, colour = isLabel, linetype = 'median'),size=1, na.rm = T)+
+    p <- p + geom_line(aes(y = medianValue, colour = isLabel, linetype = 'median'),size=1, na.rm = TRUE)+
       scale_linetype_manual('Line type', values = linetype_vector)
   }
 
