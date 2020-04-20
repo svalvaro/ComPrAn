@@ -39,7 +39,7 @@ Imports:
     grid
 RoxygenNote: 7.1.0
 Suggests: 
-    testthat,
+    testthat (>= 2.1.0),
     knitr
 VignetteBuilder: knitr
 biocViews: MassSpectrometry, Proteomics

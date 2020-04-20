@@ -393,7 +393,9 @@ server <- function(input, output, session) {
 
   # allPeptidesPlot
   output$allPeptidesPlot = renderPlot({
-
+    
+    req(peptide_index)
+    
     if (input$tabset1 == "All Proteins") {
       if (is.null(input$proteinsUnion)) {
         return()
