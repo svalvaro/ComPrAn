@@ -36,11 +36,11 @@
 #'                                method = 'complete', cutoff = 0.5)
 assignClusters <- function(.listDf, sample , method = 'complete', cutoff = 0.5){
     if(sample == "labelled"|sample == "labeled"){
-        DF <- .listDf[[1]]
-        distObject <- .listDf[[3]]
+        DF <- .listDf[["labTable"]]
+        distObject <- .listDf[["labDistM"]]
     } else if (sample == "unlabelled"|sample == "unlabeled"){
-        DF <- .listDf[[2]]
-        distObject <- .listDf[[4]]
+        DF <- .listDf[["unlabTable"]]
+        distObject <- .listDf[["unlabDistM"]]
     } else{
         stop("Valid values for \"sample\" are \"labeled\" or \"unlabeled\".")
     }
