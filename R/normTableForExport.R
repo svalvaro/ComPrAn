@@ -14,7 +14,7 @@ normTableForExport <- function(labTab, unlabTab, comboTab) {
 
   # Clean up labeled
   names(labTab) <- str_remove(names(labTab), "_.*$")
-  max_frac <- max(suppressWarnings(as.numeric(names(labTab))), na.rm = T)
+  max_frac <- max(suppressWarnings(as.numeric(names(labTab))), na.rm = TRUE)
   labTab$scenario <- "A"
   labTab$label <- TRUE
   labTab <- labTab[c("Protein Group Accessions", "Protein Descriptions", "scenario", "label", 1:max_frac)]

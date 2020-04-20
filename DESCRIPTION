@@ -35,10 +35,11 @@ Imports:
     scales,
     shinydashboard,
     stats,
-    tibble
+    tibble,
+    grid
 RoxygenNote: 7.1.0
 Suggests: 
     testthat,
     knitr
 VignetteBuilder: knitr
-BiocViews: MassSpectrometry, Proteomics
+biocViews: MassSpectrometry, Proteomics

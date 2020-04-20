@@ -67,13 +67,13 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
         select(Fraction, `Precursor Area`, isLabel, repPepA) %>%
         rowid_to_column() %>% 
         spread(Fraction, `Precursor Area`) %>%  
-        merge(padding, all.x = T)%>%
+        merge(padding, all.x = TRUE)%>%
         gather(Fraction, `Precursor Area`, -c(isLabel,repPepA,rowid))%>% 
         group_by(Fraction, isLabel) %>% 
-        mutate (meanValue = mean(`Precursor Area`, na.rm = T)) %>% 
+        mutate (meanValue = mean(`Precursor Area`, na.rm = TRUE)) %>% 
         mutate (repPepValue = ifelse(all(is.na(`Precursor Area`)),
                                      NA,
-                                     mean(`Precursor Area`[repPepA], na.rm=T))) %>% 
+                                     mean(`Precursor Area`[repPepA], na.rm=TRUE))) %>% 
         ungroup() -> dataFrame
     
     dataFrame$Fraction <- as.numeric(as.character(dataFrame$Fraction))
@@ -87,7 +87,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
     
     #create a basic plot
     p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
-        geom_point(na.rm = T, alpha = alphaValue) +
+        geom_point(na.rm = TRUE, alpha = alphaValue) +
         scale_y_log10() +
         scale_x_continuous(breaks = 1:max_frac, limits = c(0,max_frac))+
         scale_colour_manual(legendLabel, values = col_vector_peptides,
@@ -135,7 +135,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
     
     #add mean line 
     if(meanLine) {  ## add line that is a mean of all peptide values
-        p <- p + geom_line(aes(y=meanValue, colour = isLabel,linetype = 'mean'), size = 1, na.rm = T) +
+        p <- p + geom_line(aes(y=meanValue, colour = isLabel,linetype = 'mean'), size = 1, na.rm = TRUE) +
             scale_linetype_manual('Line type', values = linetype_vector)
         
     }
@@ -146,9 +146,9 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
         p <- p + geom_line(
             aes(y = repPepValue, colour = isLabel,
                 linetype = 'representative peptide'),
-            size=1, na.rm = T)+
+            size=1, na.rm = TRUE)+
             geom_point(
-                aes(y = repPepValue, colour = isLabel),na.rm = T, alpha = 1)+
+                aes(y = repPepValue, colour = isLabel),na.rm = TRUE, alpha = 1)+
             scale_linetype_manual('Line type', values = linetype_vector)
     }
     

@@ -23,7 +23,9 @@
 #' peptides <- simplifyProteins(peptides) 
 #' ## Pick representative peptide for each protein for both scenarios
 #' peptide_index <- pickPeptide(peptides)
-#'
+#' ## extract table with normalised protein values for both scenarios
+#' forAnalysis <- getNormTable(peptide_index,purpose = "analysis")
+#' 
 getNormTable <- function(.listDf, purpose = "analysis"){
     if (purpose != "analysis" & purpose != "export"){
         stop('Valid values for purpose are "analysis" or "export".')
