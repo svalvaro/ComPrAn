@@ -75,7 +75,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data = NULL
   inner_join(dataFrame, jointGroupData) -> dataFrame
 
   data.frame(Value = NA,
-             Fraction = 1:max_frac) %>%
+             Fraction = seq_len(max_frac)) %>%
     spread(Fraction, "Value") -> padding
 
   dataFrame %>%
@@ -95,7 +95,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data = NULL
     scale_fill_manual(legendLabel, values=col_vector2) +
     ylab(ylabel) +
     xlab(xlabel) +
-    scale_x_continuous(breaks=1:max_frac,minor_breaks = NULL)+
+    scale_x_continuous(breaks=seq_len(max_frac),minor_breaks = NULL)+
     scale_y_continuous(breaks=seq(0,1,0.2))+
     facet_wrap(isLabel ~ ., ncol =1, labeller = labeller(isLabel = c("TRUE" = labelled,
                                                                      "FALSE" = unlabelled)))

@@ -21,8 +21,8 @@ makeDist <- function(df,centered = FALSE){
   } else {
     nc = ncol(df)
     answer = matrix(ncol=nc,nrow=nc)
-    for (i in 1:nc){
-      for (j in 1:nc){
+    for (i in seq_len(nc)){
+      for (j in seq_len(nc)){
         answer[i,j] = 1-(uncenteredCor(df[,i],df[,j]))
       }
     }

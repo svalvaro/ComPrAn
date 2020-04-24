@@ -81,7 +81,7 @@ oneGroupTwoLabelsCoMigration <- function(dataFrame, max_frac, groupData = NULL, 
                                  "FALSE" = unlabelled)) +
     ylab(ylabel) +
     xlab(xlabel) +
-    scale_x_continuous(breaks=1:max_frac,minor_breaks = NULL)+
+    scale_x_continuous(breaks=seq_len(max_frac),minor_breaks = NULL)+
     scale_y_continuous(breaks=seq(0,1,0.2))+
     labs(title = groupName)
 

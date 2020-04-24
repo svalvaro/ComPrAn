@@ -48,9 +48,9 @@ normalizeTable<- function(.data, applyNormalization = TRUE){
 
   #reorder columns so they are from 1 to n
   if (length(labelSuffix) == 1){
-    tempMatrix <- tempMatrix[,paste0(seq(1:ncol(tempMatrix)),"_",labelSuffix)]
+    tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)),"_",labelSuffix)]
   } else {
-    tempMatrix <- tempMatrix[,paste0(1:(ncol(tempMatrix)/2),"_",rep(c(labelSuffix[1],labelSuffix[2]),each=ncol(tempMatrix)/2))]
+    tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)/2),"_",rep(c(labelSuffix[1],labelSuffix[2]),each=ncol(tempMatrix)/2))]
   }
 
 
@@ -59,7 +59,7 @@ normalizeTable<- function(.data, applyNormalization = TRUE){
 
   #for unknown reasons ';' in rownames is sometimes automaticaly switched to '.', convert it back in such cases
   # rownames(tempMatrix) <- gsub("\\.", ";", rownames(tempMatrix))
-  .data <- cbind(.data[,1:2], tempMatrix)
+  .data <- cbind(.data[,c(1,2)], tempMatrix)
 
   #tempMatrix$`Protein Descriptions` <- .data$`Protein Descriptions`
   #.data <- tempMatrix

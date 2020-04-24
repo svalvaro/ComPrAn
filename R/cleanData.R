@@ -72,7 +72,7 @@ cleanData <- function(.data, fCol = "Search ID") {
                       unlist(lapply(LETTERS, function(x) {paste0(x,LETTERS)})))
   
   letterToNumber <- data.frame("Letters" = letterSequence,
-                               "Fraction" = seq(1:length(letterSequence)),
+                               "Fraction" = seq_along(letterSequence),
                                stringsAsFactors = FALSE)
   
   names(letterToNumber)[grep("Letters", names(letterToNumber))] <- fCol

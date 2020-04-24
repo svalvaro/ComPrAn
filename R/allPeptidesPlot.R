@@ -60,7 +60,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
     
     #add columns conatining mean and repPepValue to the DF, keep only neccessary rows
     data.frame(Value = NA,
-               Fraction = 1:max_frac) %>% 
+               Fraction = seq_len(max_frac)) %>% 
         spread(Fraction, "Value") -> padding
     
     dataFrame %>% 
@@ -89,7 +89,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
     p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
         geom_point(na.rm = TRUE, alpha = alphaValue) +
         scale_y_log10() +
-        scale_x_continuous(breaks = 1:max_frac, limits = c(0,max_frac))+
+        scale_x_continuous(breaks = seq_len(max_frac), limits = c(0,max_frac))+
         scale_colour_manual(legendLabel, values = col_vector_peptides,
                             labels = c("TRUE" = labelled,
                                        "FALSE" = unlabelled)) +

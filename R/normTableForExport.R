@@ -17,13 +17,15 @@ normTableForExport <- function(labTab, unlabTab, comboTab) {
   max_frac <- max(suppressWarnings(as.numeric(names(labTab))), na.rm = TRUE)
   labTab$scenario <- "A"
   labTab$label <- TRUE
-  labTab <- labTab[c("Protein Group Accessions", "Protein Descriptions", "scenario", "label", 1:max_frac)]
+  labTab <- labTab[c("Protein Group Accessions", "Protein Descriptions", 
+                     "scenario", "label", seq_len(max_frac))]
 
   # Clean up unlabeled
   names(unlabTab) <- str_remove(names(unlabTab), "_.*$")
   unlabTab$scenario <- "A"
   unlabTab$label <- FALSE
-  unlabTab <- unlabTab[c("Protein Group Accessions", "Protein Descriptions", "scenario", "label", 1:max_frac)]
+  unlabTab <- unlabTab[c("Protein Group Accessions", "Protein Descriptions", 
+                         "scenario", "label", seq_len(max_frac))]
 
   # Clean up combined
   comboTab %>%
@@ -32,7 +34,8 @@ normTableForExport <- function(labTab, unlabTab, comboTab) {
     spread(Fraction, "value") %>%
     mutate(scenario = "B",
            label = as.logical(label)) -> comboTab
-  comboTab <- comboTab[c("Protein Group Accessions", "Protein Descriptions", "scenario", "label", 1:max_frac)]
+  comboTab <- comboTab[c("Protein Group Accessions", "Protein Descriptions", 
+                         "scenario", "label", seq_len(max_frac))]
 
   return(labTab %>%
            bind_rows(unlabTab) %>%

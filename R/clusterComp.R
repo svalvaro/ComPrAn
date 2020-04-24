@@ -31,14 +31,14 @@ clusterComp <- function(.df, scenar = "A", PearsCor = "centered"){
     unlabTab <- .df[.df$isLabel==FALSE,]
     
     if (PearsCor == "centered"|PearsCor == "centred"){
-        labDist <- makeDist(t(select(labTab,-c(1:3))), 
+        labDist <- makeDist(t(select(labTab,-c(1,2,3))), 
                                      centered = TRUE)
-        unlabDist <- makeDist(t(select(unlabTab,-c(1:3))), 
+        unlabDist <- makeDist(t(select(unlabTab,-c(1,2,3))), 
                                        centered = TRUE)
     } else if(PearsCor == "uncentered"|PearsCor == "uncentred"){
-        labDist <- makeDist(t(select(labTab,-c(1:3))), 
+        labDist <- makeDist(t(select(labTab,-c(1,2,3))), 
                                      centered = FALSE)
-        unlabDist <-makeDist(t(select(unlabTab,-c(1:3))), 
+        unlabDist <-makeDist(t(select(unlabTab,-c(1,2,3))), 
                                       centered = FALSE)
     } else(
         stop("Valid values for \"PearsCor\" are \"centered\" or 
