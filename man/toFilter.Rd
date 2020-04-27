@@ -11,13 +11,15 @@ toFilter(.data, rank = 1, cl = c("Low", "Middle", "High"))
 
 \item{rank}{integer}
 
-\item{cl}{charater any combination of one or more of 'Low', 'Middle', or 'High'}
+\item{cl}{charater any combination of one or more of 'Low',
+'Middle', or 'High'}
 }
 \value{
 a dataframe
 }
 \description{
-Filters only rows with specified values in columns Rank and Confidence Level, specified as cl
+Filters only rows with specified values in columns Rank and Confidence Level, 
+specified as cl
 }
 \examples{
  

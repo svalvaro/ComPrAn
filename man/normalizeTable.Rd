@@ -16,5 +16,6 @@ a matrix
 }
 \description{
 Convert the dataframe as output from extractRepPeps() to matrix-like table
-return normalized or raw values of Precursor Area, by default return normalized values
+return normalized or raw values of Precursor Area, by default return
+normalized values
 }

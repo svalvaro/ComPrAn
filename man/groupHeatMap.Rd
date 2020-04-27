@@ -28,17 +28,22 @@ groupHeatMap(
  `Precursor Area` double
  scenario character}
 
-\item{groupData}{data frame, mandatory column: `Protein Group Accessions` character - this column is used for filtering
-optional columns: any other column of type character that should be used for renaming}
+\item{groupData}{data frame, mandatory column: 
+`Protein Group Accessions` character - this column is used for filtering
+           optional columns: any other column of type character that should
+            be used for renaming}
 
-\item{groupName}{character, name that should be used for the group specified in groupData}
+\item{groupName}{character, name that should be used for the group specified
+in groupData}
 
-\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot}
+\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', 
+specifies alignment of the title in plot}
 
-\item{newNamesCol}{character, if groupData contains column for re-naming and you want to use it, specify
-the column name in here}
+\item{newNamesCol}{character, if groupData contains column for re-naming and 
+you want to use it, specify the column name in here}
 
-\item{colNumber}{numeric, values of 1 or 2, specifies whether facets will be shown side-by-side or above each other}
+\item{colNumber}{numeric, values of 1 or 2, specifies whether facets will be 
+shown side-by-side or above each other}
 
 \item{ylabel}{character}
 
@@ -56,8 +61,8 @@ the column name in here}
 plot
 }
 \description{
-This function creates a heatmap for a subset of proteins in dataFrame specified in groupData,
-heatmap is divided into facets according to isLabel
+This function creates a heatmap for a subset of proteins in dataFrame
+specified in groupData, heatmap is divided into facets according to isLabel
 }
 \examples{
 
@@ -66,9 +71,9 @@ inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #read file in and change structure of table to required format
 forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 ##example plot:
-groupDataFileName <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+groupDfn <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
 groupName <- 'group1'
-groupData <- data.table::fread(groupDataFileName)
+groupData <- data.table::fread(groupDfn)
 groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 
 }

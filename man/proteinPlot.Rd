@@ -19,9 +19,9 @@ proteinPlot(
 )
 }
 \arguments{
-\item{dataFrame}{data frame, contains columns: `Protein Group Accessions` character
-`Protein Descriptions` character, Fraction integer, isLabel character ('TRUE'/'FALSE' values),
-`Precursor Area` double
+\item{dataFrame}{data frame, contains columns: `Protein Group Accessions` 
+character; `Protein Descriptions` character;bFraction integer;
+isLabel character ("TRUE"/"FALSE" values);`Precursor Area` double;
 scenario character}
 
 \item{protein}{character the protein of interest}
@@ -30,9 +30,12 @@ scenario character}
 
 \item{grid}{logical specifies presence/absence of gridline in the plot}
 
-\item{titleLabel}{character one of the 'all' or 'GN', specifies whther to show full label or just the gene name}
+\item{titleLabel}{character, if it is 'all' or 'GN', it specifies whether to 
+show full label or just the gene name, if any other character is used, the
+value of titleLabel will be used as plot title}
 
-\item{titleAlign}{character one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot}
+\item{titleAlign}{character one of the 'left', 'center'/'centre', 'right',
+specifies alignment of the title in plot}
 
 \item{ylabel}{character}
 
@@ -48,7 +51,8 @@ scenario character}
 a plot
 }
 \description{
-This function creates a line plot for a proteins in dataFrame specified by protein
+This function creates a line plot for a proteins in dataFrame specified
+by protein
 }
 \examples{
 

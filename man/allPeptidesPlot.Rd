@@ -2,8 +2,7 @@
 % Please edit documentation in R/allPeptidesPlot.R
 \name{allPeptidesPlot}
 \alias{allPeptidesPlot}
-\title{Create scatter plot
-This function creates a scatter plot of all peptides that belong to a single proteins}
+\title{Create scatter plot}
 \usage{
 allPeptidesPlot(
   .listDF,
@@ -23,8 +22,8 @@ allPeptidesPlot(
 )
 }
 \arguments{
-\item{.listDF}{list, list containing data frames of peptides for each protein
-indexed by `Protein Group Accessions`}
+\item{.listDF}{list, list containing data frames of peptides for each
+protein indexed by `Protein Group Accessions`}
 
 \item{protein}{character, `Protein Group Accession` to show in the plot}
 
@@ -32,15 +31,18 @@ indexed by `Protein Group Accessions`}
 
 \item{meanLine}{logical, specifies whether to plot a mean line}
 
-\item{repPepLine}{logical, specifies whether to plot a representative peptide line}
+\item{repPepLine}{logical, specifies whether to plot a representative 
+peptide line}
 
-\item{separateLabStates}{logical, specifies whether label states will be separated into facets}
+\item{separateLabStates}{logical, specifies whether label states will be 
+separated into facets}
 
 \item{grid}{logical, specifies presence/absence of gridline in the plot}
 
 \item{titleLabel}{character, what to call the plot}
 
-\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot}
+\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', 
+specifies alignment of the title in plot}
 
 \item{ylabel}{character}
 
@@ -56,8 +58,7 @@ indexed by `Protein Group Accessions`}
 plot
 }
 \description{
-Create scatter plot
-This function creates a scatter plot of all peptides that belong to a single proteins
+This function creates a plot of all peptides that belong to a single protein
 }
 \examples{
 ##Use example peptide data set, read in and clean data

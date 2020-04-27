@@ -26,23 +26,21 @@ clusterComp <- function(.df, scenar = "A", PearsCor = "centered"){
         select(-scenario) %>%
         mutate(`Precursor Area` = replace_na(`Precursor Area`, 0)) %>% 
         spread(Fraction, `Precursor Area`) -> .df
-    
     labTab <- .df[.df$isLabel==TRUE,]
     unlabTab <- .df[.df$isLabel==FALSE,]
-    
     if (PearsCor == "centered"|PearsCor == "centred"){
         labDist <- makeDist(t(select(labTab,-c(1,2,3))), 
-                                     centered = TRUE)
+                            centered = TRUE)
         unlabDist <- makeDist(t(select(unlabTab,-c(1,2,3))), 
-                                       centered = TRUE)
+                                centered = TRUE)
     } else if(PearsCor == "uncentered"|PearsCor == "uncentred"){
         labDist <- makeDist(t(select(labTab,-c(1,2,3))), 
-                                     centered = FALSE)
+                            centered = FALSE)
         unlabDist <-makeDist(t(select(unlabTab,-c(1,2,3))), 
-                                      centered = FALSE)
+                                centered = FALSE)
     } else(
         stop("Valid values for \"PearsCor\" are \"centered\" or 
-             \"uncentered\".")
+                \"uncentered\".")
     )
     return(list(labTable = labTab,
                 unlabTable = unlabTab,

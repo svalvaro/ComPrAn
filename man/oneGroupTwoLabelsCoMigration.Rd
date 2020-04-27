@@ -24,24 +24,29 @@ oneGroupTwoLabelsCoMigration(
 )
 }
 \arguments{
-\item{dataFrame}{dataFrame: data frame, data frame of normalised values for proteins from SCENARIO A,
- contains columns:
-`Protein Group Accessions` character
-`Protein Descriptions` character
- Fraction integer
- isLabel character ('TRUE'/'FALSE' values)
- `Precursor Area` double
- scenario character}
+\item{dataFrame}{dataFrame: data frame, data frame of normalised values for
+proteins from SCENARIO A,
+          contains columns:
+         `Protein Group Accessions` character
+         `Protein Descriptions` character
+          Fraction integer
+          isLabel character ('TRUE'/'FALSE' values)
+          `Precursor Area` double
+          scenario character}
 
 \item{max_frac}{numeric, total number of fractions}
 
-\item{groupData}{character vector, contins list of Protein Group Accessions that belong to the group we want to plot}
+\item{groupData}{character vector, contins list of Protein Group Accessions 
+that belong to the group we want to plot}
 
-\item{groupName}{character, name that should be used for the group specified in groupData}
+\item{groupName}{character, name that should be used for the group specified 
+in groupData}
 
-\item{meanLine}{logical, specifies whether to plot a mean line for all values in the group}
+\item{meanLine}{logical, specifies whether to plot a mean line for all values
+in the group}
 
-\item{medianLine}{logical, specifies whether to plot a median line for all values in the group}
+\item{medianLine}{logical, specifies whether to plot a median line for all 
+values in the group}
 
 \item{ylabel}{character}
 
@@ -59,7 +64,8 @@ oneGroupTwoLabelsCoMigration(
 
 \item{grid}{logical, specifies presence/absence of gridline in the plot}
 
-\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot}
+\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right',
+specifies alignment of the title in plot}
 
 \item{alphaValue}{numeric, transparency of the point, values 0 to 1}
 }
@@ -67,9 +73,10 @@ oneGroupTwoLabelsCoMigration(
 plot
 }
 \description{
-This function creates a ?scatter plot? for a subset of proteins in dataFrame specified in groupData
-Intended use of the function - using scenario A data, compare shape of the migration profile
-for a SINGLE GROUP of proteins BETWEEN the two LABEL STATES
+This function creates a ?scatter plot? for a subset of proteins in dataFrame
+specified in groupData. Intended use of the function - using scenario A data,
+compare shape of the migration profile for a SINGLE GROUP of proteins BETWEEN
+the two LABEL STATES.
 }
 \examples{
 
@@ -78,9 +85,9 @@ inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #read file in and change structure of table to required format
 forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 ##example plot:
-groupDataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
+groupDV <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
 groupName <- 'group1' 
 max_frac <- 23 
-oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, groupDataVector,groupName)
+oneGroupTwoLabelsCoMigration(forAnalysis, max_frac, groupDV,groupName)
 
 }

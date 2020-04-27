@@ -2,20 +2,27 @@
 % Please edit documentation in R/protInportForAnalysis.R
 \name{protInportForAnalysis}
 \alias{protInportForAnalysis}
-\title{Modify import protein data
-This function converts imported protien table into format compatible with downstream analysis}
+\title{Modify import protein data}
 \usage{
 protInportForAnalysis(.data)
 }
 \arguments{
 \item{.data}{- data frame, contains columns:}
 }
-\description{
-Modify import protein data
-This function converts imported protien table into format compatible with downstream analysis
+\value{
+data frame
 }
-\details{
-"Protein Group Accessions" -  character/factor, "Protein Descriptions" - character. "scenario" - character/factor, "label" - logical, columns "1" to "n" - numeric
+\description{
+This function converts imported protien table into format compatible with 
+downstream analysis
+Imported file needs to contain following columns:
+\itemize{
+\item "Protein Group Accessions" - character/factor
+\item "Protein Descriptions" - character
+\item "scenario" - character/factor
+\item "label" - logical
+\item  columns "1" to "n" - numeric
+}
 }
 \examples{
 

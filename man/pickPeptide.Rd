@@ -13,16 +13,21 @@ pickPeptide(.data)
 list of data frames
 }
 \description{
-This function selects a single unique peptide to represent each Protein Group Accession
-There are 2 ways of selecting peptides, both are perform as they are needed for different tasks later on
-1) Scenario A: select peptide occuring in most fractions, do this individually for labelled/unlabelled
-(max value for any peptide is equal to number of fractions) in case of ties, pick
-peptide whith highest Precursor Area in any fraction
-2) Scenario B: select peptide occuring in most fractions counting both label states together
-(max value for any peptide is equal to twice the number of fractions)
-in case of ties, pick peptide with highest Precursor Area in any fraction.
-Representative peptide in Scenario B is picked only for proteins that have
-shared peptide between label states.
+This function selects a single unique peptide to represent each 
+`Protein Group Accession`
+There are 2 ways of selecting peptides, both are perform as they are needed
+for different tasks later on.
+\enumerate{
+\item Scenario A: select peptide occuring in most fractions, do this 
+individually for labelled/unlabelled (max value for any peptide is equal to 
+number of fractions) in case of ties, pick peptide whith highest 
+`Precursor Area` in any fraction.
+\item Scenario B: select peptide occuring in most fractions counting both
+label states together (max value for any peptide is equal to twice the 
+number of fractions) in case of ties, pick peptide with highest
+`Precursor Area` in any fraction. Representative peptide in Scenario B is 
+picked only for proteins that have shared peptide between label states.
+}
 }
 \examples{
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/exportClusterAssignments.R
 \name{exportClusterAssignments}
 \alias{exportClusterAssignments}
-\title{Title}
+\title{Covert clustered tables into format for export}
 \usage{
 exportClusterAssignments(labClustTable, unlabClustTable)
 }
@@ -13,13 +13,16 @@ exportClusterAssignments(labClustTable, unlabClustTable)
 `Cluster number - unlabeled` integer
 `Cluster number - labeled` integer}
 
-\item{unlabClustTable}{labClustTable, unlabClustTable: data frames, contain columns:
-`Protein Group Accessions` character
-`Protein Descriptions` character
- isLabel character ('TRUE'/'FALSE') - here in one data frame all are TRUE in secon one all are FALSE
- columns 1 to n, numeric, n is the total number of fractions/slices, each of this columns
-             contains `Precursor Area` values in a given fraction(columns) for a protein(rows)
- cluster integer}
+\item{unlabClustTable}{labClustTable, unlabClustTable: data frames, 
+contain columns:
+             `Protein Group Accessions` character
+             `Protein Descriptions` character
+              isLabel character ('TRUE'/'FALSE') - here in one data frame all
+               are TRUE in second one all are FALSE
+              columns 1 to n, numeric, n is the total number of 
+              fractions/slices, each of this columns
+             contains `Precursor Area` values in a given fraction(columns)
+              for a protein(rows) cluster integer}
 }
 \value{
 dataframe

@@ -10,8 +10,24 @@ onlyInOneLabelState_ENV(.data)
 \item{.data}{An environment containing dataframes}
 }
 \value{
-a list with 3 items, each item is a vector containing names belonging to one of 3 groups
+a list with 3 items, each item is a vector containing names
+belonging to one of 3 groups
 }
 \description{
-This function returns NAMES of proteins present in only labelled/only unlabelld or both label states
+This function returns NAMES of proteins present in only labelled/only 
+unlabelld or both label states
+}
+\examples{
+
+##Use example peptide data set, read in and clean data
+inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+## separate chemical modifications and labelling into separate columns
+peptides <- splitModLab(peptides) 
+## remove unneccessary columns, simplify rows
+peptides <- simplifyProteins(peptides) 
+## Pick representative peptide for each protein for both scenarios
+peptide_index <- pickPeptide(peptides)
+## extract list of names of proteins present in one/both samples
+oneStateList <- onlyInOneLabelState_ENV(peptide_index)
 }

@@ -15,11 +15,12 @@ simplifyProteins(.data, direction = c("rows", "cols"))
 a dataframe
 }
 \description{
-For rows: Keep only one row with highest Precursor Area in cases where for a single Protein Group Accession in
-a single fraction there are multiple rows with the same combination of Sequence, Mods and Charge
+\itemize{
+\item For rows: Keep only one row with highest Precursor Area in cases where
+for a single Protein Group Accession in a single fraction there are multiple 
+rows with the same combination of Sequence, Mods and Charge
+\item For cols: remove columns that are not neccessary any more
 }
-\details{
-For cols: remove columns that are not neccessary any more
 }
 \examples{
 ##Use example peptide data set, read in and clean data

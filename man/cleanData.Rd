@@ -9,7 +9,8 @@ cleanData(.data, fCol = "Search ID")
 \arguments{
 \item{.data}{dataframe}
 
-\item{fCol}{character The column containing the fractions, e.g. "Search ID" (default)}
+\item{fCol}{character The column containing the fractions, 
+e.g. "Search ID" (default)}
 }
 \value{
 dataframe
@@ -17,13 +18,14 @@ dataframe
 \description{
 Perform initial, mandatory, cleaning of data
 Check presence of reguired columns
-Function to process raw input data into format required for subsequent analysis
-.data is a data frame containing raw input data
+Function to process raw input data into format required for
+subsequent analysis. .data is a data frame containing raw input data.
 This function checks (not neccessarily in this order):
 \itemize{
 \item are all required columns present
 \item are these columns in correct format
-\item renames Sequence ID column to Fraction and converts values in this column from letters to numbers
+\item renames Sequence ID column to Fraction and converts values in this
+ column from letters to numbers
 \item reorders Protein Group Accessions containing multiple proteins
 \item removes rows in which PSM Ambiguity == 'Rejected'
 \item removes rows in which # Protein Groups == 0

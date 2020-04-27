@@ -11,11 +11,15 @@ makeDist(df, centered = FALSE)
 `Protein Group Accessions` character
 `Protein Descriptions` character
  isLabel character ('TRUE'/'FALSE')
- columns 1 to n, numeric, n is the total number of fractions/slices, each of this columns
-             contains `Precursor Area` values in a given fraction(columns) for a protein(rows)}
+ columns 1 to n, numeric, n is the total number of 
+ fractions/slices, each of this columns 
+ contains `Precursor Area` values in a given fraction(columns) 
+ for a protein(rows)}
 
-\item{centered}{centered: logical,if TRUE return dist matrix based on centered Pearson correlation (uses R cor() function, fast)
-,if FALSE return dist matrix based on uncentered Pearson correlation (uses custom uncenteredCor() function, slow)}
+\item{centered}{centered: logical,if TRUE return dist matrix based on 
+centered Pearson correlation (uses R cor() function, fast)
+,if FALSE return dist matrix based on uncentered Pearson
+correlation (uses custom uncenteredCor() function, slow)}
 }
 \value{
 matrix

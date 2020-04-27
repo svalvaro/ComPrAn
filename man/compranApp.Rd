@@ -6,6 +6,9 @@
 \usage{
 compranApp()
 }
+\value{
+Shiny app
+}
 \description{
 Execute the complexomics Shiny app
 }

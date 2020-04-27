@@ -27,28 +27,35 @@ twoGroupsWithinLabelCoMigration(
 )
 }
 \arguments{
-\item{dataFrame}{dataFrame: data frame, data frame of normalised values for proteins from SCENARIO A,
- contains columns:
-`Protein Group Accessions` character
-`Protein Descriptions` character
- Fraction integer
- isLabel character ('TRUE'/'FALSE' values)
- `Precursor Area` double
- scenario character}
+\item{dataFrame}{dataFrame: data frame, data frame of normalised values for 
+proteins from SCENARIO A,
+   contains columns:
+  `Protein Group Accessions` character
+  `Protein Descriptions` character
+   Fraction integer
+   isLabel character ('TRUE'/'FALSE' values)
+   `Precursor Area` double
+   scenario character}
 
 \item{max_frac}{numeric, total number of fractions}
 
-\item{group1Data}{character vector, contins list of Protein Group Accessions that belong to the group we want to plot for group 1}
+\item{group1Data}{character vector, contins list of Protein Group Accessions
+that belong to the group we want to plot for group 1}
 
-\item{group1Name}{character, name that should be used for the group specified in group1Data}
+\item{group1Name}{character, name that should be used for the group specified 
+in group1Data}
 
-\item{group2Data}{character vector, contins list of Protein Group Accessions that belong to the group we want to plot for group 2}
+\item{group2Data}{character vector, contins list of Protein Group Accessions 
+that belong to the group we want to plot for group 2}
 
-\item{group2Name}{character, name that should be used for the group specified in group2Data}
+\item{group2Name}{character, name that should be used for the group specified 
+in group2Data}
 
-\item{meanLine}{logical, specifies whether to plot a mean line for all values in the group}
+\item{meanLine}{logical, specifies whether to plot a mean line for all values
+in the group}
 
-\item{medianLine}{logical, specifies whether to plot a median line for all values in the group}
+\item{medianLine}{logical, specifies whether to plot a median line for all 
+values in the group}
 
 \item{ylabel}{character}
 
@@ -68,7 +75,8 @@ twoGroupsWithinLabelCoMigration(
 
 \item{showTitle}{logical}
 
-\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right', specifies alignment of the title in plot}
+\item{titleAlign}{character, one of the 'left', 'center'/'centre', 'right',
+specifies alignment of the title in plot}
 
 \item{alphaValue}{numeric, transparency of the point, values 0 to 1}
 }
@@ -76,10 +84,13 @@ twoGroupsWithinLabelCoMigration(
 plot
 }
 \description{
-This function creates a scatter plot for a subset of proteins in dataFrame specified
-in group1Data and group2Data, label states are always separated into facets
-Intended use of the function - using scenario A data, compare shape of the migration profile
-between a TWO GROUPS of proteins WITHIN the ONE LABEL STATE
+This function creates a scatter plot for a subset of proteins in dataFrame 
+specified in group1Data and group2Data, label states are always separated 
+into facets
+}
+\details{
+Intended use of the function - using scenario A data, compare shape of the
+migration profile between a TWO GROUPS of proteins WITHIN the ONE LABEL STATE
 }
 \examples{
 ##Use example normalised proteins file

@@ -5,7 +5,8 @@
 #' Results are combined into one data frame in a format either indended for
 #' further analysis or for export.
 #' @param .listDf list of data frames
-#' @param purpose character, purpose of use of function output, values either "analysis" of "export"
+#' @param purpose character, purpose of use of function output, values either
+#'  "analysis" of "export"
 #'
 #' @importFrom purrr map_df
 #' 
@@ -32,12 +33,12 @@ getNormTable <- function(.listDf, purpose = "analysis"){
     }
     names(.listDf) %>%
         map_df(~ extractRepPeps(
-            .listDf[[.]], scenario = 'A', label = T))  %>%
+            .listDf[[.]], scenario = 'A', label = TRUE))  %>%
         normalizeTable() -> protNormLab
     
     names(.listDf) %>%
         map_df(~ extractRepPeps(
-            .listDf[[.]], scenario = 'A', label = F))  %>%
+            .listDf[[.]], scenario = 'A', label = FALSE))  %>%
         normalizeTable() -> protNormUnlab
     
     names(.listDf) %>%

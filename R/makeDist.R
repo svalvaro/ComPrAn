@@ -7,28 +7,31 @@
 #'              `Protein Group Accessions` character
 #'              `Protein Descriptions` character
 #'               isLabel character ('TRUE'/'FALSE')
-#'               columns 1 to n, numeric, n is the total number of fractions/slices, each of this columns
-#'                           contains `Precursor Area` values in a given fraction(columns) for a protein(rows)
-#' @param centered centered: logical,if TRUE return dist matrix based on centered Pearson correlation (uses R cor() function, fast)
-#'                 ,if FALSE return dist matrix based on uncentered Pearson correlation (uses custom uncenteredCor() function, slow)
+#'               columns 1 to n, numeric, n is the total number of 
+#'               fractions/slices, each of this columns 
+#'               contains `Precursor Area` values in a given fraction(columns) 
+#'               for a protein(rows)
+#' @param centered centered: logical,if TRUE return dist matrix based on 
+#'                 centered Pearson correlation (uses R cor() function, fast)
+#'                 ,if FALSE return dist matrix based on uncentered Pearson
+#'                 correlation (uses custom uncenteredCor() function, slow)
 #'
 #' @importFrom stats as.dist cor
 #'
 #' @return matrix
 makeDist <- function(df,centered = FALSE){
-  if (centered){
-    answer <- (1 - cor(df))
-  } else {
-    nc = ncol(df)
-    answer = matrix(ncol=nc,nrow=nc)
-    for (i in seq_len(nc)){
-      for (j in seq_len(nc)){
-        answer[i,j] = 1-(uncenteredCor(df[,i],df[,j]))
-      }
+    if (centered){
+        answer <- (1 - cor(df))
+    } else {
+        nc = ncol(df)
+        answer = matrix(ncol=nc,nrow=nc)
+        for (i in seq_len(nc)){
+            for (j in seq_len(nc)){
+                answer[i,j] = 1-(uncenteredCor(df[,i],df[,j]))
+            }
+        }
+        rownames(answer) <- colnames(df)
+        colnames(answer) <- colnames(df)
     }
-    rownames(answer) <- colnames(df)
-    colnames(answer) <- colnames(df)
-  }
-  return(as.dist(answer))
+    return(as.dist(answer))
 }
-

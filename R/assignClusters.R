@@ -47,10 +47,9 @@ assignClusters <- function(.listDf, sample , method = 'complete', cutoff = 0.5){
     
     if(!method %in% c("complete","average","single"))
         stop("Valid values for \"method\" are \"complete\", \"average\"
-              or \"single\".")
-  #creates a new column in a DF containing cluster numbers
-  hcData <- stats::hclust(distObject, method = method)
-  clusters <- stats::cutree(hcData, h = cutoff)
-  return(mutate(DF,cluster = clusters))
+                or \"single\".")
+    #creates a new column in a DF containing cluster numbers
+    hcData <- stats::hclust(distObject, method = method)
+    clusters <- stats::cutree(hcData, h = cutoff)
+    return(mutate(DF,cluster = clusters))
 }
-

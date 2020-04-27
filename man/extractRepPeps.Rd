@@ -9,16 +9,19 @@ extractRepPeps(.data, scenario, label = "Label neccessary for scenario A")
 \arguments{
 \item{.data}{dataframe containing all peptides of one protein}
 
-\item{scenario}{character A, or B}
+\item{scenario}{character "A", or "B"}
 
-\item{label}{character for output label}
+\item{label}{character, selects for which label state the representative 
+peptides will be exported, can have value of "TRUE" or "FALSE",
+required only for scenario "A"}
 }
 \value{
 dataframe containing only representative peptide
 }
 \description{
-Incomplete labelling - there are cases when in peptides containing multiple Lys/Arg
-not all of them are heavy in labelled samples. As in SILAC we assume that addition of
-label does not affect peptide properties, we are taking a mean `Precursor Area` value
-as the representative `Precursor Area` in such cases
+Incomplete labelling - there are cases when in peptides containing multiple
+Lys/Arg not all of them are heavy in labelled samples. As in SILAC we assume 
+that addition of label does not affect peptide properties, we are taking 
+a mean `Precursor Area` value as the representative `Precursor Area` 
+in such cases.
 }

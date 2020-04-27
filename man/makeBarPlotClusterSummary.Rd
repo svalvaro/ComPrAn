@@ -11,8 +11,10 @@ makeBarPlotClusterSummary(df, name = "sample 1")
 `Protein Group Accessions` character
 `Protein Descriptions` character
  isLabel character ('TRUE'/'FALSE')
- columns 1 to n, numeric, n is the total number of fractions/slices, each of this columns
-             contains `Precursor Area` values in a given fraction(columns) for a protein(rows)
+ columns 1 to n, numeric, n is the total number of 
+ fractions/slices, each of this columns
+ contains `Precursor Area` values in a given fraction(columns) 
+ for a protein(rows)
  cluster integer}
 
 \item{name}{character, specifies the name of the sample}

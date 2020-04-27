@@ -13,10 +13,15 @@ splitModLab(.data)
 dataframe
 }
 \description{
-Splits up the Modifications column into lists of vectors for modifications(Mods) and labels(Labels)
+Splits up the Modifications column into lists of vectors for 
+modifications(Mods) and labels(Labels)
 It adds two more columns to the data frame:
-UniqueCombinedID_A: Unique combinations of Sequence, Mods and Charge for "scenario A"
-UniqueCombinedID_B: Unique combinations of Sequence, Mods, Charge and Labels for "scenario B"
+\itemize{
+\item UniqueCombinedID_A: Unique combinations of Sequence, Mods and Charge 
+for "scenario A".
+\item UniqueCombinedID_B: Unique combinations of Sequence, Mods, Charge and 
+Labels for "scenario B"
+}
 }
 \examples{
 ##Use example peptide data set, read in and clean data

@@ -9,7 +9,8 @@ getNormTable(.listDf, purpose = "analysis")
 \arguments{
 \item{.listDf}{list of data frames}
 
-\item{purpose}{character, purpose of use of function output, values either "analysis" of "export"}
+\item{purpose}{character, purpose of use of function output, values either
+"analysis" of "export"}
 }
 \value{
 dataframe
