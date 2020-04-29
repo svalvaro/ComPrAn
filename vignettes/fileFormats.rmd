@@ -43,7 +43,7 @@ be excluded from analysis
 
 **"Precursor Area"** - column containing quantification of peptides 
 
-**"# Protein Groups"** - specifies to how many protein groups a specific peptide 
+**"# Protein Groups"** - specifies to how many protein groups a specific peptide
 was assigned
 
 **"Rank"** - Rank assigned to the peptide by the upstream programms used
@@ -69,11 +69,13 @@ in a format containing word "Label" in its value
 **"Search ID"** - column specifiyng fraction in a format where "A" means 
 fraction 1, "B" fraction 2 and so on, for samples with more then 26 fractions 
 the values continue as "AA" for 27, "AB" for 28 etc. By default, the name of 
-this columns is "Search ID" but a different name can be specified when calling 'cleanData()' function
+this columns is "Search ID" but a different name can be specified when calling
+'cleanData()' function
 
 ![**Fig 1** Example minimal peptide input file](peptideInputFile.png)  
 
-*Example peptide file was produced using Proteome Discoverer™ Software* (Thermo Scientific™)
+*Example peptide file was produced using Proteome Discoverer™ Software* 
+(Thermo Scientific™)
 
 ## Normalised proteins input file
 *dataNormProts.txt* file in an example data set  
@@ -98,11 +100,13 @@ functionality of plotting functions should contain "GN=" with gene name after
 the equal sign
 
 **"scenario"** - A or B, specifies whether the values in any given row belog to
-"scenario A" or "scenario B", meaning of these two scenarios is described in the SILACcomplexomics vignette
+"scenario A" or "scenario B", meaning of these two scenarios is described in the
+SILACcomplexomics vignette
 
 **"label"** - specifies whether the values in any given row belog to "labeled"
 (=TRUE) or "unlabeled"(=FALSE) sample
 
-**columns "1" to "n"** - n represents total number of fractions in sample, each row contains normalised intensity values for a given protein in a given fraction
+**columns "1" to "n"** - n represents total number of fractions in sample, each 
+row contains normalised intensity values for a given protein in a given fraction
 
 ![**Fig 2** Example normalised protein input file](normProtInput.png)

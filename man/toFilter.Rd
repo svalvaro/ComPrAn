@@ -18,8 +18,8 @@ toFilter(.data, rank = 1, cl = c("Low", "Middle", "High"))
 a dataframe
 }
 \description{
-Filters only rows with specified values in columns Rank and Confidence Level, 
-specified as cl
+Filters only rows with specified values in columns Rank and Confidence Level
+, specified as cl
 }
 \examples{
  

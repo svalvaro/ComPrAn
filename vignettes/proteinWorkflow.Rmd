@@ -11,29 +11,49 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  eval = FALSE,
-  comment = "#>"
+    fig.width=7, fig.height=4.5,
+    collapse = TRUE,
+    eval = TRUE,
+    comment = "#>"
 )
 ```
 
 # Introduction
 
-Complexome profiling or complexomics is a method used in biology to study migration profiles of proteins and protein complexes. First, sample is separated into fractions, typically by blue native electrophoresis or gradient centrifugation and individual fractions are analysed by mass spectrometry. This allows to identify proteins that co-migrate. Often people want to compare migration profiles and quantities of proteins between two biological samples. SILAC version of complexomics provides a useful tool for such studies. 
+Complexome profiling or complexomics is a method used in biology to study 
+migration profiles of proteins and protein complexes. First, sample is separated
+into fractions, typically by blue native electrophoresis or gradient 
+centrifugation and individual fractions are analysed by mass spectrometry. This
+allows to identify proteins that co-migrate. Often people want to compare 
+migration profiles and quantities of proteins between two biological samples. 
+SILAC version of complexomics provides a useful tool for such studies. 
 
-Here we present a package to analyse data produced by SILAC complexomics experiments. This package does not interpret raw mass spectrometry data. Protein workflow of this package uses normalised protein data as an input. It allows to performs cluster analysis and contains tools for visualization of results. The analysis is indented for samples that were SILAC labelled, therefore the input file should contain both 'heavy' and 'light' proteins.
+Here we present a package to analyse data produced by SILAC complexomics 
+experiments. This package does not interpret raw mass spectrometry data. Protein
+workflow of this package uses normalised protein data as an input. It allows to 
+performs cluster analysis and contains tools for visualization of results. The
+analysis is indented for samples that were SILAC labelled, therefore the input 
+file should contain both 'heavy' and 'light' proteins.
 
 ### Method description
 
 #### 0) Re-formatting of input file
 
-Input file format was designed so it is easily readable by human. Downstream analysis requires a slightly different format so it is neccessary to perfomr this change before performaing the analysis.
+Input file format was designed so it is easily readable by human. Downstream 
+analysis requires a slightly different format so it is neccessary to perfomr 
+this change before performaing the analysis.
 
 #### 1) Hierarchical clustering
 
-Clustering allows to identify similarity between migration profiles of proteins in an unbiased way. We can check co-migration of known protein complexes by simply filtering the data, however, clustering provides additional information by allowing to identify unknown proteins that show similar migration profile as our proteins of interest.
+Clustering allows to identify similarity between migration profiles of proteins 
+in an unbiased way. We can check co-migration of known protein complexes by 
+simply filtering the data, however, clustering provides additional information
+by allowing to identify unknown proteins that show similar migration profile as 
+our proteins of interest.
 
-This package contains functions to perform hierarchical clustering using Pearson correlation (cantered or uncentered) as a distance measure and one of the three linkage methods (single, average or complete).
+This package contains functions to perform hierarchical clustering using Pearson
+correlation (cantered or uncentered) as a distance measure and one of the three 
+linkage methods (single, average or complete).
 
 #### 2) Export files and visualizations
 
@@ -43,115 +63,96 @@ Plotting functionality includes:
 * proteinPlot - line plot for a selected protein 
 * groupHeatMap - heatmap for a selected group of proteins 
 * oneGroupTwoLabelsCoMigration - scatter plot for a selected group of proteins
-* twoGroupsWithinLabelCoMigration - scatter plot for 2 selected groups of proteins
+* twoGroupsWithinLabelCoMigration - scatter plot for 2 selected groups of
+proteins
 * makeBarPlotClusterSummary - bar plot showing number of proteins per cluster
 
 # Example protein workflow
 
-Read in data, convert to correct format
+**Read in data, convert to correct format**
 
 ```{r}
+library(ComPrAn)
 inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 
 forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 ```
 
 
-Have a look at a selected protein (line plot)
+**Have a look at a selected protein (line plot)**
 ```{r}
 protein <- "P52815"
 max_frac <- 23
-
+# example protein plot, quantitative comparison between labeled and unlabeled
+# samples (default settings)
 proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 ```
-![**Fig 1** example protein plot, quantitative comparison between labeled and unlabeled samples (default settings)](proteinPlot.png)
 
-
-Make a heatmap for a selected group of proteins
-```{r}
-groupDataFileName <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+**Make a heatmap for a selected group of proteins**
+```{r groupHeatMap, fig.width=7, fig.height=6.7}
+groupDataFileName <- system.file("extdata","exampleGroup.txt",package="ComPrAn")
 groupName <- 'group1'
-groupData <- read_tsv(groupDataFileName)
-
-groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
+groupData <- data.table::fread(groupDataFileName)
+# example heatmap, quantitative comparison between labeled and unlabeled samples
+# (default settings)
+groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",],
+                groupData, groupName)
 ```
-![**Fig 2** example heatmap, quantitative comparison between labeled and unlabeled samples (default settings)](heatmap.png)
 
-
-Co-migration plot of single protein group between label states
+**Co-migration plot of single protein group between label states**
 ```{r}
 groupDataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
 groupName <- 'group1' 
 max_frac <- 23 
-
-oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, groupDataVector,groupName)
+# example co-migration plot, non-quantitative comparison of migration profile 
+# of a sigle protein goup between labeled and unlabeled samples 
+# (default settings)
+oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac, 
+                                groupDataVector,groupName)
 
 ```
-![**Fig 3** example co-migration plot, non-quantitative comparison of migration profile of a sigle protein goup between labeled and unlabeled samples (default settings)](oneGroupCoMigration.png)
 
-Co-migration plot of two protein groups within label state
+**Co-migration plot of two protein groups within label state**
 ```{r}
 group1DataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
 group1Name <- 'group1' 
 group2DataVector <- c("Q9NVS2","Q9NWU5","Q9NX20","Q9NYK5","Q9NZE8")
 group2Name <- 'group2'
 max_frac <- 23 
-
+# example co-migration plot, non-quantitative comparison of migration profile 
+# of two protein goups within label states (default settings)
 twoGroupsWithinLabelCoMigration(dataFrame = forAnalysis, max_frac = max_frac, 
-                                group1Data = group1DataVector, group1Name = group1Name,
-                                group2Data = group2DataVector, group2Name = group2Name)
-```
-![**Fig 4** example co-migration plot, non-quantitative comparison of migration profile of two protein goups within label states (default settings)](twoGroupsCoMigration.png)
-
-Extract data frames for clustering:
-1) scenario A, isLabel == TRUE
-2) scenario A, isLabel == FALSE
-```{r}
-forAnalysis %>% 
-  as_tibble() %>% 
-  filter(scenario == "A") %>% 
-  select(-scenario) %>%
-  mutate(`Precursor Area` = replace_na(`Precursor Area`, 0)) %>% 
-  spread(Fraction, `Precursor Area`) -> forClustering
-
-forClustering[is.na(forClustering)] <- 0
-
-forAnalysis[forAnalysis$scenario == "A",] %>% 
-  select(-scenario) %>% 
-  spread(Fraction, `Precursor Area`) -> forClustering
-
-forClustering[is.na(forClustering)] <- 0
-
-labelledTable <- forClustering[forClustering$isLabel==TRUE,]
-unlabelledTable <- forClustering[forClustering$isLabel==FALSE,]
+                                group1Data = group1DataVector, 
+                                group1Name = group1Name,
+                                group2Data = group2DataVector, 
+                                group2Name = group2Name)
 ```
 
-
-Create distance matrix
+**Create components neccessary for clustering:**
+(distance matrix for labeled and unlabeled samples,
+protein table for both samples)
 ```{r}
-labDist <- makeDist(t(select(labelledTable,-c(1:3))), centered = T)
-unlabDist <- makeDist(t(select(unlabelledTable,-c(1:3))), centered = T)
+clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
 ```
 
-
-Assign clusters to data frames
+**Assign clusters to data frames**
 ```{r}
-labelledTable_clust <- assignClusters(labelledTable, labDist,method = 'average', cutoff = 0.85)
-unlabelledTable_clust <- assignClusters(unlabelledTable,unlabDist ,method = 'average', cutoff = 0.85)
+labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
+                                    method = 'average', cutoff = 0.85)
+unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
+                                    method = 'average', cutoff = 0.85)
 ```
 
-Make bar plots summarizing numbers of proteins per cluster
-```{r}
-makeBarPlotClusterSummary(labelledTable_clust, name = 'labeled')
-makeBarPlotClusterSummary(unlabelledTable_clust, name = 'unlabeled')
+**Make bar plots** summarizing numbers of proteins per cluster for labeled
+and unlabeled samples
+```{r clusterBar, fig.width=4, fig.height=2.5}
+makeBarPlotClusterSummary(labTab_clust, name = 'labeled')
+makeBarPlotClusterSummary(unlabTab_clust, name = 'unlabeled')
 ```
-<center>
-![**Fig 5** example bar plots](bar1.png) ![](bar2.png)
-</center>
 
-Create table containing proteins and their assigned clusters
+**Create table containing proteins and their assigned clusters**
 ```{r}
-tableForClusterExport <- exportClusterAssignments(labelledTable_clust,unlabelledTable_clust)
+tableForClusterExport <- exportClusterAssignments(labTab_clust,unlabTab_clust)
 ```
 
 <center>

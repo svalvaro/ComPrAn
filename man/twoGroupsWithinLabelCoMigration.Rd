@@ -42,17 +42,17 @@ proteins from SCENARIO A,
 \item{group1Data}{character vector, contins list of Protein Group Accessions
 that belong to the group we want to plot for group 1}
 
-\item{group1Name}{character, name that should be used for the group specified 
-in group1Data}
+\item{group1Name}{character, name that should be used for the group 
+specified in group1Data}
 
 \item{group2Data}{character vector, contins list of Protein Group Accessions 
 that belong to the group we want to plot for group 2}
 
-\item{group2Name}{character, name that should be used for the group specified 
-in group2Data}
+\item{group2Name}{character, name that should be used for the group 
+specified in group2Data}
 
-\item{meanLine}{logical, specifies whether to plot a mean line for all values
-in the group}
+\item{meanLine}{logical, specifies whether to plot a mean line for all 
+values in the group}
 
 \item{medianLine}{logical, specifies whether to plot a median line for all 
 values in the group}
@@ -90,11 +90,12 @@ into facets
 }
 \details{
 Intended use of the function - using scenario A data, compare shape of the
-migration profile between a TWO GROUPS of proteins WITHIN the ONE LABEL STATE
+migration profile between a TWO GROUPS of proteins WITHIN the ONE 
+LABEL STATE
 }
 \examples{
 ##Use example normalised proteins file
-inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+inputFile <- system.file("extdata", "dataNormProts.txt", package ="ComPrAn")
 #read file in and change structure of table to required format
 forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
 ##example plot:
