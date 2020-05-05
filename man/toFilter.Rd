@@ -22,7 +22,7 @@ Filters only rows with specified values in columns Rank and Confidence Level
 , specified as cl
 }
 \examples{
- 
+
 ##Use example peptide data set, read in and clean data
 inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
 peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")

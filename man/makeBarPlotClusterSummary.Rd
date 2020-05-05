@@ -10,12 +10,12 @@ makeBarPlotClusterSummary(df, name = "sample 1")
 \item{df}{data frame, contains columns:
 `Protein Group Accessions` character
 `Protein Descriptions` character
- isLabel character ('TRUE'/'FALSE')
- columns 1 to n, numeric, n is the total number of 
- fractions/slices, each of this columns
- contains `Precursor Area` values in a given fraction(columns) 
- for a protein(rows)
- cluster integer}
+isLabel character ('TRUE'/'FALSE')
+columns 1 to n, numeric, n is the total number of 
+fractions/slices, each of this columns
+contains `Precursor Area` values in a given fraction(columns) 
+for a protein(rows)
+cluster integer}
 
 \item{name}{character, specifies the name of the sample}
 }
@@ -37,7 +37,7 @@ clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
 labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
 method = 'complete', cutoff = 0.5)
 unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
-                               method = 'complete', cutoff = 0.5)
+                                method = 'complete', cutoff = 0.5)
 #Make bar plots for labeled and unlabeled samples
 makeBarPlotClusterSummary(labTab_clust, name = 'labeled')
 makeBarPlotClusterSummary(unlabTab_clust, name = 'unlabeled')

@@ -25,7 +25,7 @@ This function checks (not neccessarily in this order):
 \item are all required columns present
 \item are these columns in correct format
 \item renames Sequence ID column to Fraction and converts values in this
- column from letters to numbers
+    column from letters to numbers
 \item reorders Protein Group Accessions containing multiple proteins
 \item removes rows in which PSM Ambiguity == 'Rejected'
 \item removes rows in which # Protein Groups == 0
@@ -34,7 +34,7 @@ This function checks (not neccessarily in this order):
 }
 }
 \examples{
- 
+
 ##Use example peptide data set, read in and clean data
 inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
 peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")

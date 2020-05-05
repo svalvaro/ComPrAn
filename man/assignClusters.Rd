@@ -41,7 +41,7 @@ clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
 labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
 method = 'complete', cutoff = 0.5)
 unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
-                               method = 'complete', cutoff = 0.5)
+                                method = 'complete', cutoff = 0.5)
 }
 \seealso{
 \code{\link{clusterComp}}

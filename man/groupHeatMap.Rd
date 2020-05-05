@@ -5,32 +5,32 @@
 \title{Make heatmap}
 \usage{
 groupHeatMap(
-  dataFrame,
-  groupData,
-  groupName,
-  titleAlign = "left",
-  newNamesCol = NULL,
-  colNumber = 2,
-  ylabel = "Protein",
-  xlabel = "Fraction",
-  legendLabel = "Relative Protein Abundance",
-  grid = TRUE,
-  labelled = "labeled",
-  unlabelled = "unlabeled"
+    dataFrame,
+    groupData,
+    groupName,
+    titleAlign = "left",
+    newNamesCol = NULL,
+    colNumber = 2,
+    ylabel = "Protein",
+    xlabel = "Fraction",
+    legendLabel = "Relative Protein Abundance",
+    grid = TRUE,
+    labelled = "labeled",
+    unlabelled = "unlabeled"
 )
 }
 \arguments{
 \item{dataFrame}{data frame, contains columns:
 `Protein Group Accessions` character
 `Protein Descriptions` character
- Fraction integer
- isLabel character ('TRUE'/'FALSE' values)
- `Precursor Area` double
- scenario character}
+Fraction integer
+isLabel character ('TRUE'/'FALSE' values)
+`Precursor Area` double
+scenario character}
 
 \item{groupData}{data frame, mandatory column: 
 `Protein Group Accessions` character - this column is used for filtering
-           optional columns: any other column of type character that should
+            optional columns: any other column of type character that should
             be used for renaming}
 
 \item{groupName}{character, name that should be used for the group specified

@@ -5,34 +5,34 @@
 \title{Compare a Single Group of Proteins Between Two Label States}
 \usage{
 oneGroupTwoLabelsCoMigration(
-  dataFrame,
-  max_frac,
-  groupData = NULL,
-  groupName = "group1",
-  meanLine = FALSE,
-  medianLine = FALSE,
-  ylabel = "Relative Protein Abundance",
-  xlabel = "Fraction",
-  legendLabel = "Condition",
-  labelled = "Labeled",
-  unlabelled = "Unlabeled",
-  jitterPoints = 0.3,
-  pointSize = 2.5,
-  grid = FALSE,
-  titleAlign = "left",
-  alphaValue = 0.5
+    dataFrame,
+    max_frac,
+    groupData = NULL,
+    groupName = "group1",
+    meanLine = FALSE,
+    medianLine = FALSE,
+    ylabel = "Relative Protein Abundance",
+    xlabel = "Fraction",
+    legendLabel = "Condition",
+    labelled = "Labeled",
+    unlabelled = "Unlabeled",
+    jitterPoints = 0.3,
+    pointSize = 2.5,
+    grid = FALSE,
+    titleAlign = "left",
+    alphaValue = 0.5
 )
 }
 \arguments{
 \item{dataFrame}{dataFrame: data frame, data frame of normalised values for
 proteins from SCENARIO A,
-          contains columns:
-         `Protein Group Accessions` character
-         `Protein Descriptions` character
-          Fraction integer
-          isLabel character ('TRUE'/'FALSE' values)
-          `Precursor Area` double
-          scenario character}
+            contains columns:
+            `Protein Group Accessions` character
+            `Protein Descriptions` character
+            Fraction integer
+            isLabel character ('TRUE'/'FALSE' values)
+            `Precursor Area` double
+            scenario character}
 
 \item{max_frac}{numeric, total number of fractions}
 

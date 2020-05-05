@@ -5,20 +5,20 @@
 \title{Create scatter plot}
 \usage{
 allPeptidesPlot(
-  .listDF,
-  protein,
-  max_frac,
-  meanLine = FALSE,
-  repPepLine = FALSE,
-  separateLabStates = FALSE,
-  grid = TRUE,
-  titleLabel = "all",
-  titleAlign = "left",
-  ylabel = "Precursor Area",
-  xlabel = "Fraction",
-  legendLabel = "Condition",
-  labelled = "Labeled",
-  unlabelled = "Unlabeled"
+    .listDF,
+    protein,
+    max_frac,
+    meanLine = FALSE,
+    repPepLine = FALSE,
+    separateLabStates = FALSE,
+    grid = TRUE,
+    titleLabel = "all",
+    titleAlign = "left",
+    ylabel = "Precursor Area",
+    xlabel = "Fraction",
+    legendLabel = "Condition",
+    labelled = "Labeled",
+    unlabelled = "Unlabeled"
 )
 }
 \arguments{
