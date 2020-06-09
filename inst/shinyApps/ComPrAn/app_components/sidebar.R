@@ -8,7 +8,7 @@ sidebar <- dashboardSidebar(
               menuItem("Import", tabName = "import", icon = icon("file-upload")),
               menuItem("Part1: Peptide-to-protein", tabName = "ptp", #icon = icon("tools"),
                        menuSubItem("Summary", tabName = "summary", icon = icon("eye")),
-                       menuSubItem("Filter", tabName = "filter", icon = icon("filter")),
+                       menuSubItem("Filter and Select", tabName = "filter", icon = icon("filter")),
                        menuSubItem("Rep Peptides", tabName = "bylabelstate", icon = icon("cogs")),
                        menuSubItem("Normalize", tabName = "normalize", icon = icon("ruler-horizontal"))
 

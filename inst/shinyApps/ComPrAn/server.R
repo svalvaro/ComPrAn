@@ -19,33 +19,18 @@ server <- function(input, output, session) {
   })
 
   peptides <- reactive({cleanData(peptides_full())})
-
+  
+  
   # Import normalized data only after the process button has been pressed:
-  normalized_full <- eventReactive(input$processNorm, {
+  compiledNorm_import <- eventReactive(input$processNorm, {
     readNorm <- input$inputfileNorm
     if (is.null(readNorm)) {
         dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
-      readr::read_tsv(dataFile)
+        protInportForAnalysis(data.table::fread(dataFile))
     } else {
-      readr::read_tsv(readNorm$datapath)
-
+        protInportForAnalysis(data.table::fread(readNorm$datapath))
     }
   })
-
-  compiledNorm_import <- reactive({normalized_full() %>%
-      gather(Fraction, `Precursor Area`, -c(`Protein Group Accessions`, `Protein Descriptions`, scenario, label)) %>%
-      rename("isLabel" = "label") %>%
-      select(`Protein Group Accessions`, `Protein Descriptions`, Fraction, isLabel, `Precursor Area`, scenario) %>%
-      mutate(`Precursor Area` = na_if(`Precursor Area`, 0)) %>%
-      mutate(isLabel = as.character(isLabel),
-             Fraction = as.integer(Fraction))
-
-      })
-
-  # Report on use case
-  # output$useCase <- renderText({
-  #   print(input$processRaw)
-  # })
 
   output$useCase <- renderText({
     if (input$processRaw != 0) {
@@ -211,48 +196,33 @@ server <- function(input, output, session) {
 
       # Step 1:
       n <- 4
-      Sys.sleep(1)
+      #Sys.sleep(1)
       incProgress(1/n, detail = "Filtering...")
       peptides_filtered <- toFilter(peptides(), rank = as.numeric(input$rank), cl = input$checkGroup)
 
       # Step 2:
-      Sys.sleep(1)
+      #Sys.sleep(1)
       incProgress(1/n, detail = "Formating Modifications and labels...")
       peptides_filtered <- splitModLab(peptides_filtered)
 
       # Step 3:
-      Sys.sleep(1)
+     # Sys.sleep(1)
       incProgress(1/n, detail = "Simplifying...")
       if(input$simplify) {
         peptides_filtered <- simplifyProteins(peptides_filtered)
       }
 
       # Step 4:
-      Sys.sleep(1)
+      #Sys.sleep(1)
       incProgress(1/n, detail = "Ready")
-      Sys.sleep(1)
+      #Sys.sleep(1)
 
     })
 
     return(peptides_filtered)
   })
   
-  # Pick representative peptide...
-  peptide_index <- eventReactive(peptides_filtered(), {
-    withProgress(message = 'Picking representative peptides environment...',
-                 value = 0, {
-
-      n <- 3
-      # Sys.sleep(3)
-      incProgress(1/n, detail = "Choosing Representative peptides")
-      peptide_index <- pickPeptide(peptides_filtered())
-      Sys.sleep(1)
-    })
-      return(peptide_index)
-  })
-
-
-
+  
   # Post-filtering
   # A in the venn diagrams
   setdiff_LU_filtered <- reactive({setdiff(peptides_filtered()$`Protein Group Accessions`[peptides_filtered()$isLabel],
@@ -306,19 +276,50 @@ server <- function(input, output, session) {
 
   })
 
-  # List of filtered values for selecting proteins
-  output$dt <- renderUI({
-    selectInput("proteinsUnion", label = "Choose protein species",
-                choices = peptides_filtered()$`Protein Group Accessions`,
-                multiple = FALSE)
+  output$pepsFilteredButton <- renderUI({
+      if(is.null(peptides_filtered())) {
+          return(0)
+      } else {
+          actionButton("pickPepsNow", "Select peptides")
+      }
   })
+  
+  # Pick representative peptide...
+  peptide_index <- eventReactive(input$pickPepsNow, {
+      withProgress(message = 'Picking representative peptides...',
+                   value = 0, {
+                       
+                      n <- 3
+                       # Sys.sleep(3)
+                     incProgress(1/n, detail = "Choosing Representative peptides")
+                     peptide_index <- pickPeptide(peptides_filtered())
+                    #Sys.sleep(1)
+                })
+      return(peptide_index)
+  })
+  
+  output$peptidesSelected <- renderText({
+      if (!is.null(peptide_index())) {
+          "Representative peptides selected, proceed to next section!"
+      }else {
+          ""
+      }
+  })
+
 
   ########################
   # analysis tab server side ####
   ########################
 
   proteinLists <- eventReactive(peptide_index(), {
-    onlyInOneLabelState_ENV(peptide_index())
+      onlyInOneLabelState_ENV(peptide_index())
+  })
+  
+  # List of filtered values for selecting proteins
+  output$dt <- renderUI({
+      selectInput("proteinsUnion", label = "Choose protein species",
+                  choices = peptides_filtered()$`Protein Group Accessions`,
+                  multiple = FALSE)
   })
   
   v <- reactiveValues(data = NULL)
@@ -340,16 +341,16 @@ server <- function(input, output, session) {
     DT::datatable(iris, options = list(paging = FALSE))
   })
 
-  # Display table for selections
-  output$x1 = DT::renderDataTable(cars, server = FALSE)
-
-  # highlight selected rows in the scatterplot
-  output$x2 = renderPlot({
-    s = input$x1_rows_selected
-    par(mar = c(4, 4, 1, .1))
-    plot(cars)
-    if (length(s)) points(cars[s, , drop = FALSE], pch = 19, cex = 2)
-  })
+  # # Display table for selections
+  # output$x1 = DT::renderDataTable(cars, server = FALSE)
+  # 
+  # # highlight selected rows in the scatterplot
+  # output$x2 = renderPlot({
+  #   s = input$x1_rows_selected
+  #   par(mar = c(4, 4, 1, .1))
+  #   plot(cars)
+  #   if (length(s)) points(cars[s, , drop = FALSE], pch = 19, cex = 2)
+  # })
 
   # print info text:
   # To test an object's value
@@ -406,6 +407,51 @@ server <- function(input, output, session) {
 
   })
 
+  ## Allow user to downloadtables of proteins in both/only one data set
+  output$downloadDataBoth <- downloadHandler(
+      filename = function() {
+          paste0("proteinsIn_Both_samples.txt")
+      },
+      content = function(file) {
+          # Write to a file specified by the 'file' argument
+          write(proteinLists()$both, file, sep = "\n")
+      }
+  )
+  
+  output$downloadDataLabeled <- downloadHandler(
+      filename = function() {
+          paste0("proteinsOnlyIn_",input$labelledName, "_sample.txt")
+      },
+      content = function(file) {
+          # Write to a file specified by the 'file' argument
+          write(proteinLists()$onlyLabelled, file, sep = "\n")
+      }
+  )
+  
+  output$downloadDataUnlabeled <- downloadHandler(
+      filename = function() {
+          paste0("proteinsOnlyIn_",input$unlabelledName, "_sample.txt")
+      },
+      content = function(file) {
+          # Write to a file specified by the 'file' argument
+          write(proteinLists()$onlyUnlabelled, file, sep = "\n")
+      }
+  )
+  
+  # Display download link when data are available
+  output$dl_both <- renderUI({
+      req(proteinLists())
+      downloadLink("downloadDataBoth", "List of proteins present in both samples")
+  })
+  output$dl_onlyLab <- renderUI({
+      req(proteinLists())
+      downloadLink("downloadDataLabeled", "List of proteins present only in labelled sample")
+  })
+  output$dl_onlyUnlab <- renderUI({
+      req(proteinLists())
+      downloadLink("downloadDataUnlabeled", "List of proteins present only in unlabelled sample")
+  })
+  # 
   ###############################
   # Normalization tab server side ####
   ###############################
@@ -751,14 +797,37 @@ server <- function(input, output, session) {
   })
 
   # Send plot to GUI
+  
+  vComig <- reactiveValues(data = NULL)
+  
+  observeEvent(input$groupData_coMig1, {
+      vComig$data <- strsplit(x = input$groupData_coMig1, split = "\\s")[[1]]
+  })
+  
+  observeEvent(input$mtLSU, {
+      vComig$data <- mtLSUProts
+  })  
+  observeEvent(input$mtSSU, {
+      vComig$data <- mtSSUProts
+  })  
+  
+  coMig1Plot_proteins <- reactive({
+      if(is.null(vComig$data)){
+          return(NULL)
+      } else {
+          return(vComig$data)
+      } 
+  })
+
   coMig_1_plot <- reactive({
-    req(input$groupData_coMig1)
+     
+    req(coMig1Plot_proteins())
 
     oneGroupTwoLabelsCoMigration(compiledNorm_plot(), as.numeric(max(compiledNorm_plot()$Fraction)),
                                                          # groupData = groupDataVector,
                                                          # groupName = groupName,
 
-                                                         groupData = strsplit(x = input$groupData_coMig1, split = "\\s")[[1]],
+                                                         groupData = coMig1Plot_proteins(),
                                                          groupName = input$groupName_coMig1,
 
                                                          grid = input$grid_coMig1,

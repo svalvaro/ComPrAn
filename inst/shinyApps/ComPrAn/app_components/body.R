@@ -132,24 +132,48 @@ body <- dashboardBody(
     # filter tab content ####
     ########################
     tabItem(tabName="filter",
-            h2("Filter data"),
-            p("Choose your filtering criteria in this section.",
+            # fluidRow(
+            #     box(title = "Pre-filtering", width = 6, solidHeader = TRUE,
+            #         textOutput("preFilterVennText"),
+            #         plotOutput("preFilterVenn", width = "100%", height = "450px")
+            #     ),
+            #     box(title = "Post-filtering", width = 6, solidHeader = TRUE,
+            #         textOutput("postFilterVennText"),
+            #         plotOutput("postFilterVenn", width = "100%", height = "450px")
+            #     )
+            # )
+            
+            fluidRow(
+                column(6,
+                       h2("Filter data"),
+                       p("Choose your filtering criteria in this section.",
+                         
+                         # numericInput("frac","Number of fractions:", value = max_frac()),
+                         uiOutput("UI_rank"),
+                         #sliderInput("rank", label = "Keep peptides ranked below or equal to:",
+                         #            min = 1, max = max(peptides$Rank), value = 1, step = 1),
+                         
+                         checkboxGroupInput("checkGroup", label = "Include peptides with confidence level:",
+                                            choices = list("High" = "High", "Middle" = "Middle", "Low" = "Low"),
+                                            selected = c("High", "Middle","Low")),
+                         
+                         checkboxInput("simplify", label = "Simplify data set", value = TRUE),
+                         
+                         actionButton("filter", "Filter the data"),
+                         "(Larger number of processing steps happens after pressing 'Filter the data' button, this might take a while.) "
+                         
+                       )
+                ),
+                column(6,
+                       h2("Select representative peptides"),
+                       p("Once you filter the data a button will appear here to allow you to select representative peptides.",
+                       uiOutput("pepsFilteredButton"),
+                       textOutput("peptidesSelected")
 
-              # numericInput("frac","Number of fractions:", value = max_frac()),
-              uiOutput("UI_rank"),
-              #sliderInput("rank", label = "Keep peptides ranked below or equal to:",
-              #            min = 1, max = max(peptides$Rank), value = 1, step = 1),
-
-              checkboxGroupInput("checkGroup", label = "Include peptides with confidence level:",
-                                 choices = list("High" = "High", "Middle" = "Middle", "Low" = "Low"),
-                                 selected = c("High", "Middle","Low")),
-
-              checkboxInput("simplify", label = "Simplify data set", value = TRUE),
-
-              actionButton("filter", "Filter the data"),
-              "(Larger number of processing steps happens after pressing 'Filter the data' button, this might take a while.) "
-
-              ),
+                ))
+            ),
+            
+            
 
             fluidRow(
               box(title = "Pre-filtering", width = 6, solidHeader = TRUE,
@@ -175,8 +199,9 @@ body <- dashboardBody(
               by the analysis.",
               style="padding-left: 0em"),
             fluidRow(
-
-              tabBox(id = "tabset1", height = "250px",
+                column(width = 6,
+                       h4(strong("Selec protein:")),
+              tabBox(id = "tabset1", height = "250px",width = 12,
                      tabPanel("All Proteins",
                               uiOutput("dt")
                      ),
@@ -192,10 +217,17 @@ body <- dashboardBody(
                               )
                      )
               )
+                ),
+              column(width = 6, 
+                     h4(strong("Available downloads:"))),
+              uiOutput("dl_both"),
+              uiOutput("dl_onlyLab"),
+                       uiOutput("dl_onlyUnlab")
               ),
 
             fluidRow(
               column(width = 6,
+                     h4(strong("Controls for plot settings:")),
                      checkboxInput("allPeptidesPlot_mean", label = "Show mean line", value = FALSE),
                      checkboxInput("allPeptidesPlot_reppep", label = "Show representative peptide line", value = FALSE),
                      checkboxInput("allPeptidesPlot_sepstates", label = "Separate label states", value = FALSE),
@@ -209,10 +241,12 @@ body <- dashboardBody(
                      textInput("allPeptidesPlot_xaxis", label = "X axis label:", value = "Fraction"),
                      textInput("allPeptidesPlot_yaxis", label = "Y axis label:", value = "Precursor Area")
               ),
-              column(width = 6, plotOutput("allPeptidesPlot", height = 500)
+              column(width = 6, 
+                     h4(strong("Plot showing all peptides that were detected for a protein:")),
+                     plotOutput("allPeptidesPlot", height = 500)
                      )
             )
-            # )
+
     ),
 
     ########################
@@ -327,7 +361,11 @@ body <- dashboardBody(
                                                         label = "Group Name",
                                                         value = "Group 1"),
                                               textAreaInput("groupData_coMig1",
-                                                            label = "Protein IDs (one per line)")
+                                                            label = "Protein IDs (one per line)"),
+                                              p("Predefined protein groups:"),
+                                              actionButton("mtLSU", "mitoribosome - large subunit"),
+                                              p(""),
+                                              actionButton("mtSSU", "mitoribosome - small subunit")
                               ),
                               column(width = 3,
                                      checkboxInput("grid_coMig1", label = "Show grid", value = FALSE),
@@ -337,7 +375,7 @@ body <- dashboardBody(
                                                  min = 0, max = 1, value = 0.3, step = 0.05),
                                      sliderInput("pointSize_coMig1", label = "Point size",
                                                  min = 1, max = 10, value = 2.5, step = 0.5),
-                                     sliderInput("alphaValue_coMig1", label = "Transparency",
+                                     sliderInput("alphaValue_coMig1", label = "Opacity",
                                                  min = 0.1, max = 1, value = 0.5, step = 0.05),
                                      radioButtons("titleAlign_coMig1", label = "Title alignment",
                                                   choices = list("Left" = "left", "Center" = "center", "Right" = "right"),
@@ -376,7 +414,7 @@ body <- dashboardBody(
                                                  min = 0, max = 1, value = 0.3, step = 0.05),
                                      sliderInput("pointSize_coMig2", label = "Point size",
                                                  min = 1, max = 10, value = 2.5, step = 0.5),
-                                     sliderInput("alphaValue_coMig2", label = "Transparency",
+                                     sliderInput("alphaValue_coMig2", label = "Opacity",
                                                  min = 0.1, max = 1, value = 0.5, step = 0.05),
                                      radioButtons("titleAlign_coMig2", label = "Title alignment",
                                                   choices = list("Left" = "left", "Center" = "center", "Right" = "right"),
