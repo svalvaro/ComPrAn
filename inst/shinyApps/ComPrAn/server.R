@@ -5,16 +5,16 @@
 server <- function(input, output, session) {
 
   ########################
-  # import tab server side
+  # import tab server side ####
   ########################
   # Import and do mandatory cleaning of the data only after the process button has been pressed:
   peptides_full <- eventReactive(input$processRaw, {
     readFile <- input$inputfile
     if (is.null(readFile)) {
       dataFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-      fread(dataFile)
+      data.table::fread(dataFile)
     } else {
-      fread(readFile$datapath)
+      data.table::fread(readFile$datapath)
     }
   })
 
@@ -76,7 +76,7 @@ server <- function(input, output, session) {
   output$test_widget_value <- renderText({names(peptides())[2]})
 
   ########################
-  # summary tab server side
+  # summary tab server side ####
   ########################
 
   # Plot split between labeled and unlabeled
@@ -137,9 +137,15 @@ server <- function(input, output, session) {
   })
 
   ########################
-  # filter tab server side
+  # filter tab server side ####
   ########################
 
+  output$UI_rank <- renderUI({
+      req(peptides())
+      sliderInput("rank", label = "Keep peptides ranked below or equal to:",
+                  min = 1, max = max(peptides()$Rank), value = 1, step = 1)
+  })
+  
   # Pre-filtering
   # A in the venn diagrams
   setdiff_LU_unfiltered <- reactive({setdiff(peptides()$`Protein Group Accessions`[peptides()$isLabel],
@@ -228,46 +234,24 @@ server <- function(input, output, session) {
 
     })
 
-    # makeEnv(peptides)
     return(peptides_filtered)
   })
+  
+  # Pick representative peptide...
+  peptide_index <- eventReactive(peptides_filtered(), {
+    withProgress(message = 'Picking representative peptides environment...',
+                 value = 0, {
 
-  # Make the Environment...
-  observeEvent(peptides_filtered(), {
-    withProgress(message = 'Making environment...', value = 0, {
-
-      n <- 6
+      n <- 3
       # Sys.sleep(3)
-      incProgress(1/n, detail = "Making environment")
-      
-      # Use makeEnv function
-      peptide_index <- makeEnv(peptides_filtered())
-      
-      # Manually just make a list
-      # peptide_index <- list()
-      # for (i in unique(peptides_filtered()$`Protein Group Accessions`)) {
-      #   peptide_index[[i]] <- peptides_filtered()[peptides_filtered()$`Protein Group Accessions` == i,]
-      # }
-      
-
-      #run new version of pickPeptide_new on all
       incProgress(1/n, detail = "Choosing Representative peptides")
-      for (i in names(peptide_index)) {
-
-        # assign(i, pickPeptide_new(peptide_index[[i]]), envir = peptide_index)
-        assign(i, pickPeptide(peptide_index[[i]]), envir = peptide_index)
-
-      }
-
-      #maybe write out in how many fractions was a gived protein detected
-      # count(unique(peptide_index[[listOnlyOneLabState[["onlyLabelled"]][30]]]['Fraction']))
-
+      peptide_index <- pickPeptide(peptides_filtered())
+      Sys.sleep(1)
     })
+      return(peptide_index)
   })
 
-  listOnlyOneLabState <- eventReactive(peptides_filtered(), {
-    onlyInOneLabelState_ENV(peptide_index)
-  })
+
 
   # Post-filtering
   # A in the venn diagrams
@@ -325,18 +309,18 @@ server <- function(input, output, session) {
   # List of filtered values for selecting proteins
   output$dt <- renderUI({
     selectInput("proteinsUnion", label = "Choose protein species",
-                choices = peptides_filtered()$`Protein Group Accessions`[1:10],
+                choices = peptides_filtered()$`Protein Group Accessions`,
                 multiple = FALSE)
   })
 
   ########################
-  # analysis tab server side
+  # analysis tab server side ####
   ########################
 
-  proteinLists <- eventReactive(input$filter, {
-    onlyInOneLabelState_ENV(peptide_index)
+  proteinLists <- eventReactive(peptide_index(), {
+    onlyInOneLabelState_ENV(peptide_index())
   })
-
+  
   v <- reactiveValues(data = NULL)
 
   observeEvent(input$chooseUnlabeled, {
@@ -393,9 +377,9 @@ server <- function(input, output, session) {
 
   # allPeptidesPlot
   output$allPeptidesPlot = renderPlot({
-    
-    req(peptide_index)
-    
+
+    req(peptide_index())
+
     if (input$tabset1 == "All Proteins") {
       if (is.null(input$proteinsUnion)) {
         return()
@@ -407,8 +391,8 @@ server <- function(input, output, session) {
     } else {
       protein <- v$data[input$allPeptides_choose_rows_selected]
     }
-
-    allPeptidesPlot(peptide_index, protein, max(peptides()$Fraction),
+    req(protein)
+    allPeptidesPlot(peptide_index(), protein, max(peptides()$Fraction),
                     meanLine = input$allPeptidesPlot_mean,
                     repPepLine = input$allPeptidesPlot_reppep,
                     separateLabStates = input$allPeptidesPlot_sepstates,
@@ -420,49 +404,18 @@ server <- function(input, output, session) {
                     labelled = input$labelledName,
                     unlabelled = input$unlabelledName)
 
-
   })
 
   ###############################
-  # Normalization tab server side
+  # Normalization tab server side ####
   ###############################
 
-  protNormLab <- eventReactive(input$normData, {
-
-    withProgress(message = 'Normalizing labeled...', value = 0, {
-      incProgress(0.3, detail = "working...")
-
-      names(peptide_index) %>%
-        map_df(~ extractRepPeps(peptide_index[[.]],scenario = 'A', label = T)) %>%
-        normalizeTable()
-
-    })
-  })
-
-  protNormUnlab <- eventReactive(input$normData, {
-    withProgress(message = 'Normalizing unlabeled...', value = 0, {
-      incProgress(0.3, detail = "working...")
-      names(peptide_index) %>%
-        map_df(~ extractRepPeps(peptide_index[[.]],scenario = 'A', label = F)) %>%
-        normalizeTable()
-    })
-  })
-
-  protNormComb <- eventReactive(input$normData, {
-    withProgress(message = 'Normalizing combined...', value = 0, {
-      incProgress(0.3, detail = "working...")
-      names(peptide_index) %>%
-        map_df(~ extractRepPeps(peptide_index[[.]],scenario = 'B')) %>%
-        normalizeTable()
-    })
-  })
-
-  compiledExport <- reactive({
-    normTableForExport(protNormLab(), protNormUnlab(), protNormComb())
+  compiledExport <- eventReactive(input$normData,{
+      getNormTable(peptide_index(),purpose = "export")
     })
 
-  compiledNorm <- reactive({
-      normTableWideToLong(protNormLab(), protNormUnlab(), protNormComb())
+  compiledNorm <- eventReactive(input$normData,{
+      getNormTable(peptide_index(),purpose = "analysis")
     })
 
   output$dl_Norm <- renderUI({
@@ -492,7 +445,7 @@ server <- function(input, output, session) {
   })
 
   ###############################
-  # proteinNormViz tab server side
+  # proteinNormViz tab server side ####
   ###############################
 
   # Check for a dataset. if one has been imported, or if the example file is being used
@@ -530,8 +483,8 @@ server <- function(input, output, session) {
     }
 
     # proteinPlot(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], protein, max(peptides()$Fraction),
-    proteinPlot(compiledNorm_plot(), protein, as.numeric(max(compiledNorm_plot()$Fraction)),
-
+       proteinPlot(compiledNorm_plot(), protein, as.numeric(max(compiledNorm_plot()$Fraction)),
+ 
                 grid = input$allProteinPlot_removegrid,
                 titleLabel = input$allProteinPlot_title,
                 titleAlign = input$allProteinPlot_align,
@@ -544,7 +497,7 @@ server <- function(input, output, session) {
 
   # Send the reactive plot to the UI
   output$proteinPlot = renderPlot({
-    normPlotSingle()
+      normPlotSingle()
   })
 
   # Display download link only if a protein is selected
@@ -565,6 +518,7 @@ server <- function(input, output, session) {
       ggsave(file, normPlotSingle())
     }
   )
+
 
   # Input for multiple normalized plots
   normPlotsMultipleInput <- reactive({
@@ -594,7 +548,7 @@ server <- function(input, output, session) {
           })
 
   ###############################
-  # heatMaps tab server side
+  # heatMaps tab server side ####
   ###############################
 
   # Just some test output for me
@@ -610,43 +564,131 @@ server <- function(input, output, session) {
       textInput("heatMapGroupNameColumn", label = "Column with new names", value = "Protein Group Accessions")
     }
   })
+  
+  
 
+  
+  # df <- eventReactive(input$heatMapFile,
+  #       {
+  #           tryCatch(
+  #               {
+  #                   df <- read_tsv(input$heatMapFile$datapath)
+  #               },
+  #               error = function(e) {
+  #                   # return a safeError if a parsing error occurs
+  #                   stop(safeError(e))
+  #               }
+  #           )
+  #       })
+  # 
+  # df <- eventReactive(input$exampleGroup,
+  #                     {
+  #                         df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
+  #                     })
+  # 
+  # # Make reactive plot object
+  # heatMapPlotObject <- reactive({
+  #     req(df())
+  #     
+  #     if (is.null(input$heatMapGroupNameColumn)) {
+  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], 
+  #                      df(), input$heatMapGroupName,
+  #                      titleAlign = "center",
+  #                      grid = F, colNumber = input$showSamplesHeatMap,
+  #                      labelled = input$labelledName,
+  #                      unlabelled = input$unlabelledName)
+  #     } else {
+  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], 
+  #                      df(), input$heatMapGroupName,
+  #                      titleAlign = "center",
+  #                      newNamesCol = input$heatMapGroupNameColumn,
+  #                      grid = F, colNumber = input$showSamplesHeatMap,
+  #                      labelled = input$labelledName,
+  #                      unlabelled = input$unlabelledName)
+  #     }
+  #     
+  # })
+  
   # Make reactive plot object
   heatMapPlotObject <- reactive({
-    req(input$heatMapFile)
+      req(input$heatMapFile)
+      tryCatch(
+          {
+              df <- read_tsv(input$heatMapFile$datapath)
+          },
+          error = function(e) {
+              # return a safeError if a parsing error occurs
+              stop(safeError(e))
+          }
+      )
 
-    tryCatch(
-      {
-        df <- read_tsv(input$heatMapFile$datapath)
-      },
-      error = function(e) {
-        # return a safeError if a parsing error occurs
-        stop(safeError(e))
+      if (is.null(input$heatMapGroupNameColumn)) {
+          groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+                       df, input$heatMapGroupName,
+                       titleAlign = "center",
+                       grid = F, colNumber = input$showSamplesHeatMap,
+                       labelled = input$labelledName,
+                       unlabelled = input$unlabelledName)
+      } else {
+          groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+                       df, input$heatMapGroupName,
+                       titleAlign = "center",
+                       newNamesCol = input$heatMapGroupNameColumn,
+                       grid = F, colNumber = input$showSamplesHeatMap,
+                       labelled = input$labelledName,
+                       unlabelled = input$unlabelledName)
       }
-    )
-
-    if (is.null(input$heatMapGroupNameColumn)) {
-      groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], df, input$heatMapGroupName,
-                   titleAlign = "center",
-                   grid = F, colNumber = input$showSamplesHeatMap,
-                   labelled = input$labelledName,
-                   unlabelled = input$unlabelledName)
-    } else {
-      groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], df, input$heatMapGroupName,
-                   titleAlign = "center",
-                   newNamesCol = input$heatMapGroupNameColumn,
-                   grid = F, colNumber = input$showSamplesHeatMap,
-                   labelled = input$labelledName,
-                   unlabelled = input$unlabelledName)
-    }
 
   })
-
-  # Send heatmap to GUI
-  output$heatMapPlot = renderPlot({
-    heatMapPlotObject()
+  
+  # Make reactive plot object from example group
+  heatMapPlotObject_example <- reactive({
+      req(input$exampleGroup)
+      df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
+      
+      if (is.null(input$heatMapGroupNameColumn)) {
+          groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+                       df, input$heatMapGroupName,
+                       titleAlign = "center",
+                       grid = F, colNumber = input$showSamplesHeatMap,
+                       labelled = input$labelledName,
+                       unlabelled = input$unlabelledName)
+      } else {
+          groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+                       df, input$heatMapGroupName,
+                       titleAlign = "center",
+                       newNamesCol = input$heatMapGroupNameColumn,
+                       grid = F, colNumber = input$showSamplesHeatMap,
+                       labelled = input$labelledName,
+                       unlabelled = input$unlabelledName)
+      }
+      
   })
 
+  
+  observeEvent(input$exampleGroup,{
+               output$heatMapPlot = renderPlot({
+                   heatMapPlotObject_example()
+               })
+               
+  })
+  
+  observeEvent(input$heatMapFile,{
+               output$heatMapPlot= renderPlot({
+                   heatMapPlotObject()
+               })
+               
+  })
+  # # Send heatmap to GUI
+  # output$heatMapPlot = renderPlot({
+  #     heatMapPlotObject()
+  # })
+  # 
+  # # Send heatmap to GUI
+  # output$heatMapPlot_example = renderPlot({
+  #     heatMapPlotObject_example()
+  # })
+  
   # Save heatmap
   # Display download link only if a protein is selected
   output$dl_Heat_Plot <- renderUI({
@@ -668,7 +710,7 @@ server <- function(input, output, session) {
   )
 
   ###############################
-  # coMigration tab server side
+  # coMigration tab server side ####
   ###############################
 
   # Comigration plot 1:
@@ -822,52 +864,43 @@ server <- function(input, output, session) {
   )
 
   ###############################
-  # cluster tab server side
+  # cluster tab server side ####
   ###############################
-
-  forClustering <- reactive({
-    compiledNorm_plot() %>%
-    # as_tibble() %>%
-      filter(scenario == "A") %>%
-      select(-scenario) %>%
-      mutate(`Precursor Area` = replace_na(`Precursor Area`, 0)) %>%
-      spread(Fraction, `Precursor Area`)
-  })
-
-  labelledTable <- reactive({forClustering()[forClustering()$isLabel==TRUE,]})
-  unlabelledTable <- reactive({forClustering()[forClustering()$isLabel==FALSE,]})
-
-  #create distance matrix
-  labDist <- reactive({
-    withProgress(message = "Calculating distance matrix...", value = 0, {
-      incProgress(0.5, detail = "Working...")
-      makeDist(t(select(labelledTable(),-c(1:3))), centered = input$distCentered)
-    })
-    })
-
-  unlabDist <- reactive({
-    withProgress(message = "Calculating distance matrix...", value = 0, {
-      incProgress(0.5, detail = "Working...")
-      makeDist(t(select(unlabelledTable(),-c(1:3))), centered = input$distCentered)
-    })
-    })
-
+  
+  ## Create components necessary for clustering
+  clusteringDF <- eventReactive(input$distCentered,{
+      clusterComp(compiledNorm_plot(),
+                              scenar = "A", 
+                              PearsCor = input$distCentered)})
+  
+  
   # Generate slider for cutoff
   output$UI_distCutoff <- renderUI({
-    req(labDist())
-    req(unlabDist())
-
-    sliderInput("distCutoff", "Cutoff for distance matrix",
-                min = round(min(labDist(),unlabDist()),2),
-                max = round(max(labDist(),unlabDist()),2),
-                value = 0.8, step = 0.05)
+      req(clusteringDF())
+      
+      sliderInput("distCutoff", "Cutoff for distance matrix",
+                  min = round(min(clusteringDF()$labDistM,
+                                  clusteringDF()$unlabDistM),2),
+                  max = round(max(clusteringDF()$labDistM,
+                                  clusteringDF()$unlabDistM),2),
+                  value = round(max(clusteringDF()$labDistM,
+                                    clusteringDF()$unlabDistM)/2,2),
+                  step = 0.05)
   })
+  
+  labelledTable_clust <- reactive({
+      req(input$distCutoff)
+      assignClusters(.listDf = clusteringDF(),
+                                                  sample = "labeled", 
+                                        method = input$distMethod, 
+                                        cutoff = input$distCutoff)})
 
-  labelledTable_clust <- reactive({assignClusters(labelledTable(), labDist(),
-                                  method = input$distMethod, cutoff = input$distCutoff)})
-
-  unlabelledTable_clust <- reactive({assignClusters(unlabelledTable(),unlabDist(),
-                                    method = input$distMethod, cutoff = input$distCutoff)})
+  unlabelledTable_clust <- reactive({
+      req(input$distCutoff)
+      assignClusters(.listDf = clusteringDF(),
+                                                    sample = "unlabeled", 
+                                                    method = input$distMethod, 
+                                                    cutoff = input$distCutoff)})
 
   #make bar plots summarizing numbers of proteins per cluster
   labeledBar <- reactive({

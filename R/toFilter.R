@@ -21,6 +21,6 @@
 toFilter <- function(.data, rank = 1, cl = c('Low','Middle','High')) {
     .data %>%
         dplyr::filter(.data$Rank <= rank,
-                        `Confidence Level` %in% cl)
+                        `Confidence Level` %in% cl) ->.data
     return(.data)
 }

@@ -6,7 +6,7 @@ body <- dashboardBody(
   tabItems(
 
     ########################
-    # intro tab content
+    # intro tab content ####
     ########################
     tabItem(
       tabName = "intro",
@@ -56,7 +56,7 @@ body <- dashboardBody(
       ),
 
     ########################
-    # import tab content
+    # import tab content ####
     ########################
     tabItem(tabName="import",
             h2("Import data"),
@@ -105,7 +105,7 @@ body <- dashboardBody(
             )
     ),
     ########################
-    # summary tab content
+    # summary tab content ####
     ########################
     tabItem(tabName="summary",
             h2("Summary"),
@@ -129,15 +129,16 @@ body <- dashboardBody(
     ),
 
     ########################
-    # filter tab content
+    # filter tab content ####
     ########################
     tabItem(tabName="filter",
             h2("Filter data"),
             p("Choose your filtering criteria in this section.",
 
               # numericInput("frac","Number of fractions:", value = max_frac()),
-              sliderInput("rank", label = "Keep peptides ranked below or equal to:",
-                          min = 1, max = max(peptides$Rank), value = 1, step = 1),
+              uiOutput("UI_rank"),
+              #sliderInput("rank", label = "Keep peptides ranked below or equal to:",
+              #            min = 1, max = max(peptides$Rank), value = 1, step = 1),
 
               checkboxGroupInput("checkGroup", label = "Include peptides with confidence level:",
                                  choices = list("High" = "High", "Middle" = "Middle", "Low" = "Low"),
@@ -163,7 +164,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # bylabelstate tab content
+    # bylabelstate tab content ####
     ########################
     tabItem(tabName="bylabelstate",
             h2("Analysis Summary"),
@@ -215,7 +216,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # normalize tab content
+    # normalize tab content ####
     ########################
     tabItem(tabName="normalize",
             h2("Normalize protein values"),
@@ -234,7 +235,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # proteinNormViz tab content
+    # proteinNormViz tab content ####
     ########################
     tabItem(tabName="proteinNormViz",
             h2("Protein Normalized Profile"),
@@ -274,7 +275,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # heatMaps tab content
+    # heatMaps tab content ####
     ########################
     tabItem(tabName="heatMaps",
             h2("Heatmaps of Normalized Profiles"),
@@ -285,6 +286,7 @@ body <- dashboardBody(
                      fileInput("heatMapFile", "Select a file for analysis", accept = c('text/tab-separated-values',
                                                                                        '.csv',
                                                                                        '.tsv')) ,
+                     actionButton("exampleGroup", "Use example group"),
                      verbatimTextOutput("HeatTest"),
 
                      textInput("heatMapGroupName", label = "Group Name:", value = "Group 1"),
@@ -297,6 +299,7 @@ body <- dashboardBody(
                                   selected = 1)),
               column(width = 6,
                      plotOutput("heatMapPlot", height = 500),
+                     #plotOutput("heatMapPlot_example", height = 500),
                      uiOutput("dl_Heat_Plot"))
 
 
@@ -304,7 +307,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # co-migration tab content
+    # co-migration tab content ####
     ########################
     tabItem(tabName="coMigration",
             h2("Co-migration plots"),
@@ -396,7 +399,7 @@ body <- dashboardBody(
 
 
     ########################
-    # cluster tab content
+    # cluster tab content ####
     ########################
     tabItem(tabName="cluster",
             h2("Clustering"),
@@ -405,8 +408,8 @@ body <- dashboardBody(
             fluidRow(
               column(width = 6,
                      radioButtons("distCentered", label = "Pearson correlation variant:",
-                                  choices = list("centered" = TRUE,
-                                                 "uncentered" = FALSE
+                                  choices = list("centered" = "centered",
+                                                 "uncentered" = "uncentered"
                                                  )),
 
                      radioButtons("distMethod", "Linkage method:",
@@ -430,7 +433,7 @@ body <- dashboardBody(
 
 
     ########################
-    # QuestionsAndAnswers tab content
+    # QuestionsAndAnswers tab content ####
     ########################
     tabItem(tabName="QuestionsAndAnswers",
             h2("FAQ"),
@@ -449,7 +452,7 @@ body <- dashboardBody(
     ),
 
     ########################
-    # feedback tab content
+    # feedback tab content ####
     ########################
     tabItem(tabName="feedback",
             h2("Feedback"),
