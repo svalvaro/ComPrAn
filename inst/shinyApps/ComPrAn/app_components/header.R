@@ -2,4 +2,4 @@
 # header.R
 # 
 ###################
-header <- dashboardHeader(title = "MS Complexomics Analysis App")
+header <- dashboardHeader(title = "ComPrAn app")

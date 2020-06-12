@@ -9,6 +9,7 @@ library(rio)
 library(grid)
 library(ggplot2)
 library(readr)
+library(shinyjs)
 
 ##global options
 options(shiny.maxRequestSize = 150*1024^2)

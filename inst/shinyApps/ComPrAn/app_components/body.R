@@ -3,8 +3,14 @@
 #
 ###################
 body <- dashboardBody(
+    tags$head(tags$style(HTML('
+      .main-header .logo {
+        font-weight: bold;
+        font-size: 24px;
+      }
+    '))),
   tabItems(
-
+   
     ########################
     # intro tab content ####
     ########################
@@ -12,9 +18,9 @@ body <- dashboardBody(
       tabName = "intro",
       h2("Introduction"),
       p(
-        strong("Complexome Profiling Analysis") ,
+        strong("Complexome profiling") ,
         "or",
-        strong("ComPrAn"),
+        strong("complexomics"),
         "is a method used in biology to study migration profiles of proteins and protein complexes. First, ",
         strong("sample is separated into fractions"),
         ", typically by blue native electrophoresis or gradient centrifugation and individual",
@@ -62,7 +68,7 @@ body <- dashboardBody(
             h2("Import data"),
             p("Enter a file to use, if this is blank, we'll just use an example file"),
 
-            fluidRow(
+            fluidRow(useShinyjs(),
 
               tabBox(id = "tabsetImport", height = "250px",
                      tabPanel("Raw Data",
@@ -83,7 +89,7 @@ body <- dashboardBody(
                      )
               ),
 
-              textOutput("useCase")
+              h3(textOutput("useCase"))
 
 
             ),
@@ -108,6 +114,15 @@ body <- dashboardBody(
     # summary tab content ####
     ########################
     tabItem(tabName="summary",
+            conditionalPanel(
+                condition = "output.useCase != 'Using raw data file. Proceed to part 1.'",
+                h3(strong("Note: You need to import peptide data to use this section.")),
+                h4("Go to Import -> Raw data box -> select peptide data file")
+                
+            ),
+            
+            conditionalPanel(
+                condition = "output.useCase == 'Using raw data file. Proceed to part 1.'",
             h2("Summary"),
             p("Here is a summary of the peptide values in your raw data:"),
 
@@ -124,7 +139,7 @@ body <- dashboardBody(
             fluidRow(
               # textOutput("selected_var"),
               plotOutput("labUnlabSplit", width = "100%", height = "150px")
-            )
+            ))
 
     ),
 
@@ -132,17 +147,14 @@ body <- dashboardBody(
     # filter tab content ####
     ########################
     tabItem(tabName="filter",
-            # fluidRow(
-            #     box(title = "Pre-filtering", width = 6, solidHeader = TRUE,
-            #         textOutput("preFilterVennText"),
-            #         plotOutput("preFilterVenn", width = "100%", height = "450px")
-            #     ),
-            #     box(title = "Post-filtering", width = 6, solidHeader = TRUE,
-            #         textOutput("postFilterVennText"),
-            #         plotOutput("postFilterVenn", width = "100%", height = "450px")
-            #     )
-            # )
-            
+            conditionalPanel(
+                condition = "output.useCase != 'Using raw data file. Proceed to part 1.'",
+                h3(strong("Note: You need to import peptide data to use this section.")),
+                h4("Go to Import -> Raw data box -> select peptide data file")
+                
+            ),
+            conditionalPanel(
+                condition = "output.useCase == 'Using raw data file. Proceed to part 1.'",
             fluidRow(
                 column(6,
                        h2("Filter data"),
@@ -166,11 +178,13 @@ body <- dashboardBody(
                 ),
                 column(6,
                        h2("Select representative peptides"),
-                       p("Once you filter the data a button will appear here to allow you to select representative peptides.",
-                       uiOutput("pepsFilteredButton"),
-                       textOutput("peptidesSelected")
+                       p("Once you filter the data a button will appear here to allow you to select representative peptides."),
+                       conditionalPanel(
+                           condition = "output.filterTabPostVenn == 'show'",
+                         uiOutput("pepsFilteredButton"),
+                       textOutput("openRepPep"))
 
-                ))
+                )
             ),
             
             
@@ -180,17 +194,40 @@ body <- dashboardBody(
                   textOutput("preFilterVennText"),
                   plotOutput("preFilterVenn", width = "100%", height = "450px")
               ),
+              
               box(title = "Post-filtering", width = 6, solidHeader = TRUE,
+                  conditionalPanel(
+                      condition = "output.filterTabPostVenn == 'show'",
                   textOutput("postFilterVennText"),
                   plotOutput("postFilterVenn", width = "100%", height = "450px")
               )
-            )
+            )))
     ),
 
     ########################
     # bylabelstate tab content ####
     ########################
     tabItem(tabName="bylabelstate",
+            conditionalPanel(
+                condition = "output.openRepPep != 'Representative peptides selected, proceed to next section!'",
+    
+                h3(strong("Note: You need to select representative peptides to use this section.")),
+                h4(strong("Go to Filter and Select tab")),
+                h5("If there is a note shown, follow the instructions on Filter and Select tab."),
+                h4("If you see the content of Filter and Select tab:"),
+                h4("Select filtering options you want -> press ",em("`Filter`") ," button -> 
+                   press ",em("`Select peptides`"), " button -> you can use Rep peptides tab now",
+                   style = "padding-left: 1em")
+                # ,p(),
+                # p(),
+                # p("On this tab you will be able to:"),
+                # p("- display plot with all peptides for a selected protein", br(),
+                #    "- download list of proteins present in both or only in one of the two samples",
+                #   style = "padding-left: 1em")
+            ),
+            
+            conditionalPanel(
+                condition = "output.openRepPep == 'Representative peptides selected, proceed to next section!'",
             h2("Analysis Summary"),
             p("Here you can search for presence/absence of a protein in your data set.
               The plot displayes all peptides that belong to the selected protein.
@@ -245,7 +282,7 @@ body <- dashboardBody(
                      h4(strong("Plot showing all peptides that were detected for a protein:")),
                      plotOutput("allPeptidesPlot", height = 500)
                      )
-            )
+            ))
 
     ),
 
@@ -253,25 +290,67 @@ body <- dashboardBody(
     # normalize tab content ####
     ########################
     tabItem(tabName="normalize",
+            
+            conditionalPanel(
+                condition = "output.openRepPep != 'Representative peptides selected, proceed to next section!'",
+                h3(strong("Note: You need to select representative peptides to use this section.")),
+                h4(strong("Go to Filter and Select tab")),
+                h5("If there is a note shown, follow the instructions on Filter and Select tab."),
+                h4("If you see the content of Filter and Select tab:"),
+                h4("Select filtering options you want -> press ",em("`Filter`") ," button -> 
+                   press ",em("`Select peptides`"), " button -> you can use Normalize tab now",
+                   style = "padding-left: 1em")
+                # ,p(),
+                # p(),
+                # p("On this tab you will be able to:"),
+                # p("- produce a table with normalised protein values neccessary for Part 2", br(),
+                #    "- download normalised protein table in tab separated format",
+                #   style = "padding-left: 1em")
+            ),
+            
+            conditionalPanel(
+                condition = "output.openRepPep == 'Representative peptides selected, proceed to next section!'",
             h2("Normalize protein values"),
             p("For easier comparison of protein co-migrations and quantities we
               normalize all values to be between 0 and 1."),
 
             fluidRow(
               column(width = 6,
-                     actionButton("normData", "Normalize the data")
+                     actionButton("normData", "Normalize the data"),
+                     conditionalPanel(
+                         condition = "output.normProtDownload == 'show'",
+                         h4(strong("Part 1 analysis finished, you may proceed to Part 2.")))
               ),
+              conditionalPanel(
+                  condition = "output.normProtDownload == 'show'",
               column(width = 6,
-                     verbatimTextOutput("NormTest"),
+                     #verbatimTextOutput("NormTest"),
+                     h4("Normalized protein data are available for download:"),
                      uiOutput("dl_Norm")
-              )
-            )
+                    
+              ))
+            ))
     ),
 
     ########################
     # proteinNormViz tab content ####
     ########################
     tabItem(tabName="proteinNormViz",
+            conditionalPanel(
+                condition = "output.openPart2 != 'Part2 ready!'",
+                h3(strong("Note: You need to do one of the following to access this section")),
+                h4(strong("- Import protein data"),
+                    style = "padding-left: 1em"),
+                h4("Go to Import -> Normalized values box -> select protein data file",
+                   style = "padding-left: 2em"),
+                h4(strong("- Use Part 1 to produce protein data from peptide data"),
+                   style = "padding-left: 1em"),
+                h4("Follow instructions on tabs in Part 1", 
+                   style = "padding-left: 2em")
+            ),
+            
+            conditionalPanel(
+                condition = "output.openPart2 == 'Part2 ready!'",
             h2("Protein Normalized Profile"),
             p("This plot ",
               strong("compares quantity"),
@@ -305,13 +384,27 @@ body <- dashboardBody(
               )
 
             )
-            )
+            ))
     ),
 
     ########################
     # heatMaps tab content ####
     ########################
     tabItem(tabName="heatMaps",
+            conditionalPanel(
+                condition = "output.openPart2 != 'Part2 ready!'",
+                h3(strong("Note: You need to do one of the following to access this section")),
+                h4(strong("- Import protein data"),
+                   style = "padding-left: 1em"),
+                h4("Go to Import -> Normalized values box -> select protein data file",
+                   style = "padding-left: 2em"),
+                h4(strong("- Use Part 1 to produce protein data from peptide data"),
+                   style = "padding-left: 1em"),
+                h4("Follow instructions on tabs in Part 1", 
+                   style = "padding-left: 2em")
+            ),
+            conditionalPanel(
+                condition = "output.openPart2 == 'Part2 ready!'",
             h2("Heatmaps of Normalized Profiles"),
             p("Quantitative comparison of a group of proteins
               between labeled and unlabeled samples"),
@@ -319,31 +412,55 @@ body <- dashboardBody(
               column(width = 6,
                      fileInput("heatMapFile", "Select a file for analysis", accept = c('text/tab-separated-values',
                                                                                        '.csv',
-                                                                                       '.tsv')) ,
+                                                                                       '.tsv',
+                                                                                       '.txt')) ,
                      actionButton("exampleGroup", "Use example group"),
                      verbatimTextOutput("HeatTest"),
 
                      textInput("heatMapGroupName", label = "Group Name:", value = "Group 1"),
 
+                     verbatimTextOutput("testDF"),
+                     verbatimTextOutput("testCols"),
                      checkboxInput("renameProteinsHeatMap", label = "Rename proteins", value = FALSE),
-                     uiOutput("dt_3"),
+                     #uiOutput("dt_3"),
+                     uiOutput("HeatmapGroupColList"),
+                     #h4(strong(textOutput("colNotFound"))),
+                     checkboxInput("reorderProteinsHeatMap", label = "Reorder proteins", value = FALSE),
+                     uiOutput("HeatmapGroupColList_2"),
+                     verbatimTextOutput("testColType"),
 
                      radioButtons("showSamplesHeatMap", label = "Show Samples",
                                   choices = list("Side-by-side" = 2, "One above another" = 1),
-                                  selected = 1)),
+                                  selected = 1)
+                     
+                     ),
               column(width = 6,
                      plotOutput("heatMapPlot", height = 500),
                      #plotOutput("heatMapPlot_example", height = 500),
                      uiOutput("dl_Heat_Plot"))
 
 
-            )
+            ))
     ),
 
     ########################
     # co-migration tab content ####
     ########################
     tabItem(tabName="coMigration",
+            conditionalPanel(
+                condition = "output.openPart2 != 'Part2 ready!'",
+                h3(strong("Note: You need to do one of the following to access this section")),
+                h4(strong("- Import protein data"),
+                   style = "padding-left: 1em"),
+                h4("Go to Import -> Normalized values box -> select protein data file",
+                   style = "padding-left: 2em"),
+                h4(strong("- Use Part 1 to produce protein data from peptide data"),
+                   style = "padding-left: 1em"),
+                h4("Follow instructions on tabs in Part 1", 
+                   style = "padding-left: 2em")
+            ),
+            conditionalPanel(
+                condition = "output.openPart2 == 'Part2 ready!'",
             h2("Co-migration plots"),
             p("Here you can compare migation of a single group of proteins between the label states,
               or look whether two groups of proteins co-migrate in both label states."),
@@ -431,7 +548,7 @@ body <- dashboardBody(
 
                      )
               )
-            )
+            ))
     ),
 
 
@@ -440,6 +557,21 @@ body <- dashboardBody(
     # cluster tab content ####
     ########################
     tabItem(tabName="cluster",
+            conditionalPanel(
+                condition = "output.openPart2 != 'Part2 ready!'",
+                h3(strong("Note: You need to do one of the following to access this section")),
+                h4(strong("- Import protein data"),
+                   style = "padding-left: 1em"),
+                h4("Go to Import -> Normalized values box -> select protein data file",
+                   style = "padding-left: 2em"),
+                h4(strong("- Use Part 1 to produce protein data from peptide data"),
+                   style = "padding-left: 1em"),
+                h4("Follow instructions on tabs in Part 1", 
+                   style = "padding-left: 2em")
+            ),
+            conditionalPanel(
+        condition = "output.openPart2 == 'Part2 ready!'",
+
             h2("Clustering"),
             p("Here you can perform a hierarchical clustering of your protein data.
               Clustering is performed separately on labelled and unlabelled sample."),
@@ -464,7 +596,7 @@ body <- dashboardBody(
                      plotOutput("unlabeledBar_plot", height = 500),
                      uiOutput("dl_unlabeledBar_Plot")
                      )
-    )
+    ))
     ),
 
 
