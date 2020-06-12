@@ -51,12 +51,14 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
                             colNumber = 2,
                             ylabel = "Protein", xlabel = "Fraction",
                             legendLabel = "Relative Protein Abundance", 
-                            grid = TRUE,
-                            labelled = "labeled", unlabelled = "unlabeled") {
+                            legendPosition = "right",grid = TRUE,
+                            labelled = "labeled", unlabelled = "unlabeled",
+                            orderColumn = NULL) {
     #join DF and group data - proteins present in group but 
     # absent in the data will be shown as empty
-    groupData %>%
-        select(`Protein Group Accessions`, newNamesCol) -> groupData
+    #join DF and group data - proteins present in group but absent in the data will be shown as empty
+    groupData %>% 
+        select(`Protein Group Accessions`, newNamesCol,orderColumn) -> groupData
     right_join(dataFrame, groupData) -> dataFrame
     if(sum(is.na(dataFrame$isLabel))>0){
         dataFrame[is.na(dataFrame$isLabel),]$isLabel <- FALSE}
@@ -64,19 +66,33 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
     if(!is.null(newNamesCol)){ycolumn <- newNamesCol
     } else {ycolumn <- 'Protein Group Accessions'}
     #draw basic plot
-    p <- ggplot(dataFrame, 
-                aes(x = Fraction, y = get(ycolumn), fill = `Precursor Area`)) +
-        geom_raster(na.rm = TRUE)  +
-        facet_wrap(isLabel ~ ., ncol = colNumber, 
-                    labeller = labeller(isLabel = c("TRUE" =  labelled,
-                                                    "FALSE" = unlabelled)))+
+    if(is.null(orderColumn)){
+        p <- ggplot(dataFrame, aes(x = Fraction,
+                                y = get(ycolumn),fill = `Precursor Area`)) + 
+        geom_raster(na.rm = T)  +
+        facet_wrap(isLabel ~ ., ncol = as.integer(colNumber), 
+            labeller = labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
         labs(title = groupName) +
-        ylab(ylabel) +
-        xlab(xlabel) +
-        scale_fill_gradient(legendLabel,
-                            low = '#cacde8',high = '#0019bf', 
-                            na.value="grey60") +
+        ylab(ylabel) + xlab(xlabel) +
+        scale_fill_gradient(legendLabel,low='#cacde8',high ='#0019bf',
+                            na.value="grey60",
+                            breaks = seq(0,1,0.25), limits = c(0,1)) +
         coord_cartesian(expand = 0)
+    }else{
+        protsOrder <- dataFrame[,orderColumn]
+        dataFrame[[ycolumn]]<-fct_reorder(dataFrame[[ycolumn]],desc(protsOrder))
+        p <-  ggplot(dataFrame, aes(x = Fraction,y = get(ycolumn),
+                                    fill = `Precursor Area`)) + 
+        geom_tile(na.rm = T)+
+        facet_wrap(isLabel ~ .,ncol=as.integer(colNumber), 
+            labeller=labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
+        labs(title = groupName) +
+        ylab(ylabel) +  xlab(xlabel) +
+        scale_fill_gradient(legendLabel,
+                            low = '#cacde8',high = '#0019bf', na.value="grey60",
+                                breaks = seq(0,1,0.25), limits = c(0,1)) +
+        coord_cartesian(expand = 0)
+    }
     #add grid
     if(grid){p<- p +theme_minimal() +
             theme(panel.grid.minor = element_blank())
@@ -86,6 +102,12 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
     #adjust position of title
-    p <- p + theme(plot.title = element_text(hjust = adjust))
+    p <- p + theme(plot.title = element_text(hjust = adjust),
+                   legend.position = legendPosition)
+    if(legendPosition == "bottom"){
+        p <- p+guides(fill=guide_colourbar(title.position="top",title.hjust=0.5,
+                    draw.ulim = FALSE, draw.llim = FALSE,barwidth = 12))
+    }else{p<-p+guides(fill=guide_colourbar(title.position="top",title.hjust=0.5,
+                draw.ulim = FALSE, draw.llim = FALSE,barwidth = 2))}
     return(p)
 }
