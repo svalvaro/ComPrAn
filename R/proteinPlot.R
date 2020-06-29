@@ -35,7 +35,7 @@
 #' ##example plot:
 #' protein <- "P52815"
 #' max_frac <- 23
-#' proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
+#' proteinPlot(forAnalysis, protein, max_frac)
 #' 
 proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE, 
                         titleLabel = 'all', titleAlign = 'left',

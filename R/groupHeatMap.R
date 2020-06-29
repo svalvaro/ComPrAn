@@ -70,7 +70,7 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
         p <- ggplot(dataFrame, aes(x = Fraction,
                                 y = get(ycolumn),fill = `Precursor Area`)) + 
         geom_raster(na.rm = T)  +
-        facet_wrap(isLabel ~ ., ncol = as.integer(colNumber), 
+        facet_wrap(isLabel ~ ., ncol = colNumber, 
             labeller = labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
         labs(title = groupName) +
         ylab(ylabel) + xlab(xlabel) +
@@ -84,7 +84,7 @@ groupHeatMap <- function(dataFrame, groupData, groupName,
         p <-  ggplot(dataFrame, aes(x = Fraction,y = get(ycolumn),
                                     fill = `Precursor Area`)) + 
         geom_tile(na.rm = T)+
-        facet_wrap(isLabel ~ .,ncol=as.integer(colNumber), 
+        facet_wrap(isLabel ~ .,ncol=colNumber, 
             labeller=labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
         labs(title = groupName) +
         ylab(ylabel) +  xlab(xlabel) +

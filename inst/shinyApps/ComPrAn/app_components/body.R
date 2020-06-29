@@ -409,13 +409,12 @@ body <- dashboardBody(
             p("Quantitative comparison of a group of proteins
               between labeled and unlabeled samples"),
             fluidRow(
-              column(width = 6,
+              column(width = 4,
                      fileInput("heatMapFile", "Select a file for analysis", accept = c('text/tab-separated-values',
                                                                                        '.csv',
                                                                                        '.tsv',
                                                                                        '.txt')) ,
                      actionButton("exampleGroup", "Use example group"),
-                     verbatimTextOutput("HeatTest"),
 
                      textInput("heatMapGroupName", label = "Group Name:", value = "Group 1"),
 
@@ -427,17 +426,26 @@ body <- dashboardBody(
                      #h4(strong(textOutput("colNotFound"))),
                      checkboxInput("reorderProteinsHeatMap", label = "Reorder proteins", value = FALSE),
                      uiOutput("HeatmapGroupColList_2"),
+                     h4(strong(textOutput("noDoubleColumn"))),
                      verbatimTextOutput("testColType"),
 
                      radioButtons("showSamplesHeatMap", label = "Show Samples",
                                   choices = list("Side-by-side" = 2, "One above another" = 1),
-                                  selected = 1)
-                     
+                                  selected = 1),
+                     radioButtons("legendPosition", label = "Legend position",
+                                  choices = list("Right" = "right", "Bottom" = "bottom"),
+                                  selected = "right"),
+                     verbatimTextOutput("testPlay"),
+                     uiOutput("dl_Heat_Plot"),
+                     uiOutput("heatmapHeightSlider"),
+                     uiOutput("heatmapWidthSlider")
                      ),
-              column(width = 6,
-                     plotOutput("heatMapPlot", height = 500),
+
+              column(width = 8,
+                     plotOutput("heatMapPlot")
                      #plotOutput("heatMapPlot_example", height = 500),
-                     uiOutput("dl_Heat_Plot"))
+ 
+              )
 
 
             ))

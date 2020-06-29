@@ -24,6 +24,10 @@ server <- function(input, output, session) {
   
   peptides <- reactive({cleanData(peptides_full())})
   
+  maxFraction <- eventReactive(peptides(),{
+      max(peptides()$Fraction)
+          })
+  
   # Import normalized data only after the process button has been pressed:
   compiledNorm_import <- eventReactive(input$processNorm, {
     readNorm <- input$inputfileNorm
@@ -35,6 +39,10 @@ server <- function(input, output, session) {
     }
   })
 
+  observeEvent(input$inputfileNorm,{
+      click("processNorm")
+  })
+  
   vImportMessage <- reactiveValues(data = "No file uploaded and no example file chosed.
                            Please upload a file or click on one of the process buttons in the above tabs.")
   
@@ -106,13 +114,13 @@ server <- function(input, output, session) {
             rect = element_rect(fill = plotBkg, color = plotBkg))
 
   })
-
+ 
   # Display number of peptides to the user:
   output$test_input <- renderText({
     if (is.null(input$inputfile)) {
-      paste("The example dataset containing", nrow(peptides_full()), " peptides and ", max(peptides()$Fraction) ," fractions will be used. After mandatory cleaning", nrow(peptides()), " (",round(nrow(peptides())/nrow(peptides_full())*100,2) ,"% ) remain. You may now proceed to filtering your data.")
+      paste("The example dataset containing", nrow(peptides_full()), " peptides and ", maxFraction() ," fractions will be used. After mandatory cleaning", nrow(peptides()), " (",round(nrow(peptides())/nrow(peptides_full())*100,2) ,"% ) remain. You may now proceed to filtering your data.")
     } else {
-      paste0("Your dataset containing ", nrow(peptides_full()), " peptides and ", max(peptides()$Fraction) ," fractions has been imported. After mandatory cleaning", nrow(peptides()), " (",round(nrow(peptides())/nrow(peptides_full())*100,2) ,"% ) remain. You may now proceed to filtering your data.")
+      paste0("Your dataset containing ", nrow(peptides_full()), " peptides and ", maxFraction() ," fractions has been imported. After mandatory cleaning", nrow(peptides()), " (",round(nrow(peptides())/nrow(peptides_full())*100,2) ,"% ) remain. You may now proceed to filtering your data.")
     }
   })
 
@@ -484,7 +492,7 @@ server <- function(input, output, session) {
       protein <- v$data[input$allPeptides_choose_rows_selected]
     }
     req(protein)
-    allPeptidesPlot(peptide_index(), protein, max(peptides()$Fraction),
+    allPeptidesPlot(peptide_index(), protein, maxFraction(),
                     meanLine = input$allPeptidesPlot_mean,
                     repPepLine = input$allPeptidesPlot_reppep,
                     separateLabStates = input$allPeptidesPlot_sepstates,
@@ -644,8 +652,21 @@ server <- function(input, output, session) {
   # proteinNormViz tab server side ####
   ###############################
 
-  # Check for a dataset. if one has been imported, or if the example file is being used
-  # then take it. If not, use the result from part 1
+ # decide on the sourcedata set fot Part 2
+ # either output from Part 1
+ # example normalized file
+ # imported normalized file
+  
+  # compiledNorm_plot <- reactiveValues(value = NULL)
+  # 
+  # observeEvent(input$processNorm, {
+  #      compiledNorm_plot$value <- compiledNorm_import()
+  # })  
+  # 
+  # observeEvent(compiledNorm(), {
+  #     compiledNorm_plot$value <- compiledNorm()
+  # })  
+  
   compiledNorm_plot <- reactive({
     if(input$processNorm != 0) {
       compiledNorm_import()
@@ -771,59 +792,15 @@ server <- function(input, output, session) {
   ###############################
   # heatMaps tab server side ####
   ###############################
-  # Just some test output for me
-  output$HeatTest <- renderText({
-    input$heatMapFile$datapath })
 
-  # df <- eventReactive(input$heatMapFile,
-  #       {
-  #           tryCatch(
-  #               {
-  #                   df <- read_tsv(input$heatMapFile$datapath)
-  #               },
-  #               error = function(e) {
-  #                   # return a safeError if a parsing error occurs
-  #                   stop(safeError(e))
-  #               }
-  #           )
-  #       })
-  # 
-  # df <- eventReactive(input$exampleGroup,
-  #                     {
-  #                         df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
-  #                     })
-  # 
-  # # Make reactive plot object
-  # heatMapPlotObject <- reactive({
-  #     req(df())
-  #     
-  #     if (is.null(input$heatMapGroupNameColumn)) {
-  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], 
-  #                      df(), input$heatMapGroupName,
-  #                      titleAlign = "center",
-  #                      grid = F, colNumber = input$showSamplesHeatMap,
-  #                      labelled = input$labelledName,
-  #                      unlabelled = input$unlabelledName)
-  #     } else {
-  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], 
-  #                      df(), input$heatMapGroupName,
-  #                      titleAlign = "center",
-  #                      newNamesCol = input$heatMapGroupNameColumn,
-  #                      grid = F, colNumber = input$showSamplesHeatMap,
-  #                      labelled = input$labelledName,
-  #                      unlabelled = input$unlabelledName)
-  #     }
-  #     
-  # })
-  
   ### reactive value to get a list of all column names in group data frame
-  vPresentColumns <- reactiveValues(data = NULL)
-  ## read in group data frame
+#  vPresentColumns <- reactiveValues(data = NULL)
+  ## reactive value to read in group data frame
   vGroupDF <- reactiveValues(data = NULL)
 
   observeEvent(input$exampleGroup,{
       vGroupDF$data <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
-      vPresentColumns$data <- names(vGroupDF$data)
+    #  vPresentColumns$data <- names(vGroupDF$data)
   })
   
   observeEvent(input$heatMapFile,{
@@ -836,216 +813,204 @@ server <- function(input, output, session) {
               stop(safeError(e))
           }
       )
-      vPresentColumns$data <- names(vGroupDF$data)
+     # vPresentColumns$data <- names(vGroupDF$data)
   })
   
-
   
-  output$testCols <- renderText(
-      vPresentColumns$data
-  )
-      
 
-  #     
-  # observeEvent(input$exampleGroup,{
-  #     df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
-  #     vPresentColumns$data <- names(df)
-  # })
-  # 
-  # observeEvent(input$heatMapFile,{
-  #     tryCatch(
-  #         {
-  #             df <- read_tsv(input$heatMapFile$datapath)
-  #         },
-  #         error = function(e) {
-  #             # return a safeError if a parsing error occurs
-  #             stop(safeError(e))
-  #         }
-  #     )
-  #     vPresentColumns$data <- names(df)
-  # })
-  
-  # output$testColNames <- renderText({
-  #     vPresentColumns$data
-  #   })
   ### reactive value to return as a new column name
-  
   vHeatmapGroupColumn <- reactiveValues(data = NULL)
-
-  # observeEvent(input$heatMapGroupNameColumn,{
-  #     if(input$heatMapGroupNameColumn %in%  vPresentColumns$data){
-  #         vHeatmapGroupColumn$data <- input$heatMapGroupNameColumn
-  #         output$colNotFound <- renderText({
-  #             NULL})
-  #         
-  #     } 
-  #     #if(!input$heatMapGroupNameColumn %in%  vPresentColumns$data)
-  #      else   {
-  #         output$colNotFound <- renderText({
-  #             paste("Note: Column", input$heatMapGroupNameColumn,
-  #                 "is not present in group data!",sep = " ")
-  #     })}
-  # 
-  # })
-  # # observeEvent(input$renameProteinsHeatMap ,{
-  #     output$colNotFound <- renderText({
-  #         NULL
-  #     })
-  # })
-  
+  # reset in case the tickbox is clicked
   observeEvent(input$renameProteinsHeatMap ,{
       vHeatmapGroupColumn$data <- NULL
   })
   
-  # Text input with new column name
-  # output$dt_3 <- renderUI({
-  #     if (input$renameProteinsHeatMap) {
-  #         textInput("heatMapGroupNameColumn", label = "Column with new names", value = vHeatmapGroupColumn$data)
-  #     }
-  # })
+  observeEvent(vGroupDF$data,{
+      vHeatmapGroupColumn$data <- NULL
+  })
   
   #List of columns to select a column to rename the data with
   output$HeatmapGroupColList <- renderUI({
-      if (input$renameProteinsHeatMap) {
-      selectInput("heatGroupNameCol", label = "Choose column with new names",
-                  choices = vPresentColumns$data,
-                  multiple = FALSE)
+      req(vGroupDF$data)
+      if (input$renameProteinsHeatMap & any(sapply(vGroupDF$data, typeof) == "character")) {
+          presentColumnsCH <- names(vGroupDF$data)[sapply(vGroupDF$data, typeof) == "character"]
+          selectInput("heatGroupNameCol", label = "Choose column with new names",
+                      choices = presentColumnsCH,
+                      multiple = FALSE)
       }
+  })
+  #if tickbox selected, save name of column to be renamed
+  observeEvent(input$heatGroupNameCol,{
+                vHeatmapGroupColumn$data <- input$heatGroupNameCol
   })
   
   observe({
-      if (input$renameProteinsHeatMap) {
+      req(input$heatGroupNameCol)
+      if(input$renameProteinsHeatMap & (input$heatGroupNameCol %in% names(vGroupDF$data))){
           vHeatmapGroupColumn$data <- input$heatGroupNameCol
       }
   })
   
+  observe({
+      if(!input$renameProteinsHeatMap){
+          vHeatmapGroupColumn$data <- NULL
+      }
+  })
+  
+  # observeEvent(c(vGroupDF$data,input$renameProteinsHeatMap),{
+  #     req(input$heatGroupNameCol)
+  #     if(input$heatGroupNameCol %in% names(vGroupDF$data)){
+  #         vHeatmapGroupColumn$data <- input$heatGroupNameCol
+  #     }
+  # })
   
   
+  ### reactive value to return column name with desired protein order
   vHeatmapOrderColumn <- reactiveValues(data = NULL)
-  
+  # reset in case the tickbox is clicked
   observeEvent(input$reorderProteinsHeatMap ,{
       vHeatmapOrderColumn$data <- NULL
   })
   
 
-  #List of columns to select a column to reorder the data with
+  observeEvent(vGroupDF$data,{
+      vHeatmapOrderColumn$data <- NULL
+  })
+  
+  #List of columns to select a column to reorder the data with, allow only columns with data in "double" type
   output$HeatmapGroupColList_2 <- renderUI({
-      req(vPresentColumns$data)
-      if (input$reorderProteinsHeatMap) {
+      req(vGroupDF$data)
+      if (input$reorderProteinsHeatMap & any(sapply(vGroupDF$data, typeof) == "double")) {
+          presentColumnsD <- names(vGroupDF$data)[sapply(vGroupDF$data, typeof) == "double"]
           selectInput("heatGroupOrderCol", label = "Choose column with order",
-                      choices = vPresentColumns$data,
+                      choices = presentColumnsD,
                       multiple = FALSE)
       }
   })
-  
+  #if tickbox selected save name of column to be renamed
   observeEvent(input$heatGroupOrderCol,{
-          req(vGroupDF$data)
-         if(typeof(vGroupDF$data[[input$heatGroupOrderCol]]) == "double"){
-          output$testColType <- renderText({typeof(vGroupDF$data[[input$heatGroupOrderCol]])})
           vHeatmapOrderColumn$data <- input$heatGroupOrderCol
-         }
-          
+  })
+  
+  observe({
+      req(input$heatGroupOrderCol)
+      if(input$reorderProteinsHeatMap & (input$heatGroupOrderCol %in% names(vGroupDF$data))){
+          vHeatmapOrderColumn$data <- input$heatGroupOrderCol
+      }
+  })
 
+  observe({
+      if(!input$reorderProteinsHeatMap){
+          vHeatmapOrderColumn$data <- NULL
+      }
   })
   
-  
-  output$testDF <- renderText({
-      #req(input$reorderProteinsHeatMap)
-      vHeatmapOrderColumn$data
-  })
-  
-  # Make reactive plot object from example group
-  heatMapPlotObject_example <- reactive({
-      # req(input$exampleGroup)
-      # df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
+  output$noDoubleColumn <- renderText({
       req(vGroupDF$data)
-      groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
-                   vGroupDF$data, input$heatMapGroupName,
-                   titleAlign = "center",
-                   newNamesCol = vHeatmapGroupColumn$data,
-                   grid = F, colNumber = input$showSamplesHeatMap,
-                   labelled = input$labelledName,
-                   unlabelled = input$unlabelledName)
-      
+      if (input$reorderProteinsHeatMap & !any(sapply(vGroupDF$data, typeof) == "double")) {
+          "There is no numeric column in your group data!"
+      }
   })
+  
+  ## TEST
+  output$testDF <- renderText({
+      #any(sapply(vGroupDF$data, typeof) == "double")
+      paste(vHeatmapOrderColumn$data, names(vGroupDF$data)[sapply(vGroupDF$data, typeof) == "double"], sep = "|")
+  })
+  
+  # # Make reactive plot object
+  # heatMapPlotObject_example <- reactive({
+  #     # req(input$exampleGroup)
+  #     # df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
+  #     req(vGroupDF$data)
+  #     groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+  #                  vGroupDF$data, input$heatMapGroupName,
+  #                  titleAlign = "center",
+  #                  newNamesCol = vHeatmapGroupColumn$data,
+  #                  grid = F, colNumber = as.integer(input$showSamplesHeatMap),
+  #                  labelled = input$labelledName,
+  #                  unlabelled = input$unlabelledName,
+  #                  orderColumn = vHeatmapOrderColumn$data,dev
+  #                  legendPosition = input$legendPosition)
+  #     
+  # })
   
   # Make reactive plot object
   heatMapPlotObject <- reactive({
-      # req(input$heatMapFile)
-      # tryCatch(
-      #     {
-      #         df <- read_tsv(input$heatMapFile$datapath)
-      #     },
-      #     error = function(e) {
-      #         # return a safeError if a parsing error occurs
-      #         stop(safeError(e))
-      #     }
-      # )
-      # 
-      
       req(vGroupDF$data)
       groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
                    vGroupDF$data, input$heatMapGroupName,
                    titleAlign = "center",
                    newNamesCol = vHeatmapGroupColumn$data,
-                   grid = F, colNumber = input$showSamplesHeatMap,
+                   grid = F, colNumber = as.integer(input$showSamplesHeatMap),
                    labelled = input$labelledName,
                    unlabelled = input$unlabelledName,
-                   orderColumn = vHeatmapOrderColumn$data)
+                   orderColumn = vHeatmapOrderColumn$data,
+                   legendPosition = input$legendPosition)
       
       
   })
 
-  # Make reactive plot object from example group - currently in use
-  # heatMapPlotObject_example <- reactive({
-  #     req(input$exampleGroup)
-  #     df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
-  #     
-  #     if (is.null(input$heatMapGroupNameColumn)) {
-  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
-  #                      df, input$heatMapGroupName,
-  #                      titleAlign = "center",
-  #                      grid = F, colNumber = input$showSamplesHeatMap,
-  #                      labelled = input$labelledName,
-  #                      unlabelled = input$unlabelledName)
-  #     } else {
-  #         groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
-  #                      df, input$heatMapGroupName,
-  #                      titleAlign = "center",
-  #                      newNamesCol = input$heatMapGroupNameColumn,
-  #                      grid = F, colNumber = input$showSamplesHeatMap,
-  #                      labelled = input$labelledName,
-  #                      unlabelled = input$unlabelledName)
-  #     }
-  #     
+  
+  # Display sliders for plot sizes only when group is selected
+  observeEvent(vGroupDF$data,{
+      output$heatmapHeightSlider <- renderUI({
+          sliderInput("heatmapHeight", label = "Plot heigth",
+                      min = 50, max = 2000, value = 800, step = 1)
+      })
+  })  
+  
+  observeEvent(vGroupDF$data,{
+      output$heatmapWidthSlider <- renderUI({
+          sliderInput("heatmapWidth", label = "Plot width",
+                      min = 50, max = 2000, value = 600, step = 1)
+      })
+  })
+  
+  
+  # heightPlot <- reactive({
+  #     (nrow(vGroupDF$data)*15+20)*(2/as.integer(input$showSamplesHeatMap))})
+  # widthPlot <-  reactive({max(compiledNorm_plot()$Fraction)*25+20})
+  
+  
+  # output$testPlay <- renderText(
+  #     paste(widthPlot(),
+  #     heightPlot())
+  #     )
+  # 
+  # observeEvent(c(input$exampleGroup,input$showSamplesHeatMap,
+  #                widthPlot(),heightPlot()),{
+  #     #req(input$heatmapWidth)
+  #     #req(input$heatmapHeight)
+  #              output$heatMapPlot = renderPlot(
+  #                  heatMapPlotObject_example(),
+  #                  width = widthPlot(),
+  #                  height = heightPlot()
+  #                  
+  #              )
   # })
+  
+  # observeEvent(input$heatMapFile,{
+  #              output$heatMapPlot = renderPlot(
+  #                  heatMapPlotObject()
+  #              )
+  # })
+  observeEvent(c(heatMapPlotObject(),input$heatmapWidth,input$heatmapHeight),{
+      req(input$heatmapWidth)
+      req(input$heatmapHeight)
+  output$heatMapPlot = renderPlot(
+    
+                   heatMapPlotObject(),
+                   width = input$heatmapWidth,
+                   height = input$heatmapHeight
+               )})
+ 
 
-  
-  observeEvent(input$exampleGroup,{
-               output$heatMapPlot = renderPlot({
-                   heatMapPlotObject_example()
-               })
-  })
-  
-  observeEvent(input$heatMapFile,{
-               output$heatMapPlot = renderPlot({
-                   heatMapPlotObject()
-               })
-  })
   
   observeEvent(input$processNorm,{
       output$heatMapPlot = NULL
   })
-  # # Send heatmap to GUI
-  # output$heatMapPlot = renderPlot({
-  #     heatMapPlotObject()
-  # })
-  # 
-  # # Send heatmap to GUI
-  # output$heatMapPlot_example = renderPlot({
-  #     heatMapPlotObject_example()
-  # })
-  
+
   # Save heatmap
   # Display download link only if a protein is selected
   output$dl_Heat_Plot <- renderUI({
@@ -1062,7 +1027,8 @@ server <- function(input, output, session) {
       "heatmap.pdf"
     },
     content = function(file) {
-      ggsave(file, heatMapPlotObject())
+      ggsave(file, heatMapPlotObject(), height = input$heatmapHeight/96,
+             width = input$heatmapWidth/96)
     }
   )
 
