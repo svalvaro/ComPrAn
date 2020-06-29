@@ -373,6 +373,7 @@ body <- dashboardBody(
               column(width = 6,
                      plotOutput("proteinPlot", height = 500),
                      uiOutput("dl_Norm_Plot")
+                     #,verbatimTextOutput("normDataPresent")
               ),
 
             fluidRow(
@@ -418,8 +419,7 @@ body <- dashboardBody(
 
                      textInput("heatMapGroupName", label = "Group Name:", value = "Group 1"),
 
-                     verbatimTextOutput("testDF"),
-                     verbatimTextOutput("testCols"),
+                     #verbatimTextOutput("testDF"),
                      checkboxInput("renameProteinsHeatMap", label = "Rename proteins", value = FALSE),
                      #uiOutput("dt_3"),
                      uiOutput("HeatmapGroupColList"),

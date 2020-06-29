@@ -29,15 +29,29 @@ server <- function(input, output, session) {
           })
   
   # Import normalized data only after the process button has been pressed:
-  compiledNorm_import <- eventReactive(input$processNorm, {
-    readNorm <- input$inputfileNorm
-    if (is.null(readNorm)) {
-        dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
-        protInportForAnalysis(data.table::fread(dataFile))
-    } else {
-        protInportForAnalysis(data.table::fread(readNorm$datapath))
-    }
+
+  vNormProts <- reactiveValues(data = NULL)
+  
+  # compiledNorm_import <- eventReactive(input$processNorm, {
+  #   readNorm <- input$inputfileNorm
+  #   if (is.null(readNorm)) {
+  #       dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+  #       protInportForAnalysis(data.table::fread(dataFile))
+  #   } else {
+  #       protInportForAnalysis(data.table::fread(readNorm$datapath))
+  #   }
+  # })
+  
+  observeEvent(input$processNorm, {
+      readNorm <- input$inputfileNorm
+      if (is.null(readNorm)) {
+          dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+          vNormProts$data <- protInportForAnalysis(data.table::fread(dataFile))
+      } else {
+          vNormProts$data <- protInportForAnalysis(data.table::fread(readNorm$datapath))
+      }
   })
+  
 
   observeEvent(input$inputfileNorm,{
       click("processNorm")
@@ -560,10 +574,13 @@ server <- function(input, output, session) {
       getNormTable(peptide_index(),purpose = "export")
     })
 
-  compiledNorm <- eventReactive(input$normData,{
-      getNormTable(peptide_index(),purpose = "analysis")
-    })
+  # compiledNorm <- eventReactive(input$normData,{
+  #     getNormTable(peptide_index(),purpose = "analysis")
+  #   })
 
+  observeEvent(input$normData,{
+      vNormProts$data <- getNormTable(peptide_index(),purpose = "analysis")
+  })
   
   observeEvent(compiledExport(),{
       output$dl_Norm <- renderUI({
@@ -667,26 +684,26 @@ server <- function(input, output, session) {
   #     compiledNorm_plot$value <- compiledNorm()
   # })  
   
-  compiledNorm_plot <- reactive({
-    if(input$processNorm != 0) {
-      compiledNorm_import()
-    } else {
-      compiledNorm()
-    }
-
-  })
+  # compiledNorm_plot <- reactive({
+  #   if(input$processNorm != 0) {
+  #     compiledNorm_import()
+  #   } else {
+  #     compiledNorm()
+  #   }
+  # 
+  # })
   
   # vNormProts <- reactiveValues(data = NULL)
   # 
-  # observeEvent(compiledNorm_plot(), {
-  #     vNormProts$data <- TRUE
+  # observeEvent(compiledNorm_import(), {
+  #     vNormProts$data <- compiledNorm_import()
   # })
-  # observeEvent(input$processNorm, {
-  #     vNormProts$data <- TRUE
-  # }) 
-  # 
+  # observeEvent(compiledNorm(), {
+  #     vNormProts$data <- compiledNorm()
+  # })
+
   # output$normDataPresent <- reactive({
-  #     vNormProts$data
+  #     nrow(vNormProts$data)
   # })
   
   # 
@@ -703,13 +720,13 @@ server <- function(input, output, session) {
   # outputOptions(output, "normDataPresent", suspendWhenHidden = FALSE)
   # Just some output testing here
   output$NormInputTest <- renderText({
-    length(unique(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",]$`Protein Group Accessions`))
+    length(unique(vNormProts$data[vNormProts$data$scenario == "B",]$`Protein Group Accessions`))
     })
 
   # List of filtered values for selecting proteins
   output$dt_2 <- renderUI({
     selectInput("proteinNormChoose", label = "Choose protein species",
-                choices = unique(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",]$`Protein Group Accessions`),
+                choices = unique(vNormProts$data[vNormProts$data$scenario == "B",]$`Protein Group Accessions`),
                 multiple = FALSE)
   })
 
@@ -724,8 +741,8 @@ server <- function(input, output, session) {
       protein <- input$proteinNormChoose
     }
 
-    # proteinPlot(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",], protein, max(peptides()$Fraction),
-       proteinPlot(compiledNorm_plot(), protein, as.numeric(max(compiledNorm_plot()$Fraction)),
+    # proteinPlot(vNormProts$data[vNormProts$data$scenario == "B",], protein, max(peptides()$Fraction),
+       proteinPlot(vNormProts$data, protein, as.numeric(max(vNormProts$data$Fraction)),
  
                 grid = input$allProteinPlot_removegrid,
                 titleLabel = input$allProteinPlot_title,
@@ -771,7 +788,7 @@ server <- function(input, output, session) {
   g_norm <- reactive({
     normPlotsMultipleInput() %>%
     # c("Q16540", "P52815", "P09001", "Q13405", "Q9H2W6", "Q9NYK5", "Q96DV4") %>%
-      map(~ proteinPlot(compiledNorm_plot(), ., as.numeric(max(compiledNorm_plot()$Fraction)),
+      map(~ proteinPlot(vNormProts$data, ., as.numeric(max(vNormProts$data$Fraction)),
 
                         grid = input$allProteinPlot_removegrid,
                         titleLabel = input$allProteinPlot_title,
@@ -913,17 +930,17 @@ server <- function(input, output, session) {
   })
   
   ## TEST
-  output$testDF <- renderText({
-      #any(sapply(vGroupDF$data, typeof) == "double")
-      paste(vHeatmapOrderColumn$data, names(vGroupDF$data)[sapply(vGroupDF$data, typeof) == "double"], sep = "|")
-  })
+  # output$testDF <- renderText({
+  #     #any(sapply(vGroupDF$data, typeof) == "double")
+  #     paste(vHeatmapOrderColumn$data, names(vGroupDF$data)[sapply(vGroupDF$data, typeof) == "double"], sep = "|")
+  # })
   
   # # Make reactive plot object
   # heatMapPlotObject_example <- reactive({
   #     # req(input$exampleGroup)
   #     # df <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
   #     req(vGroupDF$data)
-  #     groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+  #     groupHeatMap(vNormProts$data[vNormProts$data$scenario == "B",],
   #                  vGroupDF$data, input$heatMapGroupName,
   #                  titleAlign = "center",
   #                  newNamesCol = vHeatmapGroupColumn$data,
@@ -938,7 +955,7 @@ server <- function(input, output, session) {
   # Make reactive plot object
   heatMapPlotObject <- reactive({
       req(vGroupDF$data)
-      groupHeatMap(compiledNorm_plot()[compiledNorm_plot()$scenario == "B",],
+      groupHeatMap(vNormProts$data[vNormProts$data$scenario == "B",],
                    vGroupDF$data, input$heatMapGroupName,
                    titleAlign = "center",
                    newNamesCol = vHeatmapGroupColumn$data,
@@ -1042,7 +1059,7 @@ server <- function(input, output, session) {
     req(input$groupData_coMig2_g1)
     req(input$groupData_coMig2_g2)
 
-    twoGroupsWithinLabelCoMigration(compiledNorm_plot(), as.numeric(max(compiledNorm_plot()$Fraction)),
+    twoGroupsWithinLabelCoMigration(vNormProts$data, as.numeric(max(vNormProts$data$Fraction)),
                                     # group1Data = group1DataVector,
                                     # group1Name = group1Name,
                                     # group2Data = group2DataVector,
@@ -1100,7 +1117,7 @@ server <- function(input, output, session) {
      
     req(coMig1Plot_proteins())
 
-    oneGroupTwoLabelsCoMigration(compiledNorm_plot(), as.numeric(max(compiledNorm_plot()$Fraction)),
+    oneGroupTwoLabelsCoMigration(vNormProts$data, as.numeric(max(vNormProts$data$Fraction)),
                                                          # groupData = groupDataVector,
                                                          # groupName = groupName,
 
@@ -1153,7 +1170,7 @@ server <- function(input, output, session) {
     req(input$groupData_coMig2_g1)
     req(input$groupData_coMig2_g2)
 
-    twoGroupsWithinLabelCoMigration(compiledNorm_plot(), as.numeric(max(compiledNorm_plot()$Fraction)),
+    twoGroupsWithinLabelCoMigration(vNormProts$data, as.numeric(max(vNormProts$data$Fraction)),
                                     # group1Data = group1DataVector,
                                     # group1Name = group1Name,
                                     # group2Data = group2DataVector,
@@ -1215,7 +1232,7 @@ server <- function(input, output, session) {
   
   ## Create components necessary for clustering
   clusteringDF <- eventReactive(input$distCentered,{
-      clusterComp(compiledNorm_plot(),
+      clusterComp(vNormProts$data,
                               scenar = "A", 
                               PearsCor = input$distCentered)})
   
