@@ -29,7 +29,8 @@
 #' @examples 
 #' ##Use example peptide data set, read in and clean data
 #' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' peptides <- peptideImport(inputFile)
+#' peptides <- cleanData(peptides, fCol = "Search ID")
 #' ## separate chemical modifications and labelling into separate columns
 #' peptides <- splitModLab(peptides) 
 #' ## remove unneccessary columns, simplify rows
@@ -49,39 +50,30 @@
 #' allPeptidesPlot(peptide_index,protein, max_frac = max_frac,
 #' repPepLine = TRUE, meanLine = TRUE, separateLabStates =TRUE,
 #' titleLabel = "GN")
-allPeptidesPlot <- function(.listDF, protein, max_frac, 
-                            meanLine = FALSE, repPepLine = FALSE, 
-                            separateLabStates = FALSE,
-                            grid = TRUE, 
-                            titleLabel = 'all', titleAlign = 'left',
-                            ylabel = 'Precursor Area', xlabel = 'Fraction',
-                            legendLabel = 'Condition',
-                            labelled = "Labeled", unlabelled = "Unlabeled"){
+allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE, 
+    repPepLine = FALSE,separateLabStates = FALSE,grid = TRUE,titleLabel = 'all',
+    titleAlign = 'left',ylabel = 'Precursor Area', xlabel = 'Fraction',
+    legendLabel = 'Condition', labelled = "Labeled", unlabelled = "Unlabeled"){
     dataFrame <- .listDF[[protein]]
     #Next lines: edit data frame to neccessary format before plotting
     description <- dataFrame$`Protein Descriptions`[1]
-    #add columns conatining mean and repPepValue to the DF, 
-    #keep only neccessary rows
+    #add mean and repPepValue columns to DF, keep only necessary rows
     data.frame(Value = NA, Fraction = seq_len(max_frac)) %>% 
         spread(Fraction, "Value") -> padding
     dataFrame %>% 
         select(Fraction, `Precursor Area`, isLabel, repPepA) %>%
-        rowid_to_column() %>% 
-        spread(Fraction, `Precursor Area`) %>%  
+        rowid_to_column() %>% spread(Fraction, `Precursor Area`) %>%  
         merge(padding, all.x = TRUE)%>%
         gather(Fraction, `Precursor Area`, -c(isLabel,repPepA,rowid))%>% 
         group_by(Fraction, isLabel) %>% 
         mutate (meanValue = mean(`Precursor Area`, na.rm = TRUE)) %>% 
         mutate (repPepValue = ifelse(all(is.na(`Precursor Area`)),
-                                        NA,
-                                        mean(`Precursor Area`[repPepA], 
+                                        NA, mean(`Precursor Area`[repPepA], 
                                         na.rm=TRUE))) %>% 
         ungroup() -> dataFrame
     dataFrame$Fraction <- as.numeric(as.character(dataFrame$Fraction))
-    #transparent dots in case of drawing a line
-    if (meanLine | repPepLine){alphaValue <- 0.20
-    } else {alphaValue <- 1}
-    #create a basic plot
+    if (meanLine | repPepLine){alphaValue <- 0.20    
+    } else {alphaValue <- 1}  #transparent dots in case of drawing a line
     p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
         geom_point(na.rm = TRUE, alpha = alphaValue) +
         scale_y_log10() +
@@ -89,54 +81,38 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
         scale_colour_manual(legendLabel, values = col_vector_peptides,
                             labels = c("TRUE" = labelled,
                                         "FALSE" = unlabelled)) +
-        ylab (ylabel) +
-        xlab (xlabel)
-    #add grid 
-    if(grid){p<- p +theme_minimal() +
+        ylab (ylabel) + xlab (xlabel)
+    if(grid){p<- p +theme_minimal() +     #add grid 
             theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
-    #title alignment settings
-    if (titleAlign == 'left'){adjust <- 0
+    if (titleAlign == 'left'){adjust <- 0     #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    #add title to plot according to arguments
-    if (titleLabel == 'all'){
+    if (titleLabel == 'all'){     #add title to plot according to arguments
         p <- p + labs(title = str_remove(
             str_extract(description, "^.* OS"), " OS"),
-            subtitle = str_extract(
-                str_remove(description, " PE=.*$"), "OS=.*$"),
+            subtitle = str_extract(str_remove(description, " PE=.*$"),"OS=.*$"),
             caption = paste('UniProt ID:', protein, sep ='')) +
             theme(plot.title = element_text(hjust = adjust))
     } else if (titleLabel == 'GN') {
         p <- p + labs(title = str_remove(
             str_extract(description, "GN=[:alnum:]*"), "GN="),
-            # subtitle = '',
             caption = paste('UniProt ID:', protein, sep ='')) +
-            theme(plot.title = element_text(hjust = adjust))
-    }
-    #define linetype_vector 
-    linetype_vector <- c('twodash', 'solid')
+            theme(plot.title = element_text(hjust = adjust))}
+    linetype_vector <- c('twodash', 'solid')     #define linetype_vector 
     names(linetype_vector) <- c('mean','representative peptide')
-    #add mean line 
     if(meanLine) {  ## add line that is a mean of all peptide values
         p <- p + geom_line(aes(y=meanValue, colour = isLabel,linetype ='mean'),
                             size = 1, na.rm = TRUE) +
             scale_linetype_manual('Line type', values = linetype_vector)
     }
-    #add rep pep line
-    ## add line that goes throug values of chosen representative peptide
-    if (repPepLine) { 
-        p <- p + geom_line(
-            aes(y = repPepValue, colour = isLabel,
-                linetype = 'representative peptide'),
-            size=1, na.rm = TRUE)+
-            geom_point(
-                aes(y = repPepValue, colour = isLabel),na.rm = TRUE,alpha = 1)+
+    if (repPepLine) { ## add rep pep line fir scenario A
+        p <- p + geom_line(aes(y = repPepValue, colour = isLabel,
+                linetype = 'representative peptide'),size=1, na.rm = TRUE)+
+            geom_point(aes(y=repPepValue,colour=isLabel),na.rm=TRUE,alpha = 1)+
             scale_linetype_manual('Line type', values = linetype_vector)
     }
     #edit title in case of a multiprotein group
-    #this hides information but there doesn't seems to be an easy way 
-    #to deal with these cases in a nice way at this point
     if(str_detect(description,'\\|')){
         p <- p + labs(title = protein,
                         subtitle = 'Multiple proteins group')+
@@ -144,8 +120,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac,
     }
     #make facets if one wishes to separate label states
     if(separateLabStates){
-        p <- p + 
-            facet_wrap(isLabel ~ ., nrow =2,scales = "free_x")+
+        p <- p + facet_wrap(isLabel ~ ., nrow =2,scales = "free_x")+
             theme(strip.text = element_blank())
     }
     return (p)

@@ -36,9 +36,9 @@ server <- function(input, output, session) {
   #   readNorm <- input$inputfileNorm
   #   if (is.null(readNorm)) {
   #       dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
-  #       protInportForAnalysis(data.table::fread(dataFile))
+  #       protImportForAnalysis(data.table::fread(dataFile))
   #   } else {
-  #       protInportForAnalysis(data.table::fread(readNorm$datapath))
+  #       protImportForAnalysis(data.table::fread(readNorm$datapath))
   #   }
   # })
   
@@ -46,9 +46,9 @@ server <- function(input, output, session) {
       readNorm <- input$inputfileNorm
       if (is.null(readNorm)) {
           dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
-          vNormProts$data <- protInportForAnalysis(data.table::fread(dataFile))
+          vNormProts$data <- protImportForAnalysis(dataFile)
       } else {
-          vNormProts$data <- protInportForAnalysis(data.table::fread(readNorm$datapath))
+          vNormProts$data <- protImportForAnalysis(readNorm$datapath)
       }
   })
   
@@ -425,7 +425,7 @@ server <- function(input, output, session) {
   ########################
 
   proteinLists <- eventReactive(peptide_index(), {
-      onlyInOneLabelState_ENV(peptide_index())
+      onlyInOneLabelState(peptide_index())
   })
   
   # List of filtered values for selecting proteins
@@ -944,7 +944,7 @@ server <- function(input, output, session) {
   #                  vGroupDF$data, input$heatMapGroupName,
   #                  titleAlign = "center",
   #                  newNamesCol = vHeatmapGroupColumn$data,
-  #                  grid = F, colNumber = as.integer(input$showSamplesHeatMap),
+  #                  grid = FALSE, colNumber = as.integer(input$showSamplesHeatMap),
   #                  labelled = input$labelledName,
   #                  unlabelled = input$unlabelledName,
   #                  orderColumn = vHeatmapOrderColumn$data,dev
@@ -959,7 +959,7 @@ server <- function(input, output, session) {
                    vGroupDF$data, input$heatMapGroupName,
                    titleAlign = "center",
                    newNamesCol = vHeatmapGroupColumn$data,
-                   grid = F, colNumber = as.integer(input$showSamplesHeatMap),
+                   grid = FALSE,colNumber=as.integer(input$showSamplesHeatMap),
                    labelled = input$labelledName,
                    unlabelled = input$unlabelledName,
                    orderColumn = vHeatmapOrderColumn$data,

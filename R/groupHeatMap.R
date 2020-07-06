@@ -25,6 +25,7 @@
 #' @param ylabel character
 #' @param xlabel character
 #' @param legendLabel character
+#' @param legendPosition character, one of "right" or "bottom"
 #' @param grid logical, specifies presence/absence of gridline in the plot
 #' @param labelled character, label to be used for isLabel == TRUE
 #' @param unlabelled character, label to be used for isLabel == FALSE
@@ -39,71 +40,56 @@
 #' ##Use example normalised proteins file
 #' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #' #read file in and change structure of table to required format
-#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' forAnalysis <- protImportForAnalysis(inputFile)
 #' ##example plot:
 #' groupDfn <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
 #' groupName <- 'group1'
 #' groupData <- data.table::fread(groupDfn)
 #' groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)
 #' 
-groupHeatMap <- function(dataFrame, groupData, groupName,
-                            titleAlign = "left", newNamesCol = NULL, 
-                            colNumber = 2,
-                            ylabel = "Protein", xlabel = "Fraction",
-                            legendLabel = "Relative Protein Abundance", 
-                            legendPosition = "right",grid = TRUE,
-                            labelled = "labeled", unlabelled = "unlabeled",
-                            orderColumn = NULL) {
-    #join DF and group data - proteins present in group but 
-    # absent in the data will be shown as empty
-    #join DF and group data - proteins present in group but absent in the data will be shown as empty
+groupHeatMap <- function(dataFrame, groupData, groupName, titleAlign = "left", 
+    newNamesCol = NULL, colNumber = 2, ylabel = "Protein", xlabel = "Fraction",
+    legendLabel = "Relative Protein Abundance", legendPosition = "right",
+    grid = TRUE,labelled = "labeled",unlabelled="unlabeled",orderColumn = NULL){
+    #join DF and group data - proteins present in group but absent in the data 
+    #will be shown as empty
     groupData %>% 
         select(`Protein Group Accessions`, newNamesCol,orderColumn) -> groupData
     right_join(dataFrame, groupData) -> dataFrame
     if(sum(is.na(dataFrame$isLabel))>0){
         dataFrame[is.na(dataFrame$isLabel),]$isLabel <- FALSE}
-    #rename proteins if such column is provided
-    if(!is.null(newNamesCol)){ycolumn <- newNamesCol
+    if(!is.null(newNamesCol)){ycolumn <- newNamesCol #rename proteins
     } else {ycolumn <- 'Protein Group Accessions'}
-    #draw basic plot
-    if(is.null(orderColumn)){
+    if(is.null(orderColumn)){     #draw basic plot
         p <- ggplot(dataFrame, aes(x = Fraction,
                                 y = get(ycolumn),fill = `Precursor Area`)) + 
-        geom_raster(na.rm = T)  +
+        geom_tile(na.rm = TRUE)  +
         facet_wrap(isLabel ~ ., ncol = colNumber, 
             labeller = labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
-        labs(title = groupName) +
-        ylab(ylabel) + xlab(xlabel) +
+        labs(title = groupName) + ylab(ylabel) + xlab(xlabel) +
         scale_fill_gradient(legendLabel,low='#cacde8',high ='#0019bf',
-                            na.value="grey60",
-                            breaks = seq(0,1,0.25), limits = c(0,1)) +
+            na.value="grey60",breaks = seq(0,1,0.25), limits = c(0,1)) +
         coord_cartesian(expand = 0)
     }else{
         protsOrder <- dataFrame[,orderColumn]
         dataFrame[[ycolumn]]<-fct_reorder(dataFrame[[ycolumn]],desc(protsOrder))
         p <-  ggplot(dataFrame, aes(x = Fraction,y = get(ycolumn),
                                     fill = `Precursor Area`)) + 
-        geom_tile(na.rm = T)+
+        geom_tile(na.rm = TRUE)+
         facet_wrap(isLabel ~ .,ncol=colNumber, 
             labeller=labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
-        labs(title = groupName) +
-        ylab(ylabel) +  xlab(xlabel) +
-        scale_fill_gradient(legendLabel,
-                            low = '#cacde8',high = '#0019bf', na.value="grey60",
-                                breaks = seq(0,1,0.25), limits = c(0,1)) +
-        coord_cartesian(expand = 0)
-    }
-    #add grid
-    if(grid){p<- p +theme_minimal() +
+        labs(title = groupName) + ylab(ylabel) +  xlab(xlabel) +
+        scale_fill_gradient(legendLabel, low = '#cacde8',high = '#0019bf', 
+            na.value="grey60", breaks = seq(0,1,0.25), limits = c(0,1)) +
+        coord_cartesian(expand = 0)}
+    if(grid){p<- p +theme_minimal() +     #add grid
             theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
-    #title alignment settings
-    if (titleAlign == 'left'){adjust <- 0
+    if (titleAlign == 'left'){adjust <- 0     #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    #adjust position of title
     p <- p + theme(plot.title = element_text(hjust = adjust),
-                   legend.position = legendPosition)
+                    legend.position = legendPosition)
     if(legendPosition == "bottom"){
         p <- p+guides(fill=guide_colourbar(title.position="top",title.hjust=0.5,
                     draw.ulim = FALSE, draw.llim = FALSE,barwidth = 12))

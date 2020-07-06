@@ -5,20 +5,20 @@
 \title{Create scatter plot}
 \usage{
 allPeptidesPlot(
-    .listDF,
-    protein,
-    max_frac,
-    meanLine = FALSE,
-    repPepLine = FALSE,
-    separateLabStates = FALSE,
-    grid = TRUE,
-    titleLabel = "all",
-    titleAlign = "left",
-    ylabel = "Precursor Area",
-    xlabel = "Fraction",
-    legendLabel = "Condition",
-    labelled = "Labeled",
-    unlabelled = "Unlabeled"
+  .listDF,
+  protein,
+  max_frac,
+  meanLine = FALSE,
+  repPepLine = FALSE,
+  separateLabStates = FALSE,
+  grid = TRUE,
+  titleLabel = "all",
+  titleAlign = "left",
+  ylabel = "Precursor Area",
+  xlabel = "Fraction",
+  legendLabel = "Condition",
+  labelled = "Labeled",
+  unlabelled = "Unlabeled"
 )
 }
 \arguments{
@@ -63,7 +63,8 @@ This function creates a plot of all peptides that belong to a single protein
 \examples{
 ##Use example peptide data set, read in and clean data
 inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+peptides <- peptideImport(inputFile)
+peptides <- cleanData(peptides, fCol = "Search ID")
 ## separate chemical modifications and labelling into separate columns
 peptides <- splitModLab(peptides) 
 ## remove unneccessary columns, simplify rows

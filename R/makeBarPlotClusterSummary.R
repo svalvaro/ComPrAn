@@ -21,7 +21,7 @@
 #' ##Use example normalised proteins file
 #' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #' #read file in and change structure of table to required format
-#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' forAnalysis <- protImportForAnalysis(inputFile)
 #' # create components necessary for clustering
 #' clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
 #' #assign clusters

@@ -12,3 +12,7 @@ Shiny app
 \description{
 Execute the complexomics Shiny app
 }
+\examples{
+##to start the shiny app associated with ComPrAn package run
+compranApp()
+}
