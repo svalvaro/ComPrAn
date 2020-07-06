@@ -189,8 +189,10 @@ proteins
 ```{r}
 library(ComPrAn)
 inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-#read in + mandatory filtering
-peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#read in data
+peptides <- peptideImport(inputFile)
+#mandatory filtering
+peptides <- cleanData(peptides, fCol = "Search ID")
 #optional filtering
 peptides <- toFilter(peptides, rank = 1)
 # separate chemical modifications and labelling into separate columns
@@ -216,7 +218,7 @@ allPeptidesPlot(peptide_index,protein, max_frac = max_frac)
 
 **Create a list of proteins present in both/only in one label state**
 ```{r}
-listOnlyOneLabState <- onlyInOneLabelState_ENV(peptide_index)
+listOnlyOneLabState <- onlyInOneLabelState(peptide_index)
 ```
 
 

@@ -1,13 +1,10 @@
 #' Clean raw peptide complexomics data
 #'
 #' Perform initial, mandatory, cleaning of data
-#' Check presence of reguired columns
 #' Function to process raw input data into format required for
 #' subsequent analysis. .data is a data frame containing raw input data.
 #' This function checks (not neccessarily in this order):
 #' \itemize{
-#' \item are all required columns present
-#' \item are these columns in correct format
 #' \item renames Sequence ID column to Fraction and converts values in this
 #'  column from letters to numbers
 #' \item reorders Protein Group Accessions containing multiple proteins
@@ -34,13 +31,12 @@
 #' @examples  
 #' ##Use example peptide data set, read in and clean data
 #' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' peptides <- peptideImport(inputFile)
+#' peptides <- cleanData(peptides, fCol = "Search ID")
 cleanData <- function(.data, fCol = "Search ID") {
     columnHeaders <- names(.data)
     # check if column specifying fraction number is present
-    if (!fCol %in% columnHeaders) {
-        stop(paste0("\"",fCol, "\"column not found"))
-    } 
+    if (!fCol %in% columnHeaders) {stop(paste0("\"",fCol,"\"column not found"))}
     letterSequence <- c(LETTERS, 
                         unlist(lapply(LETTERS, 
                                         function(x) {paste0(x,LETTERS)})))
@@ -50,29 +46,10 @@ cleanData <- function(.data, fCol = "Search ID") {
     names(letterToNumber)[grep("Letters", names(letterToNumber))] <- fCol
     nrowOld <- nrow(.data)
     .data <- dplyr::inner_join(.data,letterToNumber, by = fCol)
-    
     # check if column specifying fraction number is present
     if (nrow(.data) < nrowOld) {
         stop(paste0("Some rows in \"", fCol, "\" column do not have a value"))
     } 
-    #all column names with after adding "Fraction" column
-    columnHeaders <- names(.data)
-    # which columns we need
-    colsToLookFor <- c( "PSM Ambiguity", "Fraction", "Precursor Area",
-                        "# Protein Groups", "Rank", "Confidence Level",
-                        "Protein Group Accessions", "Protein Descriptions",
-                        "Modifications", "Charge", "Sequence")
-    #their expected classes
-    classesOfCols <- c( "factor", "integer", "numeric",
-                        "integer", "integer", "factor",
-                        "factor", "character",
-                        "character", "integer", "character")
-    # make a named vector:
-    names(classesOfCols) <- colsToLookFor
-    #are all columns we need in column names?
-    if(sum(colsToLookFor %in% columnHeaders) < length(colsToLookFor)) {
-        stop('Not all columns found') #write an ERROR message, do not continue
-    }
     # Convert to factor variables
     .data %>%
         mutate( `PSM Ambiguity` = as.factor(`PSM Ambiguity`),
@@ -80,15 +57,9 @@ cleanData <- function(.data, fCol = "Search ID") {
                 `Protein Group Accessions` = as.factor(
                     `Protein Group Accessions`)
                 ) -> .data
-    #are all values in columns we need of correct type?
-    # check to see that actual and desired match
-    if(!identical(sapply(.data, class)[colsToLookFor], classesOfCols)) {
-        stop('Not all columns are the correct type!') 
-    }
     # Reorder multiple name accessions #
     strsplit(levels(.data$`Protein Group Accessions`), ";") %>%
-        lapply(function (x) length(x)) %>%
-        unlist() -> lengths
+        lapply(function (x) length(x)) %>% unlist() -> lengths
     # These are the names:
     strsplit(levels(.data$`Protein Group Accessions`)[lengths > 1], ";") %>%
         purrr::map(~ sort(.)) %>%
@@ -96,16 +67,19 @@ cleanData <- function(.data, fCol = "Search ID") {
         unlist() -> new_names
     # Replace levels
     levels(.data$`Protein Group Accessions`)[lengths > 1] <- new_names
-    # Revert back to characte for future work
+    # Revert back to character for future work
     .data$`Protein Group Accessions` <- as.character(
         .data$`Protein Group Accessions`)
+    colsToLookFor <- c( "PSM Ambiguity", "Fraction", "Precursor Area",
+                        "# Protein Groups", "Rank", "Confidence Level",
+                        "Protein Group Accessions", "Protein Descriptions",
+                        "Modifications", "Charge", "Sequence")
     # Mandatory filtering
     .data %>%
         dplyr::select(colsToLookFor)  %>%
-        dplyr::filter(  `PSM Ambiguity` != 'Rejected',
-                        `# Protein Groups` > 0) %>%
+        dplyr::filter(`PSM Ambiguity` != 'Rejected',`# Protein Groups` > 0) %>%
         tidyr::drop_na(`Precursor Area`) %>%
         dplyr::mutate(isLabel = ifelse(str_detect(Modifications, "\\(Label\\:")
                                         ,TRUE, FALSE),
-                        Sequence = toupper(Sequence)) -> data1
+                        Sequence = toupper(Sequence)) -> .data
 }

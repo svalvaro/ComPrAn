@@ -11,7 +11,7 @@
 #' \item  columns "1" to "n" - numeric
 #'}
 #' 
-#' @param .data - data frame, contains columns:
+#' @param inputFile - character vector containing the location of protein file
 #' 
 #' @export
 #' 
@@ -21,9 +21,10 @@
 #' ##Use example normalised proteins file
 #' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #' #read file in and change structure of table to required format
-#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' forAnalysis <- protImportForAnalysis(inputFile)
 #' 
-protInportForAnalysis <- function(.data){
+protImportForAnalysis <- function(inputFile){
+    .data <- data.table::fread(inputFile, stringsAsFactors = FALSE)
     .data %>%  gather(Fraction, `Precursor Area`, 
                         -c(`Protein Group Accessions`, `Protein Descriptions`, 
                         scenario, label)) %>%

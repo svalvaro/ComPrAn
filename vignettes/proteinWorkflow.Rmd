@@ -75,7 +75,7 @@ proteins
 library(ComPrAn)
 inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 
-forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+forAnalysis <- protImportForAnalysis(inputFile)
 ```
 
 
