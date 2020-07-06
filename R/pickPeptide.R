@@ -78,7 +78,7 @@ pickPeptide <- function(.data){
         dplyr::select(-n, -n_2, -maxN, -maxArea) -> .data
     ###change data to named list(https://github.com/tidyverse/dplyr/issues/4223)
     .data %>% dplyr::group_by(`Protein Group Accessions`) %>% 
-        dplyr::group_keys() %>% pull(1) -> group_names
+        dplyr::group_keys()  %>% pull(1) -> group_names
     .data %>% dplyr::group_split(`Protein Group Accessions`) %>% 
         rlang::set_names(group_names)->.data
     return(.data)
