@@ -5,37 +5,37 @@
 \title{Compare a Two Groups of Proteins Within One Label State}
 \usage{
 twoGroupsWithinLabelCoMigration(
-    dataFrame,
-    max_frac,
-    group1Data = NULL,
-    group1Name = "group1",
-    group2Data = NULL,
-    group2Name = "group2",
-    meanLine = FALSE,
-    medianLine = FALSE,
-    ylabel = "Relative Protein Abundance",
-    xlabel = "Fraction",
-    legendLabel = "Group",
-    labelled = "Labeled",
-    unlabelled = "Unlabeled",
-    jitterPoints = 0.3,
-    pointSize = 2.5,
-    grid = FALSE,
-    showTitle = FALSE,
-    titleAlign = "left",
-    alphaValue = 0.5
+  dataFrame,
+  max_frac,
+  group1Data = NULL,
+  group1Name = "group1",
+  group2Data = NULL,
+  group2Name = "group2",
+  meanLine = FALSE,
+  medianLine = FALSE,
+  ylabel = "Relative Protein Abundance",
+  xlabel = "Fraction",
+  legendLabel = "Group",
+  labelled = "Labeled",
+  unlabelled = "Unlabeled",
+  jitterPoints = 0.3,
+  pointSize = 2.5,
+  grid = FALSE,
+  showTitle = FALSE,
+  titleAlign = "left",
+  alphaValue = 0.5
 )
 }
 \arguments{
 \item{dataFrame}{dataFrame: data frame, data frame of normalised values for 
 proteins from SCENARIO A,
-    contains columns:
-    `Protein Group Accessions` character
-    `Protein Descriptions` character
-    Fraction integer
-    isLabel character ('TRUE'/'FALSE' values)
-    `Precursor Area` double
-    scenario character}
+   contains columns:
+  `Protein Group Accessions` character
+  `Protein Descriptions` character
+   Fraction integer
+   isLabel character ('TRUE'/'FALSE' values)
+   `Precursor Area` double
+   scenario character}
 
 \item{max_frac}{numeric, total number of fractions}
 
@@ -97,7 +97,7 @@ LABEL STATE
 ##Use example normalised proteins file
 inputFile <- system.file("extdata", "dataNormProts.txt", package ="ComPrAn")
 #read file in and change structure of table to required format
-forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+forAnalysis <- protImportForAnalysis(inputFile)
 ##example plot:
 g1D <- c("Q16540","P52815","P09001","Q13405","Q9H2W6") #group 1 data vector
 g1N <- 'group1'                                        #group 1 name

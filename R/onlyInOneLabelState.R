@@ -13,7 +13,8 @@
 #' 
 #' ##Use example peptide data set, read in and clean data
 #' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' peptides <- peptideImport(inputFile)
+#' peptides <- cleanData(peptides, fCol = "Search ID")
 #' ## separate chemical modifications and labelling into separate columns
 #' peptides <- splitModLab(peptides) 
 #' ## remove unneccessary columns, simplify rows
@@ -21,9 +22,9 @@
 #' ## Pick representative peptide for each protein for both scenarios
 #' peptide_index <- pickPeptide(peptides)
 #' ## extract list of names of proteins present in one/both samples
-#' oneStateList <- onlyInOneLabelState_ENV(peptide_index)
-onlyInOneLabelState_ENV <- function(.data){
-    results <- sapply(.data, function(x)
+#' oneStateList <- onlyInOneLabelState(peptide_index)
+onlyInOneLabelState <- function(.data){
+    results <- vapply(.data, function(x)
         if(all(!x$isLabel)){
             'onlyUnlabelled'
         } else if(all(x$isLabel)){
@@ -31,7 +32,7 @@ onlyInOneLabelState_ENV <- function(.data){
             #add to vecA
         } else {
             'both'
-        })
+        },"a")
     
     results <- list(onlyLabelled = names(results[results == "onlyLabelled"]),
                     onlyUnlabelled =names(results[results == "onlyUnlabelled"]),

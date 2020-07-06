@@ -25,21 +25,19 @@
 #' 
 #' ##Use example peptide data set, read in and clean data
 #' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-#' peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+#' peptides <- peptideImport(inputFile)
+#' peptides <- cleanData(peptides, fCol = "Search ID")
 #' ## separate chemical modifications and labelling into separate columns
 #' peptides <- splitModLab(peptides) 
 #' ## remove unneccessary columns, simplify rows
 #' peptides <- simplifyProteins(peptides) 
 #' ## Pick representative peptide for each protein for both scenarios
 #' peptide_index <- pickPeptide(peptides)
-#'
-pickPeptide <- function(.data) {
-    ##############scenarioA
-    .data %>%
+pickPeptide <- function(.data){ 
+    .data %>%        ############## scenario A
         dplyr::group_by(`Protein Group Accessions`,
                         UniqueCombinedID_A,isLabel)%>%
-        dplyr::mutate(n = n()) %>%
-        dplyr::ungroup() %>%
+        dplyr::mutate(n = n()) %>% dplyr::ungroup() %>%
         dplyr::group_by(`Protein Group Accessions`,isLabel) %>%
         dplyr::mutate(repPepA = ifelse(n == max(n), TRUE, FALSE)) %>%
         dplyr::mutate(maxArea = max(`Precursor Area`[repPepA])) %>%
@@ -47,59 +45,41 @@ pickPeptide <- function(.data) {
             UniqueCombinedID_A[(`Precursor Area` == maxArea & repPepA)][1]) %>%
         dplyr::mutate(repPepA = ifelse(repPepA & 
                                         UniqueCombinedID_A == maxAreaPeptide,
-                                        TRUE,
-                                        FALSE))%>%
+                                        TRUE,FALSE))%>%
         dplyr::select(-n, -maxArea, -maxAreaPeptide) -> .data
-    ###############scenarionB
-    .data %>%
+    .data %>%        ############### scenarion B
         dplyr::group_by(`Protein Group Accessions`,UniqueCombinedID_B) %>%
-        dplyr::mutate(n = n()) %>%
-        dplyr::ungroup() %>%
+        dplyr::mutate(n = n()) %>% dplyr::ungroup() %>%
         dplyr::group_by(`Protein Group Accessions`,UniqueCombinedID_A) %>%
         dplyr::mutate(n_2 = sum(n[isLabel][1], n[!isLabel][1],na.rm = TRUE)) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(`Protein Group Accessions`) %>% 
-        dplyr::mutate(maxN = ifelse(identical(n_2[n_2 != n], integer(0)),
-                                    9999,
+        dplyr::mutate(maxN = ifelse(identical(n_2[n_2 != n], integer(0)),9999,
                                     max(n_2[n_2 != n]))) %>%
-        # add TRUE to all peptides that are present in maximum number of 
-        # fractions this can happen for multiple peptides in any given protein
-        # here we as well don't check whether peptide is present in 
-        # BOTH label states
+        #add TRUE to all peptides that are present in maximum number of 
+        #fractions this can happen for multiple peptides in any given protein
+        #here we don't check whether peptide is present in BOTH label states
         dplyr::mutate(repPepB = ifelse(n_2 == maxN, TRUE, FALSE)) %>%
         dplyr::ungroup() %>% 
-        # here we check whether each peptide is present in both label states
-        # if there are peptides present only for one label state 
-        # repPepB MUST be FALSE for this `Protein Group Accessions` and
-        # `UniqueCombinedID_A`
+        # check whether each peptide is present in both label states, if there 
+        # are peptides present only for one label state repPepB MUST be FALSE 
+        # for this `Protein Group Accessions` and `UniqueCombinedID_A`
         dplyr::group_by(`Protein Group Accessions`,`UniqueCombinedID_A`) %>% 
-        dplyr::mutate(repPepB = ifelse(length(unique(isLabel)) == 1,
-                                        FALSE,
-                                        repPepB)) %>% 
-        dplyr::ungroup() %>% 
-        # when there is TRUE present in any of repPepB rows: in case there are 
-        # multpile peptides selected pick the one that has highest precursor
-        # area, in case there are more like that pick the first one
+        dplyr::mutate(repPepB = ifelse(length(unique(isLabel)) == 1,FALSE,
+                                        repPepB)) %>% dplyr::ungroup() %>% 
+        #when there is TRUE in any of repPepB rows:if multpile peptides selected
+        #pick the one with highest precursor area, if there are more pick first 
         dplyr::group_by(`Protein Group Accessions`) %>% 
-        dplyr::mutate(
-            maxArea = ifelse(any(repPepB), 
+        dplyr::mutate(maxArea = ifelse(any(repPepB), 
                                 UniqueCombinedID_A[`Precursor Area` == max(
-                                `Precursor Area`[repPepB])& repPepB][1]
-                                ,NA)) %>%
-        dplyr::mutate(
-            repPepB = ifelse(repPepB & UniqueCombinedID_A == maxArea, 
-                                TRUE, 
-                                FALSE)) %>% 
-        ungroup() %>% 
-        # remove unneccessary columns
+                                `Precursor Area`[repPepB])& repPepB][1],NA)) %>%
+        dplyr::mutate(repPepB = ifelse(repPepB & UniqueCombinedID_A == maxArea, 
+                                TRUE,FALSE)) %>%  dplyr::ungroup() %>% 
         dplyr::select(-n, -n_2, -maxN, -maxArea) -> .data
-    ###change data to named list
-    # using code from https://github.com/tidyverse/dplyr/issues/4223
-    .data %>% 
-        dplyr::group_keys(`Protein Group Accessions`) %>% 
-        pull(1) -> group_names
-    .data %>% 
-        dplyr::group_split(`Protein Group Accessions`) %>% 
+    ###change data to named list(https://github.com/tidyverse/dplyr/issues/4223)
+    .data %>% dplyr::group_by(`Protein Group Accessions`) %>% 
+        dplyr::group_keys() %>% pull(1) -> group_names
+    .data %>% dplyr::group_split(`Protein Group Accessions`) %>% 
         rlang::set_names(group_names)->.data
     return(.data)
 }

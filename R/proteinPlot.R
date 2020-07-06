@@ -31,7 +31,7 @@
 #' ##Use example normalised proteins file
 #' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #' #read file in and change structure of table to required format
-#' forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+#' forAnalysis <- protImportForAnalysis(inputFile)
 #' ##example plot:
 #' protein <- "P52815"
 #' max_frac <- 23
@@ -46,7 +46,6 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
     dataFrame %>%
         filter(scenario == "B",`Protein Group Accessions`== protein)-> dataFrame
     description <- dataFrame$`Protein Descriptions`[1]
-    
     p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
         geom_line(na.rm = TRUE) +
         geom_point(na.rm = TRUE) +

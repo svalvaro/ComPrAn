@@ -5,17 +5,17 @@
 \title{Create Line Plots}
 \usage{
 proteinPlot(
-    dataFrame,
-    protein,
-    max_frac,
-    grid = TRUE,
-    titleLabel = "all",
-    titleAlign = "left",
-    ylabel = "Relative Protein Abundance",
-    xlabel = "Fraction",
-    legendLabel = "Condition",
-    labelled = "Labeled",
-    unlabelled = "Unlabeled"
+  dataFrame,
+  protein,
+  max_frac,
+  grid = TRUE,
+  titleLabel = "all",
+  titleAlign = "left",
+  ylabel = "Relative Protein Abundance",
+  xlabel = "Fraction",
+  legendLabel = "Condition",
+  labelled = "Labeled",
+  unlabelled = "Unlabeled"
 )
 }
 \arguments{
@@ -59,10 +59,10 @@ by protein
 ##Use example normalised proteins file
 inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #read file in and change structure of table to required format
-forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+forAnalysis <- protImportForAnalysis(inputFile)
 ##example plot:
 protein <- "P52815"
 max_frac <- 23
-proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
+proteinPlot(forAnalysis, protein, max_frac)
 
 }

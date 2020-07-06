@@ -5,32 +5,34 @@
 \title{Make heatmap}
 \usage{
 groupHeatMap(
-    dataFrame,
-    groupData,
-    groupName,
-    titleAlign = "left",
-    newNamesCol = NULL,
-    colNumber = 2,
-    ylabel = "Protein",
-    xlabel = "Fraction",
-    legendLabel = "Relative Protein Abundance",
-    grid = TRUE,
-    labelled = "labeled",
-    unlabelled = "unlabeled"
+  dataFrame,
+  groupData,
+  groupName,
+  titleAlign = "left",
+  newNamesCol = NULL,
+  colNumber = 2,
+  ylabel = "Protein",
+  xlabel = "Fraction",
+  legendLabel = "Relative Protein Abundance",
+  legendPosition = "right",
+  grid = TRUE,
+  labelled = "labeled",
+  unlabelled = "unlabeled",
+  orderColumn = NULL
 )
 }
 \arguments{
 \item{dataFrame}{data frame, contains columns:
 `Protein Group Accessions` character
 `Protein Descriptions` character
-Fraction integer
-isLabel character ('TRUE'/'FALSE' values)
-`Precursor Area` double
-scenario character}
+ Fraction integer
+ isLabel character ('TRUE'/'FALSE' values)
+ `Precursor Area` double
+ scenario character}
 
 \item{groupData}{data frame, mandatory column: 
 `Protein Group Accessions` character - this column is used for filtering
-            optional columns: any other column of type character that should
+           optional columns: any other column of type character that should
             be used for renaming}
 
 \item{groupName}{character, name that should be used for the group specified
@@ -51,6 +53,8 @@ shown side-by-side or above each other}
 
 \item{legendLabel}{character}
 
+\item{legendPosition}{character, one of "right" or "bottom"}
+
 \item{grid}{logical, specifies presence/absence of gridline in the plot}
 
 \item{labelled}{character, label to be used for isLabel == TRUE}
@@ -69,7 +73,7 @@ specified in groupData, heatmap is divided into facets according to isLabel
 ##Use example normalised proteins file
 inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
 #read file in and change structure of table to required format
-forAnalysis <- protInportForAnalysis(data.table::fread(inputFile))
+forAnalysis <- protImportForAnalysis(inputFile)
 ##example plot:
 groupDfn <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
 groupName <- 'group1'

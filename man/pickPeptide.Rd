@@ -33,7 +33,8 @@ picked only for proteins that have shared peptide between label states.
 
 ##Use example peptide data set, read in and clean data
 inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
-peptides <- cleanData(data.table::fread(inputFile), fCol = "Search ID")
+peptides <- peptideImport(inputFile)
+peptides <- cleanData(peptides, fCol = "Search ID")
 ## separate chemical modifications and labelling into separate columns
 peptides <- splitModLab(peptides) 
 ## remove unneccessary columns, simplify rows
