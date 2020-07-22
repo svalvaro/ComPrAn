@@ -238,18 +238,26 @@ body <- dashboardBody(
             fluidRow(
                 column(width = 6,
                        h4(strong("Selec protein:")),
-              tabBox(id = "tabset1", height = "250px",width = 12,
+              tabBox(id = "tabset1", height = "400px",width = 12,
                      tabPanel("All Proteins",
-                              uiOutput("dt")
+                              DT::dataTableOutput('dt'),
+                              #style = "height:300px; overflow-y: scroll; overflow-x: scroll;"
+                              style = "height:350px"
+                              
+                              #uiOutput("dt")
                      ),
                      tabPanel("By label state",
-                              column(width = 6,
+                              #column(width = 6,
+                              #       actionButton("chooseUnlabeled", "Only Unlabeled"),
+                              #       actionButton("chooseBoth", "Both"),
+                              #       actionButton("chooseLabeled", "Only Labeled")),
+                              column(width = 12,
                                      actionButton("chooseUnlabeled", "Only Unlabeled"),
                                      actionButton("chooseBoth", "Both"),
-                                     actionButton("chooseLabeled", "Only Labeled")),
-                              column(width = 12,
+                                     actionButton("chooseLabeled", "Only Labeled"),
                                      DT::dataTableOutput('allPeptides_choose'),
-                                     style = "height:300px; overflow-y: scroll; overflow-x: scroll;"
+                                     #style = "height:300px; overflow-y: scroll; overflow-x: scroll;"
+                                     style = "height:350px"
 
                               )
                      )

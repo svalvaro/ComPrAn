@@ -428,31 +428,12 @@ server <- function(input, output, session) {
       onlyInOneLabelState(peptide_index())
   })
   
-  # List of filtered values for selecting proteins
-  output$dt <- renderUI({
-      selectInput("proteinsUnion", label = "Choose protein species",
-                  choices = peptides_filtered()$`Protein Group Accessions`,
-                  multiple = FALSE)
-  })
   
-  v <- reactiveValues(data = NULL)
 
-  observeEvent(input$chooseUnlabeled, {
-    v$data <- proteinLists()$onlyUnlabelled
-  })
-
-  observeEvent(input$chooseBoth, {
-    v$data <- proteinLists()$both
-  })
-
-  observeEvent(input$chooseLabeled, {
-    v$data <- proteinLists()$onlyLabelled
-  })
-
-  output$trace_table <- renderDataTable({
-    if (is.null(iris)) return()
-    DT::datatable(iris, options = list(paging = FALSE))
-  })
+  # output$trace_table <- renderDataTable({
+  #   if (is.null(iris)) return()
+  #   DT::datatable(iris, options = list(paging = FALSE))
+  # })
 
   # # Display table for selections
   # output$x1 = DT::renderDataTable(cars, server = FALSE)
@@ -468,8 +449,8 @@ server <- function(input, output, session) {
   # print info text:
   # To test an object's value
   # output$test_object_value <- renderText({length(peptides_plot())})
-  output$test_object_value <- renderText({length(v$data)})
-  output$test_object_value_2 <- renderText({length(peptides_full_parameters())})
+  # output$test_object_value <- renderText({length(v$data)})
+  # output$test_object_value_2 <- renderText({length(peptides_full_parameters())})
 
   # Display table for selections
   # output$allPeptides_choose = DT::renderDataTable(data.frame(Protein = peptides_plot()), server = FALSE)
@@ -478,12 +459,60 @@ server <- function(input, output, session) {
   #                                                 server = FALSE,
   #                                                 selection = "single")
 
+  v <- reactiveValues(data = NULL)
+  
+  observeEvent(input$chooseUnlabeled, {
+    v$data <- proteinLists()$onlyUnlabelled
+  })
+  
+  observeEvent(input$chooseBoth, {
+    v$data <- proteinLists()$both
+  })
+  
+  observeEvent(input$chooseLabeled, {
+    v$data <- proteinLists()$onlyLabelled
+  })
+  
+  observeEvent(input$tabset1, {
+    if(input$tabset1 == "All Proteins"){
+    v$data <- names(peptide_index())
+    }
+  })
+  
+  observeEvent(proteinLists(), {
+    if(input$tabset1 == "All Proteins"){
+      v$data <- names(peptide_index())
+    }
+  })
+  
+ # List of filtered values for selecting proteins
+  # output$dt <- renderUI({
+  #   selectInput("proteinsUnion", label = "Choose protein species",
+  #               choices = peptides_filtered()$`Protein Group Accessions`[1:50],
+  #               multiple = FALSE)
+  # })
+  
+  output$dt = DT::renderDataTable({
+    if (is.null(v$data)) {
+      return()
+    } else {
+      DT::datatable(data.frame(Proteins = v$data),
+                    options = list(paging = FALSE,
+                                   scrollY =  250,
+                                   scrollCollapse = TRUE),
+                    selection = "single")
+    }
+  }, server = FALSE
+  )
+  
   output$allPeptides_choose = DT::renderDataTable({
     if (is.null(v$data)) {
       return()
     } else {
       DT::datatable(data.frame(Proteins = v$data),
-                    options = list(paging = FALSE),
+                    options = list(paging = FALSE,
+                                   scrollY =  200,
+                                   scrollCollapse = TRUE),
                     selection = "single")
     }
   }, server = FALSE
@@ -495,10 +524,10 @@ server <- function(input, output, session) {
     req(peptide_index())
 
     if (input$tabset1 == "All Proteins") {
-      if (is.null(input$proteinsUnion)) {
+      if (is.null(input$dt_rows_selected)) {
         return()
       } else {
-        protein <- input$proteinsUnion
+        protein <- v$data[input$dt_rows_selected]
       }
     } else if (is.null(input$allPeptides_choose_rows_selected)) {
       return()
@@ -570,17 +599,26 @@ server <- function(input, output, session) {
   # Normalization tab server side ####
   ###############################
 
+  
+  observeEvent(input$normData,{
+    withProgress(message = 'Normalizing protein data for further analysis...',
+                 value = 0.25,{
+                   vNormProts$data <- getNormTable(peptide_index(),purpose = "analysis")
+                 })
+  })
+  
   compiledExport <- eventReactive(input$normData,{
+    withProgress(message = 'Preparing normalized protein data for export...',
+                 value = 0.55, {
       getNormTable(peptide_index(),purpose = "export")
     })
+  })
 
   # compiledNorm <- eventReactive(input$normData,{
   #     getNormTable(peptide_index(),purpose = "analysis")
   #   })
 
-  observeEvent(input$normData,{
-      vNormProts$data <- getNormTable(peptide_index(),purpose = "analysis")
-  })
+
   
   observeEvent(compiledExport(),{
       output$dl_Norm <- renderUI({
