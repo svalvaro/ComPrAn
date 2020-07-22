@@ -35,8 +35,8 @@ normTableForExport <- function(labTab, unlabTab, comboTab) {
         spread(Fraction, "value") %>%
         mutate(scenario = "B",
                 label = as.logical(label)) -> comboTab
-    comboTab <- comboTab[c("Protein Group Accessions", "Protein Descriptions", 
-                            "scenario", "label", seq_len(max_frac))]
+    #comboTab <- comboTab[c("Protein Group Accessions", "Protein Descriptions", 
+    #                        "scenario", "label", seq_len(max_frac))]
     
     return(labTab %>%
                 bind_rows(unlabTab) %>%

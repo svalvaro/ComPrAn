@@ -27,16 +27,16 @@ normalizeTable<- function(.data, applyNormalization = TRUE){
         tempMatrix <- t(apply(tempMatrix, 1, function(x) {x/max(x)}))
     }
     
-    #reorder columns so they are from 1 to n
-    if (length(labelSuffix) == 1){
-        tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)),
-                                            "_",labelSuffix)]
-    } else {
-        tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)/2),
-                                            "_",
-                                        rep(c(labelSuffix[1],labelSuffix[2]),
-                                            each=ncol(tempMatrix)/2))]
-    }
+    #reorder columns so they are from 1 to n#->no reason to reorder columns here
+    # if (length(labelSuffix) == 1){
+    #     tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)),
+    #                                         "_",labelSuffix)]
+    # } else {
+    #     tempMatrix <- tempMatrix[,paste0(seq_len(ncol(tempMatrix)/2),
+    #                                         "_",
+    #                                     rep(c(labelSuffix[1],labelSuffix[2]),
+    #                                         each=ncol(tempMatrix)/2))]
+    # }
     #convert back to data frame
     tempMatrix <- as.data.frame(tempMatrix)
     #for unknown reasons ';' in rownames is sometimes automaticaly switched 
