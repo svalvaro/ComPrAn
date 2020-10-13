@@ -22,48 +22,59 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Complexome profiling or complexomics is a mass spectrometry based method used 
-in biology to study macromolecular complexes in their native form. 
-Protein complexes are assessed
-by evaluating their migration profile across a range of fractions. 
+Complexome profiling or complexomics is a mass spectrometry-based method used in
+biology to study macromolecular complexes in their native form. Protein 
+complexes are assessed by evaluating their migration profile across fractions. 
 First, lysed protein sample is separated into fractions, typically by blue 
 native electrophoresis (BN-PAGE) or density gradient centrifugation. Individual
-fractions are analysed by mass spectrometry. This allows to identify protein
-migration profiles across the fractions and to assess protein co-migration. 
-It is often desirable to compare co-migration between multiple biological 
-samples. Typically, this would require analysing each sample separately, 
-using multiple
-lanes of blue native gel/multiple gradients. This might introduce technical
-biases making the qualitative comparison of migration profiles as well as 
-quantitative comparison of protein amount between different biological samples 
-difficult. To mitigate these technical biases, biological sample can be labeled 
-by means detectable by mass spectrometry (e.g. SILAC, TMT, iTRAQ). 
-Metabolic labeling in culture (SILAC) allows for sample multiplexing at the very
-early steps of experiment, making it a useful tool when experimental design 
-requires comparison of 2 biological samples. 
+fractions are analysed by protein mass spectrometry. This allows to identify 
+protein migration profiles across the fractions and to assess protein 
+co-migration. It is often desirable to compare co-migration between multiple 
+biological samples. Typically, this would require analysing each sample 
+separately, using multiple lanes of blue native gel/multiple density gradients.
+However, this approach might introduce technical biases making the qualitative 
+comparison of migration profiles as well as quantitative comparison of protein 
+amount between different biological samples difficult. To mitigate these 
+technical biases, biological samples can be labeled by means detectable by 
+mass spectrometry (e.g. SILAC, TMT, iTRAQ) and analysed simultaneously.  Stable
+Isotope Labelling with Amino acids in Cell culture (SILAC) is a method when 
+cells are grown in the presence of amino acids with either low natural 
+abundance “heavy” isotopes of carbon and nitrogen or the most frequent “light”
+isotopes. This labelling allows for reciprocally labelled samples to be mixed
+and multiplexed at the very early steps of experiment, making it a useful tool 
+when experimental design requires comparison of 2 biological samples.
 
 Here we present a ComPrAn (Complexome Profiling Analysis) R package to analyse 
 data produced by SILAC complexomics experiments. This package does not interpret
-raw mass spectrometry data. As an input it takes a table of peptides that were
+raw mass spectrometry data. As an input it takes a table of peptides that were 
 identified by search engines such as Mascot, and quantified, e.g. in Proteome 
-Discoverer.
+Discoverer. 
 
-This package allows to estimate protein intensities from peptide intensities, 
-produces a normalized migration profiles of proteins through fractions, performs
-cluster analysis and contains tools for visualization of results. The analysis 
-is indented for samples that were SILAC labelled, therefore the input file 
-should contain both "heavy" and "light" peptides.
+This package allows to estimate relative protein abundance from peptide 
+abundance, produces a normalized migration profiles of proteins through 
+fractions, performs cluster analysis and contains tools for visualization of 
+results. The analysis is indented for samples that were SILAC labelled, 
+therefore the input file should contain both “heavy” and “light” peptides.
 
 ## Method description
 
-Below, we provide an overview of the method. We suggest 
+Below, we provide an overview of the ComPrAn use (Figure 1). There are 
 **two possible uses of the package**. Here, we describe a **full workflow**,
-describing analysis starting from the peptide information. Second option is 
-to use only **protein workflow** described in a separate vignette. The second
+enabling the analysis starting from the peptide information. Second option is 
+to use only **protein workflow** (described in a separate vignette). The second
 workflow would include only steps 3) and 4) from below. It provides greater 
 flexibility, for example, when only normalised protein values are available
 or if different approach of estimation of protein intensities
 from peptide intensities and/or for normalisation are required.
+
+![](PackageWorkflow_small.png){height=700px}
+
+**Fig 1** *Schematic overview of the data analysis using ComPrA*
+*There are two entry point into ComPrAn analysis pipeline* 
+*Peptide data can be imported into Peptide-to-protein part of data analysis*
+*(shown in blue). When only normalised protein data from an experiment are*
+*available, it is possible to use Protein workflow functionality*
+*of the ComPrAn package.*
 
 ### 1) Estimation of protein intensities from peptide intensities
 
@@ -73,22 +84,21 @@ quantified. In a single sample, quantities of different peptides belonging to
 the same protein might differ. Differences in detected peptide quantities might
 be caused by different efficiency of peptides ionization, peptide charge state,
 modifications etc. There are many possibilities how to estimate a protein 
-quantity from peptide quantity, we can take minimum/average/maximum of the 
-quantities of all peptides that belong to this protein or we can do the same 
-for a subset of peptides.
+quantity from peptide quantity, including minimum/average/maximum of the 
+quantities of all peptides that belong to a given protein or
+minimum/average/maximum can be calculated for a subset of peptides. 
 
 In complexomics, protein quantity values are compared among large number of 
 fractions (typically 64 for BN-PAGE and ~20 for gradient centrifugation). 
-Usually, not all the same peptides are detected for any given protein in all 
-fractions. To make sure that protein quantification values used by the ComPrAn
-package are comparable between fractions and between two label states, we pick 
-a single representative peptide for each protein. Selected peptide must have the
-same sequence, modifications and charge state across fractions where it was
-detected. The most abundant peptide for each protein is picked as the 
-representative peptide.
+Usually, peptides detected for any given protein can differ among fractions. 
+To make sure that protein quantification values used by the ComPrAn package 
+are comparable between fractions and between two label states, a single 
+representative peptide is picked for each protein. Selected peptide must have 
+the same sequence, modifications and charge state across fractions. The most 
+abundant peptide for each protein is picked as the representative peptide. 
 
-Based on the experimental question asked, we use two scenarios to select a 
-representative peptide:
+Based on the experimental question, two scenarios to select a representative 
+peptide are used: 
 
 * **Scenario A** - *Which proteins co-migrate together within one label state?*
 *Does the migration profile for a protein differ between label states?*  
@@ -96,12 +106,12 @@ In scenario A, we firs split peptides into 2 groups, unlabeled and labelled,
 and then pick a representative peptide as the one that is present in the highest
 number of fractions within each label state (maximum possible value is the total
 number of fractions). This means that for any single protein the 
-**peptide that is picked for labelled sample may be different**
-**from the peptide selected for unlabeled sample**. This scenario picks 
+**peptide that is picked for the labelled sample may be different**
+**from the peptide selected for the unlabeled sample**. This scenario picks 
 representative peptide for all proteins, even if they are present only in one 
 label state. 
 ![](pickPeptideA.png){width=650px}
-**Fig 1** *Schematic of example case of representative peptide selection for*
+**Fig 2** *Schematic of example case of representative peptide selection for*
 *Heavy and Light samples according to*
 *scenario A. Green ticked boxes mean that a given peptide was detected in a*
 *given fraction. Peptide present in highest number of fractions, separately*
@@ -115,7 +125,7 @@ the highest number of fractions, together for both label states
 **labelled sample and unlabeled sample are the same**. This scenario picks 
 representative peptide only for shared peptides.
 ![](pickPeptideB.png){width=650px}
-**Fig 2** *Schematic of example case of representative peptide selection for*
+**Fig 3** *Schematic of example case of representative peptide selection for*
 *Heavy and Light samples according to*
 *scenario B. Green ticked boxes mean that a given peptide was detected in a*
 *given fraction. Peptide present in both samples in the highest number of*
@@ -137,10 +147,10 @@ e.g. for *protein A* there will be a value of 1 present at least in one fraction
 for unlabeled sample and at lease in one fraction for labelled samples. 
 Because of the way how we select representative peptide and this normalization
 *we do not advice to use scenario A*
-*for quantitative comparison of proteins between label states*. Intended use of
-scenario A is to compare co-migration of proteins. 
+*for quantitative comparison of proteins between SILAC label states*. Intended 
+use of scenario A is to compare co-migration of proteins for individual samples.
 ![](normalizeA.png){width=720px}
-**Fig 3** *Schematic of simplified case of normalisation according to*
+**Fig 4** *Schematic of simplified case of normalisation according to*
 *scenario A. First, fraction with highest value is identified, separately for*
 *Heavy and Light samples. Next, value of each fraction is divided by this*
 *maximum value.*
@@ -153,7 +163,7 @@ Because of the way how we select representative peptide and this normalization
 *we recommend using scenario B*
 *for quantitative comparison of proteins between label states*. 
 ![](normalizeB.png){width=720px}
-**Fig 4** *Schematic of simplified case of normalisation according to*
+**Fig 5** *Schematic of simplified case of normalisation according to*
 *scenario B. First, fraction with highest value across both samples is*
 *identified. Next, value of each fraction is divided by this*
 *maximum value.*
@@ -161,7 +171,7 @@ Because of the way how we select representative peptide and this normalization
 ### 3) Hierarchical clustering
 
 Clustering allows to identify similarity between migration profiles of proteins
-in an unbiased way. We can check co-migration of known protein complexes by
+in an unbiased way. We can examine co-migration of known protein complexes by
 simply filtering the data, however, clustering provides additional information
 by allowing to identify unknown proteins that show similar migration profile as
 our proteins of interest.

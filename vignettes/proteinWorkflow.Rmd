@@ -20,28 +20,42 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Complexome profiling or complexomics is a method used in biology to study 
-migration profiles of proteins and protein complexes. First, sample is separated
-into fractions, typically by blue native electrophoresis or gradient 
-centrifugation and individual fractions are analysed by mass spectrometry. This
-allows to identify proteins that co-migrate. Often people want to compare 
-migration profiles and quantities of proteins between two biological samples. 
-SILAC version of complexomics provides a useful tool for such studies. 
+Complexome profiling or complexomics is a mass spectrometry-based method used in
+biology to study macromolecular complexes in their native form. Protein 
+complexes are assessed by evaluating their migration profile across fractions. 
+First, lysed protein sample is separated into fractions, typically by blue 
+native electrophoresis (BN-PAGE) or density gradient centrifugation. Individual 
+fractions are analysed by protein mass spectrometry. This allows to identify 
+protein migration profiles across the fractions and to assess protein 
+co-migration. It is often desirable to compare co-migration between multiple 
+biological samples. Typically, this would require analysing each sample 
+separately, using multiple lanes of blue native gel/multiple density gradients. 
+However, this approach might introduce technical biases making the qualitative 
+comparison of migration profiles as well as quantitative comparison of protein 
+amount between different biological samples difficult. To mitigate these 
+technical biases, biological samples can be labeled by means detectable by 
+mass spectrometry (e.g. SILAC, TMT, iTRAQ) and analysed simultaneously.  Stable 
+Isotope Labelling with Amino acids in Cell culture (SILAC) is a method when 
+cells are grown in the presence of amino acids with either low natural abundance
+“heavy” isotopes of carbon and nitrogen or the most frequent “light” isotopes.
+This labelling allows for reciprocally labelled samples to be mixed and 
+multiplexed at the very early steps of experiment, making it a useful tool when 
+experimental design requires comparison of 2 biological samples. 
 
 Here we present a package to analyse data produced by SILAC complexomics 
 experiments. This package does not interpret raw mass spectrometry data. Protein
 workflow of this package uses normalised protein data as an input. It allows to 
 performs cluster analysis and contains tools for visualization of results. The
 analysis is indented for samples that were SILAC labelled, therefore the input 
-file should contain both 'heavy' and 'light' proteins.
+file should contain both “heavy” and “light” proteins.
 
 ### Method description
 
 #### 0) Re-formatting of input file
 
 Input file format was designed so it is easily readable by human. Downstream 
-analysis requires a slightly different format so it is neccessary to perfomr 
-this change before performaing the analysis.
+analysis requires a slightly different format so it is necessary to perfomr 
+this change before performing the analysis.
 
 #### 1) Hierarchical clustering
 
