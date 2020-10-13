@@ -20,6 +20,8 @@
 #' @param grid logical, specifies presence/absence of gridline in the plot
 #' @param labelled character, label to be used for isLabel == TRUE 
 #' @param unlabelled character, label to be used for isLabel == FALSE
+#' @param controlSample character, either labelled or unlabelled, this setting
+#' will adjust coloring based on which sample is a control
 #' 
 #' @importFrom tibble rowid_to_column
 #'
@@ -53,7 +55,14 @@
 allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE, 
     repPepLine = FALSE,separateLabStates = FALSE,grid = TRUE,titleLabel = 'all',
     titleAlign = 'left',ylabel = 'Precursor Area', xlabel = 'Fraction',
-    legendLabel = 'Condition', labelled = "Labeled", unlabelled = "Unlabeled"){
+    legendLabel = 'Condition', labelled = "Labeled", unlabelled = "Unlabeled",
+    controlSample = ""){
+    #if controlSample specified, adjust colouring so control is always same 
+    if (controlSample == "labelled"|controlSample == "labeled"){
+        col_vector_peptides <- c("TRUE" = "#ffc125", "FALSE" = "#a020f0")
+    }else if(controlSample == "unlabelled"|controlSample == "unlabeled"){
+        col_vector_peptides <- c("FALSE" = "#ffc125", "TRUE" = "#a020f0")
+    }
     dataFrame <- .listDF[[protein]]
     #Next lines: edit data frame to neccessary format before plotting
     description <- dataFrame$`Protein Descriptions`[1]

@@ -20,7 +20,8 @@ oneGroupTwoLabelsCoMigration(
   pointSize = 2.5,
   grid = FALSE,
   titleAlign = "left",
-  alphaValue = 0.5
+  alphaValue = 0.5,
+  controlSample = ""
 )
 }
 \arguments{
@@ -68,6 +69,9 @@ values in the group}
 specifies alignment of the title in plot}
 
 \item{alphaValue}{numeric, transparency of the point, values 0 to 1}
+
+\item{controlSample}{character, either labelled or unlabelled, this setting
+will adjust plot coloring based on which sample is a control}
 }
 \value{
 plot

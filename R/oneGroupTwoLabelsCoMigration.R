@@ -34,6 +34,8 @@
 #' @param titleAlign character, one of the 'left', 'center'/'centre', 'right',
 #'  specifies alignment of the title in plot
 #' @param alphaValue numeric, transparency of the point, values 0 to 1
+#' @param controlSample character, either labelled or unlabelled, this setting
+#' will adjust plot coloring based on which sample is a control
 #'
 #' @importFrom stats median
 #'
@@ -57,7 +59,11 @@ oneGroupTwoLabelsCoMigration <- function(
     meanLine = FALSE,medianLine = FALSE,ylabel = 'Relative Protein Abundance',
     xlabel = 'Fraction',legendLabel = 'Condition', labelled = 'Labeled',
     unlabelled = 'Unlabeled',jitterPoints = 0.3, pointSize = 2.5,
-    grid = FALSE,titleAlign = 'left', alphaValue = 0.5){
+    grid = FALSE,titleAlign = 'left', alphaValue = 0.5,controlSample = ""){
+    if (controlSample == "labelled"|controlSample == "labeled"){
+        col_vector_proteins <- c("TRUE" = "#ff9d2e", "FALSE" = "#07b58a")
+    }else if(controlSample == "unlabelled"|controlSample == "unlabeled"){
+        col_vector_proteins <- c("FALSE" = "#ff9d2e", "TRUE" = "#07b58a")}
     if(is.null(groupData)) {
         stop('Please provide a list of proteins you would like to plot')}
     dataFrame <- dataFrame[dataFrame$scenario == "A",]#filter only scenario A
@@ -68,6 +74,8 @@ oneGroupTwoLabelsCoMigration <- function(
         mutate (meanValue = mean(`Precursor Area`, na.rm = TRUE)) %>%
         mutate (medianValue = median(`Precursor Area`, na.rm = TRUE)) %>%
         ungroup() -> dataFrame
+    linetype_vector <- c('twodash', 'solid')     #define linetype_vector
+    names(linetype_vector) <- c('mean','median')
     p <- ggplot(dataFrame, aes(x = Fraction, y = `Precursor Area`, 
                                 col = isLabel)) +
         geom_point(position = position_jitter(jitterPoints),alpha = alphaValue,
@@ -76,23 +84,17 @@ oneGroupTwoLabelsCoMigration <- function(
                             labels = c("TRUE" = labelled,"FALSE" = unlabelled))+
         scale_fill_manual(legendLabel, values = col_vector_proteins,
                             labels = c("TRUE" =labelled, "FALSE" =unlabelled))+
-        ylab(ylabel) +
-        xlab(xlabel) +
+        ylab(ylabel) + xlab(xlabel) +
         scale_x_continuous(breaks=seq_len(max_frac),minor_breaks = NULL)+
-        scale_y_continuous(breaks=seq(0,1,0.2))+
-        labs(title = groupName)
-    linetype_vector <- c('twodash', 'solid')     #define linetype_vector
-    names(linetype_vector) <- c('mean','median')
+        scale_y_continuous(breaks=seq(0,1,0.2))+ labs(title = groupName)+
+        scale_linetype_manual('Line type', values = linetype_vector)
     if(meanLine) {  ## add line that is a mean of all protein values
         p <- p + geom_line(aes(y=meanValue, colour = isLabel, linetype = 'mean')
-                            ,size = 1, na.rm = TRUE) +
-            scale_linetype_manual('Line type', values = linetype_vector)
-    }
+                            ,size = 1, na.rm = TRUE)}
     if (medianLine) { ##  add line that is a median of all protein values
         p <- p + geom_line(
             aes(y = medianValue, colour = isLabel, linetype = 'median'),
-            size=1, na.rm = TRUE)+
-            scale_linetype_manual('Line type', values = linetype_vector)}
+            size=1, na.rm = TRUE)}
     if(grid){p<- p +theme_minimal() +     #add grid
             theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}

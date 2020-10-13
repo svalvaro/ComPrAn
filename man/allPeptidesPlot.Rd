@@ -18,7 +18,8 @@ allPeptidesPlot(
   xlabel = "Fraction",
   legendLabel = "Condition",
   labelled = "Labeled",
-  unlabelled = "Unlabeled"
+  unlabelled = "Unlabeled",
+  controlSample = ""
 )
 }
 \arguments{
@@ -53,6 +54,9 @@ specifies alignment of the title in plot}
 \item{labelled}{character, label to be used for isLabel == TRUE}
 
 \item{unlabelled}{character, label to be used for isLabel == FALSE}
+
+\item{controlSample}{character, either labelled or unlabelled, this setting
+will adjust coloring based on which sample is a control}
 }
 \value{
 plot

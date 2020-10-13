@@ -90,6 +90,8 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
         mutate (medianValue = median(`Precursor Area`, na.rm = TRUE)) %>%
         ungroup() -> dataFrame
     dataFrame$Fraction <- as.numeric(as.character(dataFrame$Fraction))
+    linetype_vector <- c('twodash', 'solid')     #define linetype_vector
+    names(linetype_vector) <- c('mean','median')
     p <- ggplot(dataFrame, aes(x =Fraction, y=`Precursor Area`,col = group)) +
         geom_point(position = position_jitter(jitterPoints),
                     alpha = alphaValue, size = pointSize, na.rm =TRUE) +
@@ -98,20 +100,17 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
         ylab(ylabel) + xlab(xlabel) +
         scale_x_continuous(breaks=seq_len(max_frac),minor_breaks = NULL)+
         scale_y_continuous(breaks=seq(0,1,0.2))+
+        scale_linetype_manual('Line type', values = linetype_vector)+
         facet_wrap(isLabel ~ ., ncol =1, labeller = labeller(
             isLabel = c("TRUE" = labelled,"FALSE" = unlabelled)))
     if(showTitle){p<-p +labs(title=paste(group1Name,' and ',group2Name,sep=''))}
-    linetype_vector <- c('twodash', 'solid')     #define linetype_vector
-    names(linetype_vector) <- c('mean','median')
     if(meanLine) {  ## add line that is a mean of all protein values
         p <- p + geom_line(aes(y=meanValue, col = group, linetype = 'mean'), 
-                            size = 1, na.rm = TRUE) +
-            scale_linetype_manual('Line type', values = linetype_vector)
+                            size = 1, na.rm = TRUE)
     }
     if (medianLine) { ##  add line that is a median of all protein values
         p <- p + geom_line(aes(y = medianValue, col = group, linetype='median'),
-                            size=1, na.rm = TRUE)+
-            scale_linetype_manual('Line type', values = linetype_vector)
+                            size=1, na.rm = TRUE)
     }
     if(grid){p<- p +theme_minimal() +     #add grid
         theme(panel.grid.minor = element_blank())

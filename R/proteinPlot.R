@@ -20,7 +20,9 @@
 #' @param legendLabel character
 #' @param labelled character label to be used for isLabel == TRUE
 #' @param unlabelled character label to be used for isLabel == FALSE
-#'
+#' @param controlSample character, either labelled or unlabelled, this setting
+#' will adjust plot coloring based on which sample is a control
+#' 
 #' @importFrom stringr str_extract
 #'
 #' @return a plot
@@ -40,9 +42,13 @@
 proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE, 
                         titleLabel = 'all', titleAlign = 'left',
                         ylabel = 'Relative Protein Abundance', 
-                        xlabel = 'Fraction',
-                        legendLabel = 'Condition',
-                        labelled = "Labeled", unlabelled = "Unlabeled") {
+                        xlabel = 'Fraction',legendLabel = 'Condition',
+                        labelled = "Labeled", unlabelled = "Unlabeled",
+                        controlSample = ""){
+    if (controlSample == "labelled"|controlSample == "labeled"){
+        col_vector_proteins <- c("TRUE" = "#ff9d2e", "FALSE" = "#07b58a")
+    }else if(controlSample == "unlabelled"|controlSample == "unlabeled"){
+        col_vector_proteins <- c("FALSE" = "#ff9d2e", "TRUE" = "#07b58a")}
     dataFrame %>%
         filter(scenario == "B",`Protein Group Accessions`== protein)-> dataFrame
     description <- dataFrame$`Protein Descriptions`[1]
@@ -52,17 +58,14 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
         scale_x_continuous(breaks = seq_len(max_frac), limits = c(0,max_frac))+
         scale_color_manual( legendLabel, values = col_vector_proteins,
                             labels = c("TRUE" = labelled,"FALSE" = unlabelled))+
-        ylab(ylabel) +
-        xlab(xlabel)
-    #add grid
-    if(grid){p<- p +theme_minimal() +
+        ylab(ylabel) + xlab(xlabel)
+    if(grid){p<- p +theme_minimal() +  #add grid
         theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
     #title alignment settings
     if (titleAlign == 'left'){adjust <- 0
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    
     #add title to plot according to arguments
     description <- dataFrame$`Protein Descriptions`[1]
     if (titleLabel == 'all'){
@@ -81,7 +84,6 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
     } else {p <- p + labs(  title = titleLabel,
                             caption = paste('UniProt ID:', protein, sep ='')) +
         theme(plot.title = element_text(hjust = adjust))}
-    
     if(str_detect(description,'\\|')){
         p <- p + labs(  title = protein,
                         subtitle = 'Multiple proteins group')  }
