@@ -74,6 +74,8 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
     dataFrame$Fraction <- as.numeric(as.character(dataFrame$Fraction))
     if (meanLine | repPepLine){alphaValue <- 0.20    
     } else {alphaValue <- 1}  #transparent dots in case of drawing a line
+    linetype_vector <- c('twodash', 'solid')     #define linetype_vector 
+    names(linetype_vector) <- c('mean','representative peptide')
     p <- ggplot(dataFrame,aes(Fraction, `Precursor Area`, colour = isLabel)) +
         geom_point(na.rm = TRUE, alpha = alphaValue) +
         scale_y_log10() +
@@ -81,7 +83,8 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
         scale_colour_manual(legendLabel, values = col_vector_peptides,
                             labels = c("TRUE" = labelled,
                                         "FALSE" = unlabelled)) +
-        ylab (ylabel) + xlab (xlabel)
+        ylab (ylabel) + xlab (xlabel) +
+        scale_linetype_manual('Line type', values = linetype_vector)
     if(grid){p<- p +theme_minimal() +     #add grid 
             theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
@@ -99,18 +102,14 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
             str_extract(description, "GN=[:alnum:]*"), "GN="),
             caption = paste('UniProt ID:', protein, sep ='')) +
             theme(plot.title = element_text(hjust = adjust))}
-    linetype_vector <- c('twodash', 'solid')     #define linetype_vector 
-    names(linetype_vector) <- c('mean','representative peptide')
     if(meanLine) {  ## add line that is a mean of all peptide values
         p <- p + geom_line(aes(y=meanValue, colour = isLabel,linetype ='mean'),
-                            size = 1, na.rm = TRUE) +
-            scale_linetype_manual('Line type', values = linetype_vector)
+                            size = 1, na.rm = TRUE)
     }
     if (repPepLine) { ## add rep pep line fir scenario A
         p <- p + geom_line(aes(y = repPepValue, colour = isLabel,
                 linetype = 'representative peptide'),size=1, na.rm = TRUE)+
-            geom_point(aes(y=repPepValue,colour=isLabel),na.rm=TRUE,alpha = 1)+
-            scale_linetype_manual('Line type', values = linetype_vector)
+            geom_point(aes(y=repPepValue,colour=isLabel),na.rm=TRUE,alpha = 1)
     }
     #edit title in case of a multiprotein group
     if(str_detect(description,'\\|')){

@@ -13,6 +13,9 @@ Shiny app
 Execute the complexomics Shiny app
 }
 \examples{
+#' @examples
 ##to start the shiny app associated with ComPrAn package run
-compranApp()
+if(interactive()){
+    compranApp()
+} 
 }

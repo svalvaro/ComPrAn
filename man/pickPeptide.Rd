@@ -41,5 +41,4 @@ peptides <- splitModLab(peptides)
 peptides <- simplifyProteins(peptides) 
 ## Pick representative peptide for each protein for both scenarios
 peptide_index <- pickPeptide(peptides)
-
 }

@@ -6,8 +6,11 @@
 #' @export
 #' 
 #' @examples
+#' #' @examples
 #' ##to start the shiny app associated with ComPrAn package run
-#' compranApp()
+#' if(interactive()){
+#'     compranApp()
+#' } 
 compranApp <- function() {
     appDir <- system.file("shinyApps", "ComPrAn", package = "ComPrAn")
     if (appDir == "") {

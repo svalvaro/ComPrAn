@@ -29,6 +29,8 @@
 #' @param grid logical, specifies presence/absence of gridline in the plot
 #' @param labelled character, label to be used for isLabel == TRUE
 #' @param unlabelled character, label to be used for isLabel == FALSE
+#' @param orderColumn character, if groupData contains column for re-ordering
+#' and you want to use it, specify the column name in here
 #'
 #' @import ggplot2
 #'

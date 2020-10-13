@@ -60,6 +60,9 @@ shown side-by-side or above each other}
 \item{labelled}{character, label to be used for isLabel == TRUE}
 
 \item{unlabelled}{character, label to be used for isLabel == FALSE}
+
+\item{orderColumn}{character, if groupData contains column for re-ordering
+and you want to use it, specify the column name in here}
 }
 \value{
 plot
