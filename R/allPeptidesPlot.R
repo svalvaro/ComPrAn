@@ -102,17 +102,19 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
     if (titleAlign == 'left'){adjust <- 0     #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    if (titleLabel == 'all'){     #add title to plot according to arguments
-        p <- p + labs(title = str_remove(
-            str_extract(description, "^.* OS"), " OS"),
-            subtitle = str_extract(str_remove(description, " PE=.*$"),"OS=.*$"),
+    if (titleLabel == 'all'){
+        p <- p+labs(title=str_remove(str_extract(description, "^.* OS")," OS"),
+            subtitle = str_extract(str_remove(description," PE=.*$"), "OS=.*$"),
             caption = paste('UniProt ID:', protein, sep ='')) +
             theme(plot.title = element_text(hjust = adjust))
     } else if (titleLabel == 'GN') {
         p <- p + labs(title = str_remove(
             str_extract(description, "GN=[:alnum:]*"), "GN="),
             caption = paste('UniProt ID:', protein, sep ='')) +
-            theme(plot.title = element_text(hjust = adjust))}
+            theme(plot.title = element_text(hjust = adjust))
+    } else {p <- p + labs(  title = titleLabel,
+                            caption = paste('UniProt ID:', protein, sep ='')) +
+        theme(plot.title = element_text(hjust = adjust))}
     if(meanLine) {  ## add line that is a mean of all peptide values
         p <- p + geom_line(aes(y=meanValue, colour = isLabel,linetype ='mean'),
                             size = 1, na.rm = TRUE)
