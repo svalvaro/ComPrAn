@@ -22,6 +22,8 @@
 #' @param unlabelled character label to be used for isLabel == FALSE
 #' @param controlSample character, either labelled or unlabelled, this setting
 #' will adjust plot coloring based on which sample is a control
+#' @param textSize numeric, size of text in the plot 
+#' @param axisTextSize numeric, size of axis labels in the plot
 #' 
 #' @importFrom stringr str_extract
 #'
@@ -44,7 +46,7 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
                         ylabel = 'Relative Protein Abundance', 
                         xlabel = 'Fraction',legendLabel = 'Condition',
                         labelled = "Labeled", unlabelled = "Unlabeled",
-                        controlSample = ""){
+                        controlSample = "",textSize = 12, axisTextSize = 8){
     if (controlSample == "labelled"|controlSample == "labeled"){
         col_vector_proteins <- c("TRUE" = "#ff9d2e", "FALSE" = "#07b58a")
     }else if(controlSample == "unlabelled"|controlSample == "unlabeled"){
@@ -62,8 +64,7 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
     if(grid){p<- p +theme_minimal() +  #add grid
         theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
-    #title alignment settings
-    if (titleAlign == 'left'){adjust <- 0
+    if (titleAlign == 'left'){adjust <- 0    #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
     #add title to plot according to arguments
@@ -78,14 +79,14 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
     } else if (titleLabel == 'GN') {
         p <- p + labs(title = str_remove(
             str_extract(description, "GN=[:alnum:]*"), "GN="),
-            # subtitle = '',
             caption = paste('UniProt ID:', protein, sep ='')) +
             theme(plot.title = element_text(hjust = adjust))
     } else {p <- p + labs(  title = titleLabel,
                             caption = paste('UniProt ID:', protein, sep ='')) +
         theme(plot.title = element_text(hjust = adjust))}
     if(str_detect(description,'\\|')){
-        p <- p + labs(  title = protein,
-                        subtitle = 'Multiple proteins group')  }
+        p <- p + labs(title = protein, subtitle = 'Multiple proteins group')  }
+    p <- p + theme(text = element_text(size = textSize),
+                   axis.text=element_text(size = axisTextSize))
     return(p)
 }

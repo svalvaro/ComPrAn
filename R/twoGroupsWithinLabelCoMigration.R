@@ -41,6 +41,8 @@
 #' @param titleAlign character, one of the 'left', 'center'/'centre', 'right',
 #'  specifies alignment of the title in plot
 #' @param alphaValue numeric, transparency of the point, values 0 to 1
+#' @param textSize numeric, size of text in the plot 
+#' @param axisTextSize numeric, size of axis labels in the plot
 #'
 #' @return plot
 #' @export
@@ -62,8 +64,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
     medianLine = FALSE,ylabel='Relative Protein Abundance',xlabel='Fraction',
     legendLabel='Group',labelled = "Labeled",unlabelled = "Unlabeled",
     jitterPoints = 0.3, pointSize = 2.5,grid = FALSE, showTitle = FALSE,
-    titleAlign = 'left',alphaValue = 0.5){
-    
+    titleAlign = 'left',alphaValue = 0.5,textSize = 12, axisTextSize = 8){
     if(is.null(group1Data)|is.null(group2Data)) {
         stop('Please provide a list of group1 proteins and group2 
                 proteins you would like to plot')}
@@ -118,6 +119,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
     if (titleAlign == 'left'){adjust <- 0     #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    p <- p + theme(plot.title = element_text(hjust = adjust))
+    p <- p + theme(plot.title = element_text(hjust = adjust),
+    text=element_text(size=textSize),axis.text=element_text(size=axisTextSize))
     return(p)
 }

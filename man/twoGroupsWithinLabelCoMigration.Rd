@@ -23,7 +23,9 @@ twoGroupsWithinLabelCoMigration(
   grid = FALSE,
   showTitle = FALSE,
   titleAlign = "left",
-  alphaValue = 0.5
+  alphaValue = 0.5,
+  textSize = 12,
+  axisTextSize = 8
 )
 }
 \arguments{
@@ -79,6 +81,10 @@ values in the group}
 specifies alignment of the title in plot}
 
 \item{alphaValue}{numeric, transparency of the point, values 0 to 1}
+
+\item{textSize}{numeric, size of text in the plot}
+
+\item{axisTextSize}{numeric, size of axis labels in the plot}
 }
 \value{
 plot

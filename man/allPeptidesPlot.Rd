@@ -19,7 +19,9 @@ allPeptidesPlot(
   legendLabel = "Condition",
   labelled = "Labeled",
   unlabelled = "Unlabeled",
-  controlSample = ""
+  controlSample = "",
+  textSize = 12,
+  axisTextSize = 8
 )
 }
 \arguments{
@@ -57,6 +59,10 @@ specifies alignment of the title in plot}
 
 \item{controlSample}{character, either labelled or unlabelled, this setting
 will adjust coloring based on which sample is a control}
+
+\item{textSize}{numeric, size of text in the plot}
+
+\item{axisTextSize}{numeric, size of axis labels in the plot}
 }
 \value{
 plot

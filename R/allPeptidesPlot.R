@@ -22,6 +22,8 @@
 #' @param unlabelled character, label to be used for isLabel == FALSE
 #' @param controlSample character, either labelled or unlabelled, this setting
 #' will adjust coloring based on which sample is a control
+#' @param textSize numeric, size of text in the plot 
+#' @param axisTextSize numeric, size of axis labels in the plot
 #' 
 #' @importFrom tibble rowid_to_column
 #'
@@ -56,7 +58,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
     repPepLine = FALSE,separateLabStates = FALSE,grid = TRUE,titleLabel = 'all',
     titleAlign = 'left',ylabel = 'Precursor Area', xlabel = 'Fraction',
     legendLabel = 'Condition', labelled = "Labeled", unlabelled = "Unlabeled",
-    controlSample = ""){
+    controlSample = "",textSize = 12, axisTextSize = 8){
     #if controlSample specified, adjust colouring so control is always same 
     if (controlSample == "labelled"|controlSample == "labeled"){
         col_vector_peptides <- c("TRUE" = "#ffc125", "FALSE" = "#a020f0")
@@ -131,5 +133,7 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
         p <- p + facet_wrap(isLabel ~ ., nrow =2,scales = "free_x")+
             theme(strip.text = element_blank())
     }
+    p <- p + theme(text = element_text(size = textSize), #adjust text size
+                   axis.text=element_text(size = axisTextSize))
     return (p)
 }

@@ -36,6 +36,8 @@
 #' @param alphaValue numeric, transparency of the point, values 0 to 1
 #' @param controlSample character, either labelled or unlabelled, this setting
 #' will adjust plot coloring based on which sample is a control
+#' @param textSize numeric, size of text in the plot 
+#' @param axisTextSize numeric, size of axis labels in the plot
 #'
 #' @importFrom stats median
 #'
@@ -59,7 +61,8 @@ oneGroupTwoLabelsCoMigration <- function(
     meanLine = FALSE,medianLine = FALSE,ylabel = 'Relative Protein Abundance',
     xlabel = 'Fraction',legendLabel = 'Condition', labelled = 'Labeled',
     unlabelled = 'Unlabeled',jitterPoints = 0.3, pointSize = 2.5,
-    grid = FALSE,titleAlign = 'left', alphaValue = 0.5,controlSample = ""){
+    grid = FALSE,titleAlign = 'left', alphaValue = 0.5,controlSample = "",
+    textSize = 12, axisTextSize = 8){
     if (controlSample == "labelled"|controlSample == "labeled"){
         col_vector_proteins <- c("TRUE" = "#ff9d2e", "FALSE" = "#07b58a")
     }else if(controlSample == "unlabelled"|controlSample == "unlabeled"){
@@ -95,12 +98,12 @@ oneGroupTwoLabelsCoMigration <- function(
         p <- p + geom_line(
             aes(y = medianValue, colour = isLabel, linetype = 'median'),
             size=1, na.rm = TRUE)}
-    if(grid){p<- p +theme_minimal() +     #add grid
-            theme(panel.grid.minor = element_blank())
+    if(grid){p<- p +theme_minimal() + theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}
     if (titleAlign == 'left'){adjust <- 0     #title alignment settings
     } else if ((titleAlign == 'centre')|(titleAlign=='center')) {adjust <- 0.5
     } else if(titleAlign == 'right'){adjust <- 1}
-    p <- p + theme(plot.title = element_text(hjust = adjust))
+    p <- p + theme(plot.title = element_text(hjust = adjust),
+    text=element_text(size=textSize),axis.text=element_text(size=axisTextSize))
     return(p)
 }
