@@ -63,27 +63,23 @@ groupHeatMap <- function(dataFrame, groupData, groupName, titleAlign = "left",
     if(!is.null(newNamesCol)){ycolumn <- newNamesCol #rename proteins
     } else {ycolumn <- 'Protein Group Accessions'}
     if(is.null(orderColumn)){     #draw basic plot
-        p <- ggplot(dataFrame, aes(x = Fraction,
-                                y = get(ycolumn),fill = `Precursor Area`)) + 
-        geom_tile(na.rm = TRUE)  +
-        facet_wrap(isLabel ~ ., ncol = colNumber, 
-            labeller = labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
-        labs(title = groupName) + ylab(ylabel) + xlab(xlabel) +
-        scale_fill_gradient(legendLabel,low='#cacde8',high ='#0019bf',
-            na.value="grey60",breaks = seq(0,1,0.25), limits = c(0,1)) +
-        coord_cartesian(expand = 0)
+        p <- ggplot(dataFrame, aes(x = Fraction,y = get(ycolumn),
+                        fill = `Precursor Area`, colour =`Precursor Area` )) + 
+        geom_tile(na.rm = TRUE)
     }else{
         protsOrder <- dataFrame[,orderColumn]
         dataFrame[[ycolumn]]<-fct_reorder(dataFrame[[ycolumn]],desc(protsOrder))
         p <-  ggplot(dataFrame, aes(x = Fraction,y = get(ycolumn),
-                                    fill = `Precursor Area`)) + 
-        geom_tile(na.rm = TRUE)+
-        facet_wrap(isLabel ~ .,ncol=colNumber, 
-            labeller=labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
-        labs(title = groupName) + ylab(ylabel) +  xlab(xlabel) +
-        scale_fill_gradient(legendLabel, low = '#cacde8',high = '#0019bf', 
-            na.value="grey60", breaks = seq(0,1,0.25), limits = c(0,1)) +
-        coord_cartesian(expand = 0)}
+                        fill = `Precursor Area`, colour =`Precursor Area`)) + 
+        geom_tile(na.rm = TRUE)}
+    p <- p + facet_wrap(isLabel ~ ., ncol = colNumber, 
+            labeller = labeller(isLabel=c("TRUE"=labelled,"FALSE"=unlabelled)))+
+        labs(title = groupName) + ylab(ylabel) + xlab(xlabel) +
+        scale_fill_gradient(legendLabel,low='#cacde8',high ='#0019bf',
+                    na.value="grey60",breaks = seq(0,1,0.25), limits = c(0,1))+
+        scale_color_gradient(legendLabel,low='#cacde8',high ='#0019bf',
+                    na.value="grey60",breaks = seq(0,1,0.25), limits = c(0,1))+
+        coord_cartesian(expand = 0)
     if(grid){p<- p +theme_minimal() +     #add grid
             theme(panel.grid.minor = element_blank())
     } else {p<- p +theme_classic()}

@@ -68,7 +68,8 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
     if(is.null(group1Data)|is.null(group2Data)) {
         stop('Please provide a list of group1 proteins and group2 
                 proteins you would like to plot')}
-    col_vector2 = c('#e6194B','#3cb44b','#ffe119','#4363d8','#f58231')
+    col_vector2 =c('#D81B60','#1E88E5')
+    names(col_vector2) = c(group1Name,group2Name)
     dataFrame <- dataFrame[dataFrame$scenario == "A",] #filter only scenario A
     dataFrame %>% select(-scenario) ->dataFrame
     group1Data <- data.frame(protein = group1Data, group = rep(
