@@ -623,7 +623,7 @@ body <- dashboardBody(
     ########################
     tabItem(tabName="QuestionsAndAnswers",
             h2("FAQ"),
-            p("Information about this app",
+            p("Information about this app and FAQ will be updated regularly.",
               style="padding-left: 0em"),
             # fluidPage(
             fluidRow(
@@ -642,7 +642,9 @@ body <- dashboardBody(
     ########################
     tabItem(tabName="feedback",
             h2("Feedback"),
-            p("This App is developed and maintained by Rick Scavetta and Petra Palenikova as part of the R complexomics package.")
+            p("This app is developed and maintained by Rick Scavetta (office@scavetta.academy) 
+            and Petra Palenikova (pp451@cam.ac.uk)
+              as part of the R Complexome Profiling Analysis package.")
     )
   )
 )
