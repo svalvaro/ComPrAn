@@ -87,6 +87,6 @@ proteinPlot <- function(dataFrame, protein, max_frac, grid = TRUE,
     if(str_detect(description,'\\|')){
         p <- p + labs(title = protein, subtitle = 'Multiple proteins group')  }
     p <- p + theme(text = element_text(size = textSize),
-                   axis.text=element_text(size = axisTextSize))
+                    axis.text=element_text(size = axisTextSize))
     return(p)
 }

@@ -136,6 +136,6 @@ allPeptidesPlot <- function(.listDF, protein, max_frac, meanLine = FALSE,
             theme(strip.text = element_blank())
     }
     p <- p + theme(text = element_text(size = textSize), #adjust text size
-                   axis.text=element_text(size = axisTextSize))
+                    axis.text=element_text(size = axisTextSize))
     return (p)
 }
