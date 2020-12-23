@@ -33,3 +33,4 @@ vignettes/*.pdf
 doc
 Meta
 *.Rproj
+R/.DS_Store
