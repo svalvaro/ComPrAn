@@ -40,11 +40,11 @@
 #' @examples 
 #' 
 #' ##Use example normalised proteins file
-#' inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+#' inputFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
 #' #read file in and change structure of table to required format
 #' forAnalysis <- protImportForAnalysis(inputFile)
 #' ##example plot:
-#' groupDfn <- system.file("extdata", "exampleGroup.txt", package = "ComPrAn")
+#' groupDfn <- system.file("extData", "exampleGroup.txt", package = "ComPrAn")
 #' groupName <- 'group1'
 #' groupData <- data.table::fread(groupDfn)
 #' groupHeatMap(forAnalysis[forAnalysis$scenario == "B",], groupData, groupName)

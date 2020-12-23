@@ -32,7 +32,7 @@ function.
 \examples{
 
 ##Use example normalised proteins file
-inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+inputFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
 #read file in and change structure of table to required format
 forAnalysis <- protImportForAnalysis(inputFile)
 # create components necessary for clustering

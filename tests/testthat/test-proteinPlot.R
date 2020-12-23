@@ -1,7 +1,7 @@
 test_that("output is a ggplot object", {
     
     ## Use example normalised proteins file
-    inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+    inputFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
     forAnalysis <- protImportForAnalysis(inputFile)
     protein <- "P52815"
     max_frac <- 23

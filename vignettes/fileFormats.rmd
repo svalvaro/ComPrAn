@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 ## Peptide input file
-*system.file("extdata", "data.txt", package = "ComPrAn")* file in the example 
+*system.file("extData", "data.txt", package = "ComPrAn")* file in the example 
 data set  
 Input file needs to be a text file with tab deliminated values. Data are 
 organized in a column format, first row contain column headers. 

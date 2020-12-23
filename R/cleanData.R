@@ -30,7 +30,7 @@
 #' 
 #' @examples  
 #' ##Use example peptide data set, read in and clean data
-#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' inputFile <- system.file("extData", "data.txt", package = "ComPrAn")
 #' peptides <- peptideImport(inputFile)
 #' peptides <- cleanData(peptides, fCol = "Search ID")
 cleanData <- function(.data, fCol = "Search ID") {

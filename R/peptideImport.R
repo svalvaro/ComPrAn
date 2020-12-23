@@ -22,7 +22,7 @@
 #' 
 #' @examples  
 #' ##Use example peptide data set, read in data
-#' inputFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+#' inputFile <- system.file("extData", "data.txt", package = "ComPrAn")
 #' peptides <- peptideImport(inputFile)
 peptideImport <- function(inputFile) {
     .data <- data.table::fread(inputFile, stringsAsFactors = FALSE)

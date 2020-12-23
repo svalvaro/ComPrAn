@@ -87,7 +87,7 @@ proteins
 
 ```{r}
 library(ComPrAn)
-inputFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+inputFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
 
 forAnalysis <- protImportForAnalysis(inputFile)
 ```
@@ -104,7 +104,7 @@ proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
 
 **Make a heatmap for a selected group of proteins**
 ```{r groupHeatMap, fig.width=7, fig.height=6.7}
-groupDataFileName <- system.file("extdata","exampleGroup.txt",package="ComPrAn")
+groupDataFileName <- system.file("extData","exampleGroup.txt",package="ComPrAn")
 groupName <- 'group1'
 groupData <- data.table::fread(groupDataFileName)
 # example heatmap, quantitative comparison between labeled and unlabeled samples

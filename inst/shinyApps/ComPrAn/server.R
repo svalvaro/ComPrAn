@@ -11,7 +11,7 @@ server <- function(input, output, session) {
   peptides_full <- eventReactive(input$processRaw, {
     readFile <- input$inputfile
     if (is.null(readFile)) {
-      dataFile <- system.file("extdata", "data.txt", package = "ComPrAn")
+      dataFile <- system.file("extData", "data.txt", package = "ComPrAn")
       data.table::fread(dataFile)
     } else {
       data.table::fread(readFile$datapath)
@@ -45,7 +45,7 @@ server <- function(input, output, session) {
   observeEvent(input$processNorm, {
       readNorm <- input$inputfileNorm
       if (is.null(readNorm)) {
-          dataFile <- system.file("extdata", "dataNormProts.txt", package = "ComPrAn")
+          dataFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
           vNormProts$data <- protImportForAnalysis(dataFile)
       } else {
           vNormProts$data <- protImportForAnalysis(readNorm$datapath)
@@ -854,7 +854,7 @@ server <- function(input, output, session) {
   vGroupDF <- reactiveValues(data = NULL)
 
   observeEvent(input$exampleGroup,{
-      vGroupDF$data <- read_tsv(system.file("extdata", "exampleGroup.txt", package = "ComPrAn"))
+      vGroupDF$data <- read_tsv(system.file("extData", "exampleGroup.txt", package = "ComPrAn"))
     #  vPresentColumns$data <- names(vGroupDF$data)
   })
   
