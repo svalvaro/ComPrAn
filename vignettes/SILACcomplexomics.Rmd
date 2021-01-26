@@ -193,7 +193,7 @@ Plotting functionality includes:
 proteins
 * makeBarPlotClusterSummary - bar plot showing number of proteins per cluster
 
-# Example full workflow
+# Example workflow
 
 **Read in and filter data**
 ```{r}
@@ -233,7 +233,7 @@ listOnlyOneLabState <- onlyInOneLabelState(peptide_index)
 
 
 **Extract values for representative peptides** for each protein, 
-for both scenario A and scenario B.
+for both scenario A and scenario B and perform normalization.
 Combine results into one data frame used in further analysis.
 ```{r}
 # produce a data frame in a format needed for downstream analysis
@@ -242,85 +242,13 @@ forAnalysis <- getNormTable(peptide_index,purpose = "analysis")
 forExport <- getNormTable(peptide_index,purpose = "export")
 ```
 
-
-**Have a look at a selected protein (line plot)**
-```{r}
-protein <- "P52815"
-max_frac <- max(forAnalysis$Fraction)
-# example protein plot, quantitative comparison between labeled and unlabeled
-# samples (default settings)
-proteinPlot(forAnalysis[forAnalysis$scenario == "B",], protein, max_frac)
-```
-
-
-**Make a heatmap for a selected group of proteins**
-```{r groupHeatMap, fig.width=7, fig.height=6.7}
-groupDataFile <- system.file("extData", "exampleGroup.txt", package = "ComPrAn")
-groupData <- data.table::fread(groupDataFile)
-groupName <- 'group1'
-# example heatmap, quantitative comparison between labeled and unlabeled samples
-# (default settings)
-groupHeatMap(dataFrame = forAnalysis[forAnalysis$scenario == "B",], 
-                groupData, groupName)
-```
-
-**Co-migration plot of single protein group between label states**
-```{r}
-groupDataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
-groupName <- 'group1' 
-max_frac <- max(forAnalysis$Fraction) 
-
-# example co-migration plot, non-quantitative comparison of migration profile 
-# of a single protein group between labeled and unlabeled samples 
-# (default settings)
-oneGroupTwoLabelsCoMigration(forAnalysis, max_frac = max_frac,
-                                groupDataVector,groupName)
-
-```
-
-**Co-migration plot of two protein groups within label state**
-```{r}
-group1DataVector <- c("Q16540","P52815","P09001","Q13405","Q9H2W6")
-group1Name <- 'group1' 
-group2DataVector <- c("Q9NVS2","Q9NWU5","Q9NX20","Q9NYK5","Q9NZE8")
-group2Name <- 'group2'
-max_frac <- max(forAnalysis$Fraction) 
-
-# example co-migration plot, non-quantitative comparison of migration profile 
-# of two protein groups within label states (default settings)
-twoGroupsWithinLabelCoMigration(dataFrame = forAnalysis, max_frac = max_frac, 
-                                group1Data = group1DataVector, 
-                                group1Name = group1Name,
-                                group2Data = group2DataVector, 
-                                group2Name = group2Name)
-```
-
-**Create components necessary for clustering:**
-(distance matrix for labeled and unlabeled samples,
-protein table for both samples)
-```{r}
-clusteringDF <- clusterComp(forAnalysis,scenar = "A", PearsCor = "centered")
-```
-
-**Assign clusters to data frames**
-```{r}
-labTab_clust <- assignClusters(.listDf = clusteringDF,sample = "labeled",
-                                    method = 'average', cutoff = 0.85)
-unlabTab_clust <- assignClusters(.listDf = clusteringDF,sample = "unlabeled",
-                                    method = 'average', cutoff = 0.85)
-```
-
-**Make bar plots** summarizing numbers of proteins per cluster for labeled
-and unlabeled samples
-```{r clusterBar, fig.width=4, fig.height=2.5}
-makeBarPlotClusterSummary(labTab_clust, name = 'labeled')
-makeBarPlotClusterSummary(unlabTab_clust, name = 'unlabeled')
-```
-
-**Create table containing proteins and their assigned clusters**
-```{r}
-tableForClusterExport <- exportClusterAssignments(labTab_clust,unlabTab_clust)
-```
+Once data frame with normalized protein data is produced, it can be either
+exported (*forExport* in the code above), or used for further analysis and 
+visualization (*forAnalysis* in the code above). Example procedure of analysing
+normalized protein data is available in **Protein workflow** vignette. 
+To access relevant section of **Protein workflow** vignette
+[click here](./proteinWorkflow.html#visualization-of-normalised-protein-data)
+.
 
 <center>
 #### *End of file*

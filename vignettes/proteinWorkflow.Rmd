@@ -2,7 +2,9 @@
 title: "Protein workflow"
 author: "Petra Palenikova & Rick Scavetta"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+    rmarkdown::html_vignette:
+        toc: true
 vignette: >
     %\VignetteIndexEntry{Protein workflow}
     %\VignetteEngine{knitr::rmarkdown}
@@ -49,15 +51,15 @@ performs cluster analysis and contains tools for visualization of results. The
 analysis is indented for samples that were SILAC labelled, therefore the input 
 file should contain both “heavy” and “light” proteins.
 
-### Method description
+## Method description
 
-#### 0) Re-formatting of input file
+### 0) Re-formatting of input file
 
 Input file format was designed so it is easily readable by human. Downstream 
 analysis requires a slightly different format so it is necessary to perfomr 
 this change before performing the analysis.
 
-#### 1) Hierarchical clustering
+### 1) Hierarchical clustering
 
 Clustering allows to identify similarity between migration profiles of proteins 
 in an unbiased way. We can check co-migration of known protein complexes by 
@@ -69,7 +71,7 @@ This package contains functions to perform hierarchical clustering using Pearson
 correlation (cantered or uncentered) as a distance measure and one of the three 
 linkage methods (single, average or complete).
 
-#### 2) Export files and visualizations
+### 2) Export files and visualizations
 
 We provide several functions to export intermediate steps of the analysis.
 Plotting functionality includes: 
@@ -92,7 +94,7 @@ inputFile <- system.file("extData", "dataNormProts.txt", package = "ComPrAn")
 forAnalysis <- protImportForAnalysis(inputFile)
 ```
 
-
+### Visualization of normalised protein data
 **Have a look at a selected protein (line plot)**
 ```{r}
 protein <- "P52815"
@@ -141,6 +143,8 @@ twoGroupsWithinLabelCoMigration(dataFrame = forAnalysis, max_frac = max_frac,
                                 group2Data = group2DataVector, 
                                 group2Name = group2Name)
 ```
+
+### Cluster analysis
 
 **Create components neccessary for clustering:**
 (distance matrix for labeled and unlabeled samples,
