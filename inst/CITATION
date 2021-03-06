@@ -1,0 +1,19 @@
+bibentry(bibtype="article",
+        title = "Quantitative density gradient analysis by mass spectrometry (qDGMS) and complexome profiling analysis (ComPrAn) R package for the study of macromolecular complexes",
+        author = personList(
+            as.person("Petra Páleníková"),
+            as.person("Michael E. Harbour"),
+            as.person("Shujing Ding"),
+            as.person("Ian M. Fearnley"),
+            as.person("Lindsey Van Haute"),
+            as.person("Joanna Rorbach"),
+            as.person("Rick Scavetta"),
+            as.person("Michal Minczuk"),
+            as.person("Pedro Rebelo-Guiomar")
+        ),
+        year = 2021,
+        journal = "Biochimica et Biophysica Acta (BBA) - Bioenergetics",
+        volume = 1862,
+        pages = 148399,
+        doi = "10.1016/j.bbabio.2021.148399",
+        url = "https://www.sciencedirect.com/science/article/pii/S0005272821000323" )
