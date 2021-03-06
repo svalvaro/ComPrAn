@@ -20,7 +20,7 @@ oneGroupTwoLabelsCoMigration(
   pointSize = 2.5,
   grid = FALSE,
   titleAlign = "left",
-  alphaValue = 0.5,
+  alphaValue = 1,
   controlSample = "",
   textSize = 12,
   axisTextSize = 8

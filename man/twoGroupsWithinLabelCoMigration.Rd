@@ -23,7 +23,7 @@ twoGroupsWithinLabelCoMigration(
   grid = FALSE,
   showTitle = FALSE,
   titleAlign = "left",
-  alphaValue = 0.5,
+  alphaValue = 1,
   textSize = 12,
   axisTextSize = 8
 )
