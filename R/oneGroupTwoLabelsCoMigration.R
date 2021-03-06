@@ -61,7 +61,7 @@ oneGroupTwoLabelsCoMigration <- function(
     meanLine = FALSE,medianLine = FALSE,ylabel = 'Relative Protein Abundance',
     xlabel = 'Fraction',legendLabel = 'Condition', labelled = 'Labeled',
     unlabelled = 'Unlabeled',jitterPoints = 0.3, pointSize = 2.5,
-    grid = FALSE,titleAlign = 'left', alphaValue = 0.5,controlSample = "",
+    grid = FALSE,titleAlign = 'left', alphaValue = 1,controlSample = "",
     textSize = 12, axisTextSize = 8){
     if (controlSample == "labelled"|controlSample == "labeled"){
         col_vector_proteins <- c("TRUE" = "#ff9d2e", "FALSE" = "#07b58a")

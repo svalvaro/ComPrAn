@@ -64,7 +64,7 @@ twoGroupsWithinLabelCoMigration <- function(dataFrame,max_frac,group1Data=NULL,
     medianLine = FALSE,ylabel='Relative Protein Abundance',xlabel='Fraction',
     legendLabel='Group',labelled = "Labeled",unlabelled = "Unlabeled",
     jitterPoints = 0.3, pointSize = 2.5,grid = FALSE, showTitle = FALSE,
-    titleAlign = 'left',alphaValue = 0.5,textSize = 12, axisTextSize = 8){
+    titleAlign = 'left',alphaValue = 1,textSize = 12, axisTextSize = 8){
     if(is.null(group1Data)|is.null(group2Data)) {
         stop('Please provide a list of group1 proteins and group2 
                 proteins you would like to plot')}
