@@ -1,7 +1,7 @@
 Package: ComPrAn
 Type: Package
 Title: Complexome Profiling Analysis package
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     c(person(given = "Rick",
            family = "Scavetta",
@@ -41,7 +41,7 @@ Imports:
 RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 2.1.0),
-    knitr
+    knitr,
     rmarkdown
 VignetteBuilder: knitr
 biocViews: MassSpectrometry, Proteomics, Visualization
